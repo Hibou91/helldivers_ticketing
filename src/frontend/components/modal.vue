@@ -1,25 +1,31 @@
 <template>
+    <div class="frame">
+        <tCard v-if="modalOpen == true" class="modal">
+            <div>
+                <eyeButton name="closeModal" color="RED" @click="modalOpen = false" class="close-button"></eyeButton>
 
-    <div v-if="modalOpen == true" class="frame">
-        <div>
-            <eyeButton name="closeModal" color="RED" @click="modalOpen = false" class="close-button"></eyeButton>
+            </div>
+            <div class="modal-slot">
+                <slot>
 
-        </div>
-        <div class="modal-slot">
-            <slot>
+                </slot>
+            </div>
 
-            </slot>
-
-        </div>
-
-
+        </tCard>
 
     </div>
+
+
+
+
+
+
 </template>
 
 <script setup>
 
 import eyeButton from './EyeButton.vue';
+import tCard from './tCard.vue';
 
 
 
@@ -31,14 +37,21 @@ const modalOpen = defineModel('modalOpen')
 .frame {
 
     position: absolute;
-    width: 500px;
-    height: 500px;
-    margin: 20px;
-    background-color: rgba(0, 0, 0, .7);
-    padding: 20px;
-    border-radius: 20px;
-    left: calc(50% - 250px);
-    top: calc(50% - 250px);
+    display: flex;
+   width: calc(100% - 40px);
+   max-height: calc(100% - 40px - 350px);
+   height: calc(100% - 40px - 350px);
+   padding: 20px;
+}
+
+.modal{
+    width: fit-content;
+    
+    margin: auto;
+    flex-grow: 1;
+    min-height: 0;
+    max-height: 100%;
+
 }
 
 .close-button {

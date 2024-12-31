@@ -10,9 +10,9 @@
 import Locale from '../components/Locale.vue';
 
 const config = {
-    name: "Library",
-    model: 'library',
-    category: "0",
+    name: "Garden",
+    model: 'garden',
+    category: "2",
 }
 
 </script>

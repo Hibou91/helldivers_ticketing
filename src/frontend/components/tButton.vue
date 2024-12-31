@@ -1,30 +1,55 @@
 <template>
-    <div class="button-main ">
-        <img src="../../../static/buttons/main_front.png" alt="" srcset="" width="60" height="60" class="automargin">
-        <p class=" automargin transitionable">
-            <slot>
+    <div class="button-main relative" @mouseover="onHover = true" @mouseleave="onHover = false">
+        
+       
+        <img src="../../../static/buttons/button standard bg.png" alt="" srcset="" width="150" class="absolute button-image" :class="{invisible: onHover == false, visible: onHover == true}">
+        <div class="absolute transitionable width-100">
+            <p class="auto-margin">
+            
+            <slot >
 
             </slot>
         </p>
-        <img src="../../../static/buttons/main_back.png" alt="" srcset="" width="30" height="30" class="automargin">
+        </div>
+        
+        <img src="../../../static/buttons/button standard.png" alt="" srcset="" width="150"  class="absolute button-image" >
     </div>
 </template>
+
+<script setup>
+
+import {ref} from 'vue'
+
+const onHover = ref(false)
+</script>
 
 <style scoped>
 .button-main {
     height: 60px;
     display: flex;
     align-items: center;
-    
+    width: 150px;
 }
 
-.automargin {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 20px
+.button-image{
+    top: 0;
+    left: 0;
 }
 
+.auto-margin{
+    width: fit-content;
+    margin: auto;
+}
 
+.width-100{
+    width: 100%;
+}
 
+.visible{
+    visibility: visible;
+}
 
+.invisible{
+    visibility: hidden;
+}
 </style>

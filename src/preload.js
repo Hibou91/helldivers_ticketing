@@ -7,9 +7,11 @@ contextBridge.exposeInMainWorld("questUtils", {
   postQuest: (category, data) =>
     ipcRenderer.invoke("postQuest", category, data),
   putQuest: (category, data) => ipcRenderer.invoke("putQuest", category, data),
+  deleteQuest: (category, data) => ipcRenderer.invoke("deleteQuest", category, data),
   // we can also expose variables, not just functions
 });
 
 contextBridge.exposeInMainWorld("generic", {
+  getCastleData:() => ipcRenderer.invoke("getCastleData"),
   quitProgram: () => ipcRenderer.invoke("quitProgram"),
 });

@@ -1,6 +1,7 @@
 import config from "../config";
 import Locale from "./Locale";
 import fs from "node:fs/promises";
+import { ipcMain } from "electron";
 
 export default class Castle {
   constructor() {
@@ -8,14 +9,15 @@ export default class Castle {
       config.locales.locales.library.name,
       config.locales.locales.library.category
     );
-    this.livingRoom = new Locale(
-      config.locales.locales.livingRoom.name,
-      config.locales.locales.livingRoom.category
+    this.salon = new Locale(
+      config.locales.locales.salon.name,
+      config.locales.locales.salon.category
     );
     this.garden = new Locale(
       config.locales.locales.garden.name,
       config.locales.locales.garden.category
     );
+    ipcMain.handle("getCastleData", (event, category) => this.getCastleData());
     this.getCastleData();
   }
 
@@ -31,7 +33,14 @@ export default class Castle {
           : process.env.HOME + "/.local/share");
       url += "/forge_first" + "/castle.json";
       const data = await fs.readFile(url, { encoding: "utf8" });
-    } catch (err) {}
+      const castleData = JSON.parse.parse(data)
+      castleData.locales = config.locales.locales
+      return 
+    } catch (err) {
+      const castleData = {}
+      castleData.locales = config.locales.locales
+      return castleData
+    }
   }
 
   async saveCastleData() {
