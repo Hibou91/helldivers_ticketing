@@ -1,15 +1,15 @@
 <template>
     <div class="bg" @mouseover="state.onHover = true" @mouseleave="state.onHover = false;">
 
-        <div class="btn-img" :id="name + 'EyeDiv'">
+        <div class="btn-img" >
 
 
             <img v-if="color == 'GREEN'" src="../../../static/buttons/eye bg green.jpg" alt="" srcset="" width="100px" height="100"
-                class="btn-bg"
+                class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
             <img v-if="color == 'RED'" src="../../../static/buttons/eye bg red.jpg" alt="" srcset="" width="100px" height="100"
-                class="btn-bg"
+                class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
             <img src="../../../static/buttons/eye pupil.png" alt="" srcset="" width="100" height="100" class="btn-bg "
@@ -130,5 +130,9 @@ onBeforeRouteLeave((to, from) => {
     width: 2px;
     height: 2px;
 
+}
+
+.bg:active .eye-bg{
+    filter: brightness(1.3);
 }
 </style>

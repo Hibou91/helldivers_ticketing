@@ -13,7 +13,7 @@
         <div v-if="state.openEditQuests == false && state.openNewQuests == false" class="tCardHolder">
             <tCard>
                 <tButton @click="() => { state.openNewQuests = true }">New Quests</tButton>
-                <div v-for="(quest, index) in state.quests" class="scroll-main">
+                <div v-for="(quest, index) in state.quests" class="scroll-main scroll-main-frame">
                     <div class="scroll-image" :class="{ 'scroll-panic': quest.priority == 2 }">
                         <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
                             class="scroll-main">
@@ -26,9 +26,8 @@
                     </div>
                     <div class="scroll-data">
                         <h3 @click="() => { openQuest(index) }">{{ quest.title }}</h3>
-                        <p>{{ quest.progressName }}</p>
-                        <p>{{ quest.id }}</p>
-                        <p v-if="quest.progress == 3">{{ quest.waitingFor }}</p>
+                        <p>{{ quest.progressName }} <span v-if="quest.progress == 3">on {{ quest.waitingFor }}</span>
+                        </p>
 
                     </div>
 
@@ -37,15 +36,24 @@
             <div class="tCardHolderRow">
                 <tCard>
                     <h2>{{ config.namel }}</h2>
-
                     <h3>Level: 0</h3>
+
+
                 </tCard>
 
                 <tCard>
 
-                    <h2>Keeper:</h2>
 
-                    <h3>Level: 0</h3>
+                    <div class="flex-row">
+                        <div>
+                            <h2>Keeper</h2>
+                            <h3>Level: 0</h3>
+                        </div>
+                        <div>
+                            <img :src="`../../../static/${config.model}/keeper/1.png`" alt="" height="200">
+
+                        </div>
+                    </div>
                 </tCard>
 
             </div>
@@ -76,7 +84,7 @@
                     <option value="1">Should be done</option>
                     <option value="2">PANIC</option>
                 </select>
-                
+
             </div>
 
 
@@ -111,7 +119,7 @@
             <tButton @click="deleteQuests">Delete</tButton>
         </modal>
 
-        <BottomMenu name="library" v-model:onHover="state.hover"></BottomMenu>
+        <BottomMenu name="library" v-model:onHover="state.hover" v-model:clickValue="state.menu"></BottomMenu>
     </div>
 
 </template>
@@ -133,7 +141,8 @@ const state = ref({
     openNewQuests: false,
     openEditQuests: false,
     openKeeper: true,
-    openLocale: true
+    openLocale: true,
+    menu: ""
 });
 
 
@@ -218,6 +227,14 @@ const deleteQuests = async () => {
 }
 
 
+watch(() => state.value.menu, (newValue) => {
+
+    if (newValue != '') {
+
+    }
+
+})
+
 
 </script>
 
@@ -243,6 +260,7 @@ const deleteQuests = async () => {
 }
 
 .tCardHolderRow {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -262,9 +280,14 @@ const deleteQuests = async () => {
 
 }
 
+.scroll-main-frame {
+    border: 2px solid grey;
+}
+
 .scroll-image {
     position: relative;
     width: fit-content;
+    border-right: 2px solid grey;
 }
 
 .scroll-addons {

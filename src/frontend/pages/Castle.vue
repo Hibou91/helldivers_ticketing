@@ -30,7 +30,7 @@
 
         </div>
 
-        <BottomMenu name="castle" v-model:onHover="state.hover"></BottomMenu>
+        <BottomMenu name="castle" v-model:onHover="state.hover" v-model:clickValue="state.menu"></BottomMenu>
 
 
     </div>
@@ -57,7 +57,8 @@ const state = ref({
     hoveredLocale: {
         name: "",
         description: ''
-    }
+    },
+    menu: ""
 })
 
 onMounted(() => {
@@ -103,6 +104,14 @@ watch(() => state.value.hover, (newValue) => {
        
 
     }
+
+})
+
+watch(() => state.value.menu, (newValue) => {
+
+if (newValue != '') {
+    
+}
 
 })
 

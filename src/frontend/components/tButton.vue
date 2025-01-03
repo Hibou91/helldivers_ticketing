@@ -2,7 +2,8 @@
     <div class="button-main relative" @mouseover="onHover = true" @mouseleave="onHover = false">
         
        
-        <img src="../../../static/buttons/button standard bg.png" alt="" srcset="" width="150" class="absolute button-image" :class="{invisible: onHover == false, visible: onHover == true}">
+        <img src="../../../static/buttons/button standard bg.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
+    
         <div class="absolute transitionable width-100">
             <p class="auto-margin">
             
@@ -34,6 +35,18 @@ const onHover = ref(false)
 .button-image{
     top: 0;
     left: 0;
+}
+
+.button-main .button-image-bg{
+    filter: brightness(0.7);
+}
+
+.button-main:hover .button-image-bg{
+    filter: none;
+}
+
+.button-main:active .button-image-bg{
+    filter: brightness(1.3);
 }
 
 .auto-margin{

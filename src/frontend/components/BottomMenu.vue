@@ -4,24 +4,25 @@
 
             <div v-for="(button, index) in bottomMenuConfig[props.name].buttons" class="menu-long-frame-img"
                 :style="`rotate: ${state.maxAngle - (index * state.distance)}deg; animation-duration: ${(index + 1) * 0.5}s;`"
-                @mouseover="onHover = button.name" @mouseleave="onHover = ''" >
+                @mouseover="onHover = button.name" @mouseleave="onHover = ''">
                 <div v-if="button.isRouterLink == true">
-                    <RouterLink :to="button.to" class="relative">
-                        <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100"
-                            class="absolute">
-                        <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
-                            width="100" :class="{ 'absolute': onHover == button.name }">
+                    <RouterLink :to="button.to" class="relative ">
                         <img src="../../../static/buttons/eye button long bg.png" alt="" srcset="" width="100"
-                            v-if="onHover == button.name">
+                            :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
+                            class="menu-long-frame-img-bg-default absolute">
+                        <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
+                            width="100" class="absolute">
+                        <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100">
                     </RouterLink>
                 </div>
                 <div v-else>
-                    <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100"
-                        class="absolute" @click="clickValue = button.name">
-                    <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
-                        width="100" :class="{ 'absolute': onHover == button.name }">
                     <img src="../../../static/buttons/eye button long bg.png" alt="" srcset="" width="100"
-                        v-if="onHover == button.name">
+                        :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
+                        class="menu-long-frame-img-bg-default absolute" @click="clickValue = button.name">
+                    <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
+                        width="100" class="absolute">
+                    <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100">
+
                 </div>
 
 
@@ -79,14 +80,32 @@ state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state
     bottom: 0;
     transform-origin: 50% 100%;
     animation: rotateIn 1.5s ease-in-out;
-    z-index: 5;
+
+}
+
+.menu-long-frame-img-bg-default {
+    z-index: -10;
+    filter: brightness(0.7);
+
+}
+
+.bottom-menu-main:hover .menu-long-frame-img-bg {
+
+    filter: brightness(1);
+
+}
+
+.bottom-menu-main:active .menu-long-frame-img-bg {
+
+    filter: brightness(1.3);
+
 }
 
 .menu-panel {
     position: absolute;
     left: calc(50% - 145px);
     bottom: 0;
-    z-index: 10;
+
 }
 
 @keyframes rotateIn {

@@ -8,6 +8,50 @@ body {
   font-family: 'PirataOne-Regular', serif;
 }
 
+input{
+  border: none;
+  background-image: url("../static/generic ui/input round.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #000000;
+  height: 40px;
+  width: 200px;
+  padding-left: 5px;
+  color: #ffffff;
+}
+
+input:focus{
+  border: none;
+  outline: none;
+}
+
+select{
+  border: none;
+  background-image: url("../static/generic ui/input round.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #000000;
+  height: 40px;
+  width: 200px;
+  padding-left: 5px;
+  color: #ffffff;
+}
+
+select:focus{
+  border: none;
+  outline: none;
+}
+
+textarea{
+  background-color: #000000;
+  color: #ffffff;
+}
+
+textarea:focus{
+  border: none;
+  outline: none;
+}
+
 html{
   margin: 0;
   padding: 0;
@@ -40,7 +84,35 @@ a{
   position: relative;
 }
 
+.flex-col{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row{
+  display: flex;
+}
+
 @font-face {
   font-family: 'PirataOne-Regular';
   src: url('../static/fonts/PirataOne-Regular.ttf');
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
