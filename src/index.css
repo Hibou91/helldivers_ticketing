@@ -10,31 +10,40 @@ body {
 
 input{
   border: none;
-  background-image: url("../static/generic ui/input round.png");
-  background-size: contain;
+  background-image: url("../static/generic ui/input long.png");
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: #000000;
   height: 40px;
-  width: 200px;
-  padding-left: 5px;
+  width: 275px;
+  padding-left: 15px;
+  padding-right: 10px;
   color: #ffffff;
+  color-scheme: dark;
+  font-family: 'PirataOne-Regular', serif;
+  font-size: medium;
 }
 
 input:focus{
   border: none;
   outline: none;
+  
 }
+
+
 
 select{
   border: none;
-  background-image: url("../static/generic ui/input round.png");
-  background-size: contain;
+  background-image: url("../static/generic ui/input.png");
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: #000000;
   height: 40px;
-  width: 200px;
-  padding-left: 5px;
+  width: 185px;
+  padding-left: 15px;
   color: #ffffff;
+  font-family: 'PirataOne-Regular', serif;
+  font-size: medium;
 }
 
 select:focus{
@@ -45,6 +54,10 @@ select:focus{
 textarea{
   background-color: #000000;
   color: #ffffff;
+  border: none;
+  font-family: 'PirataOne-Regular', serif;
+  font-size: medium;
+  width: 300px;
 }
 
 textarea:focus{
@@ -76,6 +89,10 @@ a{
   width: fit-content;
 }
 
+.w-50{
+  width: 50%;
+}
+
 .absolute{
   position: absolute;
 }
@@ -91,6 +108,14 @@ a{
 
 .flex-row{
   display: flex;
+}
+
+.pointer-link{
+  cursor: pointer;
+}
+
+.mt-10{
+  margin-top: 10px;
 }
 
 @font-face {

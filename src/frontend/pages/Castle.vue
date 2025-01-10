@@ -24,9 +24,12 @@
             </RouterLink>
         </tMenu>
 
-        <div v-if="state.hover != ''">
-            <h2>{{ state.hoveredLocale.name }}</h2>
-            <p>{{ state.hoveredLocale.description }}</p>
+        <div v-if="state.hover == 'GARDEN' || state.hover == 'SALON' || state.hover == 'LIBRARY'" class="label-card">
+            <tCard>
+                <h2>{{ state.hoveredLocale.name }}</h2>
+                <p>{{ state.hoveredLocale.description }}</p>
+            </tCard>
+            
 
         </div>
 
@@ -46,6 +49,7 @@
 import tButton from '../components/tButton.vue';
 import tMenu from '../components/tMenu.vue';
 import BottomMenu from '../components/BottomMenu.vue';
+import tCard from '../components/tCard.vue';
 
 import { ref, watch, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
@@ -120,6 +124,12 @@ if (newValue != '') {
 </script>
 
 <style scoped>
+
+.label-card{
+    width: 30vW;
+    min-width: 400px;
+}
+
 .castle-bg {
     width: 100vw;
     height: 100vh;

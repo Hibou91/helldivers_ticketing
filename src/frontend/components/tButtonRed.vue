@@ -2,7 +2,7 @@
     <div class="button-main relative" @mouseover="onHover = true" @mouseleave="onHover = false">
         
        
-        <img src="../../../static/buttons/button standard bg yellow.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
+        <img src="../../../static/buttons/button standard bg red.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
     
         <div class="absolute transitionable width-100">
             <p class="auto-margin">

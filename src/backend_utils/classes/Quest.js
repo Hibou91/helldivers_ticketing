@@ -1,6 +1,8 @@
 import { ipcMain } from "electron";
 import fs from "node:fs/promises";
 import config from "../config";
+import genericUtils from "../utils/genericUtils";
+
 
 export default class Quest {
   constructor() {
@@ -9,6 +11,7 @@ export default class Quest {
 
   setUpHandlers() {
     ipcMain.handle("getAllQuests", (event, category) => this.getAllQuests(category));
+    ipcMain.handle("getQuestById", (event, category, id) => this.getQuestById(category, id));
     ipcMain.handle("postQuest", (event, category, data) => this.postQuest(category, data));
     ipcMain.handle("putQuest", (event, category, data) => this.putQuest(category, data));
     ipcMain.handle("deleteQuest", (event, category, data) => this.deleteQuest(category, data));
@@ -38,10 +41,7 @@ export default class Quest {
         return []
       }
 
-      data.forEach((e) => {
-        e.progressName = config.quests.progress[e.progress]
-        
-      })
+      
       return data;
     } catch (err) {
       return [];
@@ -56,9 +56,10 @@ export default class Quest {
     newQuest.title= questToPost.title;
     newQuest.description = questToPost.description;
     newQuest.priority = questToPost.priority;
-    newQuest.id = this.createId(quests)
+    newQuest.id = genericUtils.createId(quests)
     newQuest.created = Date.now();
     newQuest.progress = 0;
+    newQuest.waitingFor = questToPost.waitingFor
     quests.push(newQuest);
 
     let url =
@@ -86,6 +87,7 @@ export default class Quest {
         e.description = updateQuest.description
         e.priority = updateQuest.priority
         e.progress = updateQuest.progress
+        e.waitingFor = updateQuest.waitingFor
       }
     })
     
@@ -135,27 +137,27 @@ export default class Quest {
     return result;
   }
 
-  createId (array){
-    if(!array || array.length == 0){
-      return 1;
-    } 
-    let id = 1;
-    for(let i = 0; i < array.length; i++){
-      if(array[i].id > id){
-        id = array[i].id;
+  async getQuestById (category, id){
+    const data = await this.getAllQuestsData(category);
+
+    let i = 0;
+    let found = false;
+
+    while ( i < data.length && found == false){
+      if(data[i].id == id){
+        found = true;
+        return this.toFrontendDto(data[i])
       }
+      i++
     }
     
-    return ++id;
   }
 
   toFrontendDto (quest){
     quest.progressName = config.quests.progress[quest.progress]
     quest.priorityName = config.quests.priority[quest.priority]
-
     return quest;
   }
-
 
 
 }

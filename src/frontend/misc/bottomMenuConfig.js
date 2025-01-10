@@ -24,13 +24,13 @@ export default {
             {
                 name: '',
                 icon: "library",
-                isRouterLink: true,
+                isRouterLink: false,
                 to: "/"
             },
             {
                 name: '',
                 icon: "library",
-                isRouterLink: true,
+                isRouterLink: false,
                 to: "/"
             },
            
@@ -38,35 +38,22 @@ export default {
     },
     library:{
         buttons:[
+            
             {
-                name: "LIBRARY",
+                name: "LOCALE",
                 icon: "library",
-                isRouterLink: true,
-                to: "/library"
+                isRouterLink: false, 
             },
             {
-                name: "SALON", 
-                icon: "salon",
-                isRouterLink: true,
-                to: "/salon"
+                name: "KEEPER",
+                icon: "keeper",
+                isRouterLink: false, 
             },
+            
             {
-                name: "GARDEN",
-                icon: "garden",
-                isRouterLink: true,
-                to: "/garden"
-            },
-            {
-                name: '',
-                icon: "library",
-                isRouterLink: true,
-                to: "/"
-            },
-            {
-                name: '',
-                icon: "library",
-                isRouterLink: true,
-                to: "/"
+                name: "NEWQUEST",
+                icon: "newquest",
+                isRouterLink: false, 
             },
            
         ]

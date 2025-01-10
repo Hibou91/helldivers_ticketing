@@ -17,8 +17,35 @@ export default class Castle {
       config.locales.locales.garden.name,
       config.locales.locales.garden.category
     );
-    ipcMain.handle("getCastleData", (event, category) => this.getCastleData());
+
+    this.setUpHandlers();
+
     this.getCastleData();
+  }
+
+  setUpHandlers() {
+    ipcMain.handle("getCastleData", (event, category) => this.getCastleData());
+    ipcMain.handle("getLocaleData", (event, category) =>
+      this.getLocale(category)
+    );
+  }
+
+  getLocale(category) {
+    switch (category) {
+      case 0:
+        return this.library.getLocale()
+        break;
+      case 1:
+        return this.salon.getLocale()
+        break;
+      case 2:
+        return this.garden.getLocale()
+        break;
+
+      default:
+        return {};
+        break;
+    }
   }
 
   async getCastleData() {
@@ -33,13 +60,13 @@ export default class Castle {
           : process.env.HOME + "/.local/share");
       url += "/forge_first" + "/castle.json";
       const data = await fs.readFile(url, { encoding: "utf8" });
-      const castleData = JSON.parse.parse(data)
-      castleData.locales = config.locales.locales
-      return 
+      const castleData = JSON.parse.parse(data);
+      castleData.locales = config.locales.locales;
+      return;
     } catch (err) {
-      const castleData = {}
-      castleData.locales = config.locales.locales
-      return castleData
+      const castleData = {};
+      castleData.locales = config.locales.locales;
+      return castleData;
     }
   }
 
@@ -59,6 +86,4 @@ export default class Castle {
     });
     return result;
   }
-
-  
 }
