@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import { Notification } from "electron";
 
 import Notifications from "./Notifications";
+import Scavenges from "./Scavenges";
 
 export default class Scheduler {
   constructor() {
@@ -35,25 +36,17 @@ export default class Scheduler {
   }
 
   async checkScavenge() {
-    try {
-      let url =
-        process.env.APPDATA ||
-        (process.platform == "darwin"
-          ? process.env.HOME + "/Library/Preferences"
-          : process.env.HOME + "/.local/share");
-      url += "/forge_first" + "/scavenges.json";
-      const data = await fs.readFile(url, { encoding: "utf8" });
-      const scanvenges = JSON.parse(data);
+    const scanvenges = await Scavenges.getScavenges();
       const d = new Date();
       for (let i = 0; i < scanvenges.length; i++) {
         if (d >= scanvenges[i].time) {
           new Notification({
             title: this.scanvenges[i].title + " has finished",
-            body: this.notifications[i].time,
+            body: this.scanvenges[i].title,
           }).show();
+          Scavenges.finishScavenge(this.scanvenges[i].id)
         }
       }
-    } catch (err) {}
   }
 
   async checkNotifications() {

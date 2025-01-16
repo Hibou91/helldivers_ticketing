@@ -10,27 +10,31 @@
             </RouterLink>
 
         </tMenu>
-        <div v-if="state.openEditQuests == false"
+        <div v-if="state.openEditQuests == false && state.openScavenge == false && state.openNewQuests == false"
             class="tCardHolder">
             <div class="tCardHolderRow">
                 <tCard>
                     <h2>{{ config.namel }}</h2>
                     <h3>Level: 0</h3>
 
-
                 </tCard>
 
                 <tCard>
 
-
                     <div class="flex-row">
-                        <div class="w-50">
-                            <img :src="`../../../static/${config.model}/keeper/1.png`" alt="" height="200">
+                        <div class="w-50 ">
+                            <div class="relative">
+                                <img :src="`../../../static/buttons/round frame.png`" alt="" height="100" class="absolute">
+                                <img :src="`../../../static/icons/keepers/${config.category}.png`" alt="" height="100" >
+                            </div>
+                            <p>"{{ state.keeperDialog }}"</p>
+                            
 
                         </div>
                         <div class="w-50">
-                            <h2>Keeper</h2>
-                            <h3>Level: 0</h3>
+                            <h2>{{ state.keeper.config ? state.keeper.config.name : "" }}</h2>
+                            <h3>Level: {{ state.keeper.level ? state.keeper.level : 0 }}</h3>
+                            <tButton @click="state.openScavenge = true">Scavenge</tButton>
 
                         </div>
                     </div>
@@ -53,7 +57,7 @@
                     </div>
                     <div class="scroll-data pointer-link" @click="() => { openQuest(index) }">
                         <h3 >{{ quest.title }}</h3>
-                        <p>{{ quest.progressName }} <span v-if="quest.progress == 3">on {{ quest.waitingFor }}</span>
+                        <p>{{ quest.progressName }} <span v-if="quest.progress == 2">on {{ quest.waitingFor }}</span>
                         </p>
 
                     </div>
@@ -66,6 +70,7 @@
         </div>
 
         <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests" v-model:questId="state.editQuest" :category="config.category"></QuestEditor>
+        <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge"  :category="config.category"></Scavenge>
 
         <modal v-if="state.openNewQuests == true" v-model:modalOpen="state.openNewQuests">
             <div class="modal-form">
@@ -83,6 +88,10 @@
                     <option value="3">Fed Up</option>
                     <option value="4">Finished</option>
                 </select>
+                <div v-if="state.new.progress == 2">
+                    <p>Waiting for</p>
+                    <input type="text" v-model="state.new.waitingFor">
+                </div>
 
                 <p>Priority</p>
                 <select name="" id="" v-model="state.new.priority">
@@ -111,6 +120,7 @@ import modal from './modal.vue';
 import tCard from './tCard.vue';
 import BottomMenu from './BottomMenu.vue';
 import QuestEditor from './QuestEditor.vue';
+import Scavenge from './Scavenge.vue';
 
 
 import { ref, onMounted, watch } from 'vue';
@@ -125,7 +135,9 @@ const state = ref({
     openLocale: true,
     openScavenge: false,
     editQuest: 0,
-    menu: ""
+    keeper: {},
+    menu: "",
+    keeperDialog: '',
 });
 
 
@@ -145,6 +157,7 @@ state.value.new = {
 
 onMounted(() => {
     getAllQuests()
+    getKeeper()
 })
 
 //methods
@@ -175,12 +188,34 @@ const postQuests = async () => {
 
 }
 
+const getKeeper = async () => {
+    const response = await window.generic.getLocaleKeeperData(props.config.category)
+
+    state.value.keeper = response
+    console.log(state.value.keeper);
+    
+    state.value.keeperDialog = state.value.keeper.config.dialogs[Math.round(Math.random() * (state.value.keeper.config.dialogs.length - 1))]
+    console.log(state.value.keeperDialog);
+    
+
+
+}
+
 
 watch(() => state.value.menu, (newValue) => {
 
     if (newValue == "NEWQUEST") {
         state.value.openNewQuests = true;
     }
+    state.value.menu=""
+
+})
+
+watch(() => state.value.openEditQuests, (newValue) => {
+
+if (newValue == false) {
+   getAllQuests()
+}
 
 })
 
@@ -228,6 +263,7 @@ watch(() => state.value.menu, (newValue) => {
     height: calc(100% - 40px);
     max-height: calc(100% - 40px);
     transition: width 0.5 ease;
+    overflow-y: auto;
 }
 
 .scroll-panic {
@@ -258,7 +294,7 @@ watch(() => state.value.menu, (newValue) => {
     width: 100%;
     background-image: url("./static/icons/scrolls/scroll frame fade.png");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     padding-left: 20px;
 }
 </style>

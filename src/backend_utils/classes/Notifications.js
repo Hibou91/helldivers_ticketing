@@ -1,6 +1,7 @@
-import fs from "node:fs/promises";
+
 import { ipcMain } from "electron";
 import genericUtils from "../utils/genericUtils";
+import fileUtil from "../utils/fileUtil";
 
 export default class Notifications {
   constructor() {
@@ -12,7 +13,7 @@ export default class Notifications {
       Notifications.postNotification(questId, data)
     );
     ipcMain.handle("putNotification", (event, id, data) =>
-      this.putNotification(id, data)
+      Notifications.putNotification(id, data)
     );
     ipcMain.handle("deleteNotification", (event, id) =>
       Notifications.deleteNotification(id)
@@ -23,23 +24,11 @@ export default class Notifications {
   }
 
   static async getNotifications() {
-    try {
-      let url =
-        process.env.APPDATA ||
-        (process.platform == "darwin"
-          ? process.env.HOME + "/Library/Preferences"
-          : process.env.HOME + "/.local/share");
-      url += `/helldivers_ticketing/notifications.json`;
-      let data = await fs.readFile(url, { encoding: "utf8" });
-      data = JSON.parse(data);
-
-      if (!data || data == "") {
-        return [];
-      }
-
-      return data;
-    } catch (err) {
-      return [];
+    const notifications = await fileUtil.getFileData('notifications.json')
+    if(notifications == false){
+      return []
+    }else{
+      return notifications
     }
   }
 
@@ -52,26 +41,34 @@ export default class Notifications {
       if (notifications[i].id == id) {
         found = true;
         notifications.splice(i, 1);
-
-        let url =
-          process.env.APPDATA ||
-          (process.platform == "darwin"
-            ? process.env.HOME + "/Library/Preferences"
-            : process.env.HOME + "/.local/share");
-        url += `/helldivers_ticketing/notifications.json`;
-        let result = true;
-        await fs.writeFile(url, JSON.stringify(notifications), (err) => {
-          if (err) {
-            result = false;
-          }
-        });
       }
       i++;
     }
+
+    return await fileUtil.postFileData('notifications.json', notifications)
+
+  }
+
+  static async deleteQuestNotifications(id) {
+    let notifications = await this.getNotifications();
+
+    let i = 0;
+   
+    while (i < notifications.length ) {
+      if (notifications[i].questId == id) {
+        
+        notifications.splice(i, 1);
+        i--;
+      }
+      i++;
+    }
+
+    return await fileUtil.postFileData('notifications.json', notifications)
   }
 
   static async putNotification(id, data) {
     let notifications = await this.getNotifications();
+    const rawData = JSON.parse(data)
 
     let i = 0;
     let found = false;
@@ -79,25 +76,16 @@ export default class Notifications {
       if (notifications[i].id == id) {
         found = true;
 
-        notifications[i].title = data.title;
-        notifications[i].body = data.body;
-        notifications[i].time = data.time;
+        notifications[i].title = rawData.title;
+        notifications[i].body = rawData.body;
+        notifications[i].time = rawData.time;
 
-        let url =
-          process.env.APPDATA ||
-          (process.platform == "darwin"
-            ? process.env.HOME + "/Library/Preferences"
-            : process.env.HOME + "/.local/share");
-        url += `/helldivers_ticketing/notifications.json`;
-        let result = true;
-        await fs.writeFile(url, JSON.stringify(notifications), (err) => {
-          if (err) {
-            result = false;
-          }
-        });
+        
       }
       i++;
     }
+
+    return await fileUtil.postFileData('notifications.json', notifications)
   }
 
   static async postNotification(questId, data) {
@@ -114,20 +102,16 @@ export default class Notifications {
 
     notifications.push(newNotification);
 
-    let url =
-      process.env.APPDATA ||
-      (process.platform == "darwin"
-        ? process.env.HOME + "/Library/Preferences"
-        : process.env.HOME + "/.local/share");
-    url += `/helldivers_ticketing/notifications.json`;
-    let result = true;
-    await fs.writeFile(url, JSON.stringify(notifications), (err) => {
-      if (err) {
-        result = false;
-      }
-    });
+    const result = await fileUtil.postFileData('notifications.json', notifications)
+    console.log(result);
+    
+    if(result == true){
+      return newNotification;
+    }else{
+      return result
+    }
 
-    return newNotification;
+    
   }
 
   static async getNotificationsForQuest(questId) {

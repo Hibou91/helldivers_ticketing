@@ -17,12 +17,14 @@ contextBridge.exposeInMainWorld("questUtils", {
 });
 
 contextBridge.exposeInMainWorld("keeperUtils", {
-  startScavenge:() => ipcRenderer.invoke("startScavenge"),
-  cancelScavenge:(id) => ipcRenderer.invoke("startScavenge", id),
+  postScavenge:() => ipcRenderer.invoke("postScavenge", id),
+  deleteScavenge:(id) => ipcRenderer.invoke("deleteScavenge", id),
+  generateScavenges:(category) => ipcRenderer.invoke("generateScavenges", category),
 });
 
 contextBridge.exposeInMainWorld("generic", {
   getCastleData:() => ipcRenderer.invoke("getCastleData"),
   getLocaleData:() => ipcRenderer.invoke("getLocaleData", category),
+  getLocaleKeeperData:(category) => ipcRenderer.invoke("getLocaleKeeperData", category),
   quitProgram: () => ipcRenderer.invoke("quitProgram"),
 });

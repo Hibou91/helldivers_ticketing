@@ -30,6 +30,7 @@ const onHover = ref(false)
     display: flex;
     align-items: center;
     width: 150px;
+    left: -10px;
 }
 
 .button-image{

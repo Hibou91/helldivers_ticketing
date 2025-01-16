@@ -29,7 +29,7 @@
                 <h2>{{ state.hoveredLocale.name }}</h2>
                 <p>{{ state.hoveredLocale.description }}</p>
             </tCard>
-            
+
 
         </div>
 
@@ -72,7 +72,7 @@ onMounted(() => {
 
 const getCastleData = async () => {
     const response = await window.generic.getCastleData()
- 
+
     state.value.castleData = response
 
 
@@ -99,13 +99,13 @@ watch(() => state.value.hover, (newValue) => {
 
     if (newValue != '') {
         filcker();
-       
+
 
         state.value.hoveredLocale = state.value.castleData.locales[newValue.toLowerCase()] ? state.value.castleData.locales[newValue.toLowerCase()] : {
             name: "",
             description: ''
         }
-       
+
 
     }
 
@@ -113,9 +113,9 @@ watch(() => state.value.hover, (newValue) => {
 
 watch(() => state.value.menu, (newValue) => {
 
-if (newValue != '') {
-    
-}
+    if (newValue != '') {
+
+    }
 
 })
 
@@ -124,8 +124,7 @@ if (newValue != '') {
 </script>
 
 <style scoped>
-
-.label-card{
+.label-card {
     width: 30vW;
     min-width: 400px;
 }

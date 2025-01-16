@@ -1,76 +1,54 @@
 <template>
-    <div class="tCardHolder" >
 
-        <TCardClosable v-if="state.openEditQuests == true" v-model:modalOpen="state.openEditQuests" :closeMethod="cardCloseMethod">
+    <div class="tCardHolder" v-if="openPanel == true">
+
+        <TCardClosable v-model:modalOpen="openPanel" :closeMethod="() => { }">
             <div class="modal-form">
-                <p>Title</p>
-                <input type="text" v-model="state.editable.title">
-                <p>Category</p>
-                <input type="text" v-model="state.editable.category">
-                <p>Description</p>
-                <textarea type="text" v-model="state.editable.description"></textarea>
-                <p>Progress</p>
-                <select name="" id="" v-model="state.editable.progress">
-                    <option value="0">New</option>
-                    <option value="1">In Progress</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Fed Up</option>
-                    <option value="4">Finished</option>
-                </select>
-                <p>Priority</p>
-                <select name="" id="" v-model="state.editable.priority">
-                    <option value="0">Who Cares</option>
-                    <option value="1">Should be done</option>
-                    <option value="2">PANIC</option>
-                </select>
+
+
+                <div class="scavenge-main scavenge-bg">
+                </div>
+                <Transition name="scavenge-bg">
+                    <div v-if="state.hover == 'DUNGEONS'" class="scavenge-dungeons scavenge-bg" id="SCAVENGE_DUNGEONS">
+                    </div>
+                </Transition>
+                <Transition>
+                    <div v-if="state.hover == 'FOREST'" class="scavenge-forest scavenge-bg" id="SCAVENGE_FOREST">
+                    </div>
+                </Transition>
+                <Transition>
+                    <div v-if="state.hover == 'VILLAGE'" class="scavenge-village scavenge-bg" id="SCAVENGE_VILLAGE">
+                    </div>
+                </Transition>
             </div>
 
-
-            <tButton @click="putQuests">Save</tButton>
-            <tButtonRed @click="deleteQuests">Delete</tButtonRed>
-            <tButton @click="getNotifications">Notifications</tButton>
         </TCardClosable>
 
         <div class="tCardHolderRow">
-            <TCardClosable v-if="state.openNotifications == true" v-model:modalOpen="state.openNotifications" :closeMethod="cardCloseMethod">
-                <tButton @click="state.openNewNotifications = !state.openNewNotifications">{{
-                    state.openNewNotifications
-                        == true ? 'Close' : 'New Notification' }}</tButton>
-                <div v-if="state.openNewNotifications == true" class="modal-form">
-                    <div class="modal-form">
-                        <p>Title</p>
-                        <input type="text" v-model="state.newNotification.title">
-                        <p>Message</p>
-                        <input type="text" v-model="state.newNotification.body">
-                        <p>Time</p>
-                        <input type="datetime-local" v-model="state.newNotification.time">
+            <div class="scavenge-holder">
+                <div v-for="scavenge in state.generatedScavenges" v-bind:key="scavenge.id"
+                    @mouseover="state.hover = scavenge.typeModel" @mouseleave="state.hover = ''" class="scavenge-data-main ">
+                    <div class="scavenge-data-image" >
+                        <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
+                            class="scavenge-data-main">
+                        <tButtonRound class="scavenge-data-addons" :color="calculateDifficulty(scavenge.successRate)"> {{ scavenge.successRate }}</tButtonRound>
+                        
                     </div>
-
-                    <tButton @click="postNotification">Save</tButton>
-                </div>
-
-                <div>
-                    <div v-for="notification in state.notifications" v-bind:key="notification.id" class="pointer-link mt-10" @click="state.openEditNotifications = true; state.editNotification = notification" >
-                        <span>{{ notification.title }} {{ notification.time }}</span>
+                    <div class="scavenge-data pointer-link" >
+                        
+                            {{ scavenge.targetName }} quest in the {{ scavenge.typeName }}
+                        <tButton >Start </tButton>
                     </div>
+                    
                 </div>
 
-            </TCardClosable>
 
-            <TCardClosable v-if="state.openEditNotifications == true" v-model:modalOpen="state.openEditNotifications" :closeMethod="cardCloseMethod">
-                <div class="modal-form">
-                    <p>Title</p>
-                    <input type="text" v-model="state.editNotification.title">
-                    <p>Message</p>
-                    <input type="text" v-model="state.editNotification.body">
-                    <p>Time</p>
-                    <input type="datetime-local" v-model="state.editNotification.time">
-                </div>
+            </div>
 
-                <tButton @click="postNotification">Save</tButton>
-                <tButtonRed @click="deleteNotification">Delete</tButtonRed>
+            <tCard>
 
-            </TCardClosable>
+
+            </tCard>
 
         </div>
 
@@ -81,132 +59,81 @@
 
 <script setup>
 import TCardClosable from './tCardClosable.vue'
+import tCard from './tCard.vue'
 import tButton from './tButton.vue'
 import tButtonRed from './tButtonRed.vue'
+import tButtonRound from './tButtonRound.vue'
 
-import {ref, onMounted} from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import TButtonRound from './tButtonRound.vue'
 
 
 const openPanel = defineModel('openPanel')
-const questId = defineModel('questId')
 const props = defineProps(['category'])
 
 const state = ref({
-    openEditQuests: true,
-    openNotifications: false,
-    openNewNotifications: false,
-    openEditNotifications: false,
+    generatedScavenges: [],
+    scavengeAction: '',
+    hover: '',
 })
 
-state.value.editable = {
-    title: "test01",
-    category: 0,
-    description: "test",
-    progress: "1",
-    priority: "1",
-    waitingFor: "",
-}
 
-state.value.newNotification = {
-    title: "test01 notification",
-    body: 0,
-    time: '',
-}
-
-state.value.editNotification = {
-    id: '',
-    title: "",
-    body: '',
-    time: '',
-}
 
 onMounted(() => {
-    getQuest()
+    generateScavenge()
 })
 
-const getQuest = async () => {
-    const response = await window.questUtils.getQuestById(props.category, questId.value)
+const generateScavenge = async () => {
 
-    state.value.editable = response
-
-
-}
-
-const putQuests = async () => {
+    let rawData = await window.keeperUtils.generateScavenges(props.category)
+    console.log(rawData);
+    state.value.generatedScavenges = rawData.scavenges
+    state.value.scavengeAction = rawData.action
+    console.log(state.value.generatedScavenges);
     
 
-    const response = await window.questUtils.putQuest(props.category, JSON.stringify(state.value.editable))
-    if (response != false) {
-
-        //state.value.openEditQuests = false
-    }
-
 }
 
-const deleteQuests = async () => {
-    
-
-    const response = await window.questUtils.deleteQuest(props.category, JSON.stringify(state.value.editable))
-    if (response != false) {
-        state.value.quests.forEach((element, index) => {
-            if (element.id == state.value.editable.id) {
-                state.value.quests.splice(index, 1)
-            }
-        });
-        state.value.openEditQuests = false
-    }
-
-}
-
-const getNotifications = async () => {
-    const response = await window.questUtils.getNotificationsForQuest(state.value.editable.id)
-
-    state.value.notifications = response;
-    state.value.openNotifications = true;
-}
-
-const postNotification = async () => {
-    console.log(state.value.newNotification)
-    const response = await window.questUtils.postNotification(state.value.editable.id, JSON.stringify(state.value.newNotification))
-    if (response != false) {
-        state.value.notifications.push(response)
-    }
-
-}
-
-const deleteNotification = async () => {
-    //state.value.quests.push(state.value.new)
-
-    const response = await window.questUtils.deleteNotification(state.value.editNotification.id)
-    if (response != false) {
-        state.value.notifications.forEach((element, index) => {
-            if (element.id == id) {
-                state.value.notifications.splice(index, 1)
-            }
-        });
-    }
-
-}
-
-const cardCloseMethod = () => {
-
-    const varArray = ['openEditQuests', 'openNotifications', 'openEditNotifications']
-    let lever = 0
-    for (let i = 0; i < varArray.length; i++) {
-        if(state.value[varArray[i]] == false){
-            lever++;
-        }
-    }
-
-    if(lever >= varArray.length){
-        openPanel.value = false
+const calculateDifficulty = (successRate) => {
+    if(successRate < 33){
+        return "RED"
+    }else if(successRate > 33 && successRate < 66){
+        return "YELLOW"
+    }else{
+        return "GREEN"
     }
 }
+
+const filcker = () => {
+
+    if (state.value.hover == '') {
+        return;
+    }
+
+    if (document.querySelector(`#SCAVENGE_${state.value.hover}`)) {
+        document.querySelector(`#SCAVENGE_${state.value.hover}`).style.opacity = Math.random() + 0.2;
+    }
+
+    setTimeout(filcker, Math.random() * 900)
+}
+
+
+
+watch(() => state.value.hover, (newValue) => {
+
+    if (newValue != '') {
+        filcker();
+
+    }
+
+})
+
+
+
 
 </script>
 
 <style>
-
 .tCardHolder {
     display: flex;
     flex-direction: row;
@@ -226,4 +153,89 @@ const cardCloseMethod = () => {
     margin-bottom: 20px;
 }
 
+.scavenge-bg {
+    width: calc(100% - 80px - 100px);
+    ;
+    height: calc(100% - 80px);
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+
+}
+
+.scavenge-main {
+    background-image: url("./static/scavenge/main map.png");
+    z-index: 9;
+}
+
+.scavenge-dungeons {
+    background-image: url("./static/scavenge/map dungeons.png");
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.scavenge-forest {
+    background-image: url("./static/scavenge/map forest.png");
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.scavenge-village {
+    background-image: url("./static/scavenge/map village.png");
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.scavenge-bg-enter-active,
+.scavenge-bg-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.scavenge-bg-enter-from,
+.scavenge-bg-leave-to {
+    opacity: 0;
+}
+
+.scavenge-holder {
+    margin: 20px;
+    background-color: rgba(0, 0, 0, .7);
+    min-width: 0;
+    min-height: 0;
+    max-width: calc(100% - 40px);
+    width: 100%;
+    height: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+    transition: width 0.5 ease;
+    overflow-y: auto;
+}
+
+.scavenge-data {
+    height: 60px;
+    width: calc(100% - 40px);
+    background-image: url("./static/icons/scrolls/scroll frame fade.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 20px;
+}
+
+.scavenge-data-main {
+
+display: flex;
+flex-direction: row;
+
+}
+
+.scavenge-data-image {
+position: relative;
+width: fit-content;
+
+}
+
+.scavenge-data-addons {
+position: absolute;
+top: 0;
+left: 0;
+}
 </style>

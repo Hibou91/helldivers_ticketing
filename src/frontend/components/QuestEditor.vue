@@ -1,7 +1,8 @@
 <template>
-    <div class="tCardHolder" >
+    <div class="tCardHolder">
 
-        <TCardClosable v-if="state.openEditQuests == true" v-model:modalOpen="state.openEditQuests" :closeMethod="cardCloseMethod">
+        <TCardClosable v-if="state.openEditQuests == true" v-model:modalOpen="state.openEditQuests"
+            :closeMethod="cardCloseMethod">
             <div class="modal-form">
                 <p>Title</p>
                 <input type="text" v-model="state.editable.title">
@@ -17,6 +18,11 @@
                     <option value="3">Fed Up</option>
                     <option value="4">Finished</option>
                 </select>
+                <div v-if="state.editable.progress == 2">
+                    <p>Waiting for</p>
+                    <input type="text" v-model="state.editable.waitingFor">
+                </div>
+
                 <p>Priority</p>
                 <select name="" id="" v-model="state.editable.priority">
                     <option value="0">Who Cares</option>
@@ -31,8 +37,9 @@
             <tButton @click="getNotifications">Notifications</tButton>
         </TCardClosable>
 
-        <div class="tCardHolderRow">
-            <TCardClosable v-if="state.openNotifications == true" v-model:modalOpen="state.openNotifications" :closeMethod="cardCloseMethod">
+        <div class="tCardHolderRow" v-if="state.openNotifications == true || state.openEditNotifications == true">
+            <TCardClosable v-if="state.openNotifications == true" v-model:modalOpen="state.openNotifications"
+                :closeMethod="cardCloseMethod">
                 <tButton @click="state.openNewNotifications = !state.openNewNotifications">{{
                     state.openNewNotifications
                         == true ? 'Close' : 'New Notification' }}</tButton>
@@ -50,14 +57,17 @@
                 </div>
 
                 <div>
-                    <div v-for="notification in state.notifications" v-bind:key="notification.id" class="pointer-link mt-10" @click="state.openEditNotifications = true; state.editNotification = notification" >
-                        <span>{{ notification.title }} {{ notification.time }}</span>
+                    <div v-for="notification in state.notifications" v-bind:key="notification.id"
+                        class="pointer-link mt-10"
+                        @click="state.openEditNotifications = true; state.editNotification = notification">
+                        <span>{{ notification.id }} {{ notification.title }} {{ notification.time }}</span>
                     </div>
                 </div>
 
             </TCardClosable>
 
-            <TCardClosable v-if="state.openEditNotifications == true" v-model:modalOpen="state.openEditNotifications" :closeMethod="cardCloseMethod">
+            <TCardClosable v-if="state.openEditNotifications == true" v-model:modalOpen="state.openEditNotifications"
+                :closeMethod="cardCloseMethod">
                 <div class="modal-form">
                     <p>Title</p>
                     <input type="text" v-model="state.editNotification.title">
@@ -67,7 +77,7 @@
                     <input type="datetime-local" v-model="state.editNotification.time">
                 </div>
 
-                <tButton @click="postNotification">Save</tButton>
+                <tButton @click="putNotification">Save</tButton>
                 <tButtonRed @click="deleteNotification">Delete</tButtonRed>
 
             </TCardClosable>
@@ -84,7 +94,7 @@ import TCardClosable from './tCardClosable.vue'
 import tButton from './tButton.vue'
 import tButtonRed from './tButtonRed.vue'
 
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 
 
 const openPanel = defineModel('openPanel')
@@ -133,7 +143,7 @@ const getQuest = async () => {
 }
 
 const putQuests = async () => {
-    
+
 
     const response = await window.questUtils.putQuest(props.category, JSON.stringify(state.value.editable))
     if (response != false) {
@@ -144,15 +154,10 @@ const putQuests = async () => {
 }
 
 const deleteQuests = async () => {
-    
+
 
     const response = await window.questUtils.deleteQuest(props.category, JSON.stringify(state.value.editable))
     if (response != false) {
-        state.value.quests.forEach((element, index) => {
-            if (element.id == state.value.editable.id) {
-                state.value.quests.splice(index, 1)
-            }
-        });
         state.value.openEditQuests = false
     }
 
@@ -166,11 +171,18 @@ const getNotifications = async () => {
 }
 
 const postNotification = async () => {
-    console.log(state.value.newNotification)
+
     const response = await window.questUtils.postNotification(state.value.editable.id, JSON.stringify(state.value.newNotification))
     if (response != false) {
         state.value.notifications.push(response)
     }
+
+}
+
+const putNotification = async () => {
+    console.log(state.value.editNotification)
+    const response = await window.questUtils.putNotification(state.value.editNotification.id, JSON.stringify(state.value.editNotification))
+
 
 }
 
@@ -181,7 +193,10 @@ const deleteNotification = async () => {
     if (response != false) {
         state.value.notifications.forEach((element, index) => {
             if (element.id == id) {
+                state.value.editNotification = {}
+                state.value.openEditNotifications = false
                 state.value.notifications.splice(index, 1)
+
             }
         });
     }
@@ -193,12 +208,12 @@ const cardCloseMethod = () => {
     const varArray = ['openEditQuests', 'openNotifications', 'openEditNotifications']
     let lever = 0
     for (let i = 0; i < varArray.length; i++) {
-        if(state.value[varArray[i]] == false){
+        if (state.value[varArray[i]] == false) {
             lever++;
         }
     }
 
-    if(lever >= varArray.length){
+    if (lever >= varArray.length) {
         openPanel.value = false
     }
 }
@@ -206,7 +221,6 @@ const cardCloseMethod = () => {
 </script>
 
 <style>
-
 .tCardHolder {
     display: flex;
     flex-direction: row;
@@ -225,5 +239,4 @@ const cardCloseMethod = () => {
 .modal-form {
     margin-bottom: 20px;
 }
-
 </style>
