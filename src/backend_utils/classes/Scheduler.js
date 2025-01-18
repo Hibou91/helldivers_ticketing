@@ -21,7 +21,7 @@ export default class Scheduler {
       clearInterval(this.scheduleSeconds);
     }
     const d = new Date();
-    
+
     if (d.getSeconds() % 10 == 0) {
       clearInterval(this.scheduleSeconds);
       this.scheduleMinutes = setInterval(() => {
@@ -37,34 +37,39 @@ export default class Scheduler {
 
   async checkScavenge() {
     const scanvenges = await Scavenges.getScavenges();
-      const d = new Date();
-      for (let i = 0; i < scanvenges.length; i++) {
-        if (d >= scanvenges[i].time) {
-          new Notification({
-            title: this.scanvenges[i].title + " has finished",
-            body: this.scanvenges[i].title,
-          }).show();
-          Scavenges.finishScavenge(this.scanvenges[i].id)
-        }
+    const d = new Date();
+    for (let i = 0; i < scanvenges.length; i++) {
+      if (scanvenges[i].state != "ACTIVE") {
+        continue;
       }
+      const dValue = new Date(scanvenges[i].time);
+      if (d >= dValue) {
+        new Notification({
+          title: scanvenges[i] + " has finished",
+          body: scanvenges[i].time,
+        }).show();
+        const finished = await Scavenges.finishScavenge(scanvenges[i].id);
+        new Notification({
+          title: `${finished.targetName} quest in the ${ scavenge.typeName }`,
+          body: ` has finished with ${finished.success == true ? "success" : "faliure"}!`,
+        }).show();
+      }
+    }
   }
 
   async checkNotifications() {
-    const notifications = Notifications.getNotifications();
+    const notifications = await Notifications.getNotifications();
     const d = new Date();
 
     for (let i = 0; i < notifications.length; i++) {
-        if (d >= notifications[i].time) {
-          new Notification({
-            title: this.notifications[i].title,
-            body: this.notifications[i].time,
-          }).show();
+      if (d >= notifications[i].time) {
+        new Notification({
+          title: this.notifications[i].title,
+          body: this.notifications[i].time,
+        }).show();
 
-          
-          Notifications.deleteNotification(notifications[i].id)
-          
-        }
+        Notifications.deleteNotification(notifications[i].id);
       }
-
+    }
   }
 }

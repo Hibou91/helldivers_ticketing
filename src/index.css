@@ -24,6 +24,8 @@ input{
   font-size: medium;
 }
 
+
+
 input:focus{
   border: none;
   outline: none;
@@ -108,6 +110,7 @@ a{
 
 .flex-row{
   display: flex;
+  flex-direction: row;
 }
 
 .pointer-link{

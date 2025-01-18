@@ -17,14 +17,21 @@ contextBridge.exposeInMainWorld("questUtils", {
 });
 
 contextBridge.exposeInMainWorld("keeperUtils", {
-  postScavenge:() => ipcRenderer.invoke("postScavenge", id),
+  postScavenge:(id) => ipcRenderer.invoke("postScavenge", id),
   deleteScavenge:(id) => ipcRenderer.invoke("deleteScavenge", id),
   generateScavenges:(category) => ipcRenderer.invoke("generateScavenges", category),
 });
 
+contextBridge.exposeInMainWorld("localeUtils", {
+  getQuestCategoryData:(category) => ipcRenderer.invoke("getQuestCategoryData", category),
+  postQuestCategoryData:(category, data) => ipcRenderer.invoke("postQuestCategoryData", category, data),
+  putQuestCategoryData:(category, id, data) => ipcRenderer.invoke("putQuestCategoryData", category, id, data),
+  deleteQuestCategoryData:(category, id) => ipcRenderer.invoke("deleteQuestCategoryData", category,  id),
+});
+
 contextBridge.exposeInMainWorld("generic", {
   getCastleData:() => ipcRenderer.invoke("getCastleData"),
-  getLocaleData:() => ipcRenderer.invoke("getLocaleData", category),
+  getLocaleData:(category) => ipcRenderer.invoke("getLocaleData", category),
   getLocaleKeeperData:(category) => ipcRenderer.invoke("getLocaleKeeperData", category),
   quitProgram: () => ipcRenderer.invoke("quitProgram"),
 });

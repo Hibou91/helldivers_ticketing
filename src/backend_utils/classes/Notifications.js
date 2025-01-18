@@ -103,7 +103,7 @@ export default class Notifications {
     notifications.push(newNotification);
 
     const result = await fileUtil.postFileData('notifications.json', notifications)
-    console.log(result);
+
     
     if(result == true){
       return newNotification;

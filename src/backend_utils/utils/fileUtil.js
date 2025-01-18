@@ -11,12 +11,12 @@ export default {
           : process.env.HOME + "/.local/share");
       url += `/helldivers_ticketing/${fileName}`;
       let data = await fs.readFile(url, { encoding: "utf8" });
-      data = JSON.parse(data);
+      
 
       if (!data || data == "") {
         return false;
       }
-
+      data = JSON.parse(data);
       return data;
     } catch (err) {
       return false;

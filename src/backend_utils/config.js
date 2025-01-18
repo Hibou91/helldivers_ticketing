@@ -24,63 +24,19 @@ export default {
         name: "Library",
         description: "A place for representation and carier.",
         category: 0,
-        questCategories: [
-          {
-            id: 0,
-            label: 'Graphics',
-            color: '#00ff55'
-          },
-          {
-            id: 1,
-            label: 'Development',
-            color: '#ff0000'
-          },
-        ]
+        
       },
       salon: {
         name: "Salon",
         description: "A cosy room for family and private matters.",
         category: 1,
-        questCategories: [
-          {
-            id: 0,
-            label: 'Family',
-            color: '#00ff55'
-          },
-          {
-            id: 1,
-            label: 'Bikers',
-            color: '#00ff55'
-          },
-          {
-            id: 2,
-            label: 'Hikers',
-            color: '#00ff55'
-          },
-         
-        ]
+        
       },
       garden: {
         name: "Garden",
         description: "The flourishing world of creativity and hobbies",
         category: 2,
-        questCategories: [
-          {
-            id: 0,
-            label: 'Art',
-            color: '#00ff55'
-          },
-          {
-            id: 1,
-            label: 'Development',
-            color: '#00ff55'
-          },
-          {
-            id: 2,
-            label: 'Geeking',
-            color: '#00ff55'
-          },
-        ]
+        
       },
     },
     keepers:{
@@ -141,29 +97,16 @@ export default {
       {
         place: "Dungeons",
         materials: {
-          paper: {
-            name: "Paper",
-            occurrence: "0.1",
-          },
+          
         },
       },
       {
         place: "Village",
-        materials: {
-          silk: {
-            name: "Silk",
-            occurrence: "0.1",
-          },
-        },
+       
       },
       {
         place: "Forest",
-        materials: {
-          paper: {
-            wood: "Wood",
-            occurrence: "0.1",
-          },
-        },
+        
       },
       
       
@@ -184,17 +127,40 @@ export default {
     ],
     materials: {
       anima: {
+        name: "Anima",
         occurrence: 0.8,
         countmin: 5,
         countmax: 10,
         keeperbonus: 0,
       },
       experience: {
+        name: "Experience",
         occurrence: 1,
         countmin: 5,
         countmax: 10,
         keeperbonus: 0,
-      }
+      },
+      wood: {
+        name: "Wood",
+        occurrence: 0.1,
+        countmin: 5,
+        countmax: 10,
+        category: 2
+      },
+      silk: {
+        name: "Silk",
+        occurrence: 0.1,
+        countmin: 5,
+        countmax: 10,
+        category: 1
+      },
+      paper: {
+        name: "Paper",
+        occurrence: 0.1,
+        countmin: 5,
+        countmax: 10,
+        category: 0
+      },
     }
   },
 };

@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import { ipcMain } from "electron";
 import genericUtils from "../utils/genericUtils";
 import config from "../config";
@@ -20,27 +19,15 @@ export default class Scavenges {
   }
 
   static async getScavenges() {
-    try {
-      let url =
-        process.env.APPDATA ||
-        (process.platform == "darwin"
-          ? process.env.HOME + "/Library/Preferences"
-          : process.env.HOME + "/.local/share");
-      url += `/helldivers_ticketing/scavenges.json`;
-      let data = await fs.readFile(url, { encoding: "utf8" });
-      data = JSON.parse(data);
-
-      if (!data || data == "") {
-        return [];
-      }
-
-      return data;
-    } catch (err) {
+    const data = await fileUtil.getFileData(`scavenges.json`);
+    if (data == false) {
       return [];
+    } else {
+      return data;
     }
   }
 
-  static async getScavengesConditional(category, state) {
+  static async getScavengesForCategoryState(category, state) {
     const scavenges = await Scavenges.getScavenges();
 
     const result = [];
@@ -54,7 +41,7 @@ export default class Scavenges {
     return result;
   }
 
-  static async getScavengesConditional(category) {
+  static async getScavengesForCategory(category) {
     const scavenges = await Scavenges.getScavenges();
 
     const result = [];
@@ -69,7 +56,7 @@ export default class Scavenges {
   }
 
   async getScavengesforFrontend(category) {
-    const scavenges = await Scavenges.getScavengesConditional(category);
+    const scavenges = await Scavenges.getScavengesForCategory(category);
 
     const result = {
       action: "",
@@ -84,26 +71,27 @@ export default class Scavenges {
     if (scavenges.length == 1) {
       if (scavenges[0].state == "ACTIVE") {
         result.action = "ACTIVE";
-        result.scavenges.push(this.toFrontendDto(scavenges[0]));
+        result.scavenges = [this.toFrontendDto(scavenges[0])];
         return result;
       } else if (scavenges[0].state == "FINISHED") {
         result.action = "FINISHED";
-        result.scavenges.push(this.toFrontendDto(scavenges[0]));
+        result.scavenges = [this.toFrontendDto(scavenges[0])];
         return result;
       }
     }
 
     let d = new Date();
-      if (d.getMinutes() != scavenges[0].generationTime.getMinutes()) {
-        Scavenges.deleteScavengesConditional(category, "generated");
-        result.action = "GENERATE";
-        result.scavenges = this.generateScavenges(category);
-        return result;
-      } else {
-        result.action = "GENERATE";
-        result.scavenges.push(this.toFrontendDto(scavenges[0]));
-        return result;
-      }
+    let dValue = new Date(scavenges[0].generationTime);
+    if (d.getMinutes() != dValue.getMinutes()) {
+      await Scavenges.deleteScavengesConditional(category, "GENERATED");
+      result.action = "GENERATE";
+      result.scavenges = await this.generateScavenges(category);
+      return result;
+    } else {
+      result.action = "GENERATE";
+      result.scavenges = scavenges;
+      return result;
+    }
   }
 
   static async deleteScavengesConditional(category, state) {
@@ -143,19 +131,21 @@ export default class Scavenges {
     let category;
 
     while (i < scavenges.length && found == false) {
-      if (scavenges.id == id) {
+      if (scavenges[i].id == id) {
         found = true;
-        (scavenges[i].state = "ACTIVE"), (scavenges[i].time = new Date());
+        scavenges[i].state = "ACTIVE";
+        scavenges[i].time = new Date();
         scavenges[i].time.setTime(
           scavenges[i].time.getTime() +
             scavenges[i].duration /* * 60 * 60*/ * 1000
         );
         category = scavenges[i].category;
-        return await fileUtil.postFileData("scavenges.json", scavenges);
+        await fileUtil.postFileData("scavenges.json", scavenges);
       }
       i++;
     }
-    Scavenges.deleteScavengesConditional(category, "generated");
+    Scavenges.deleteScavengesConditional(category, "GENERATED");
+    return found;
   }
 
   static async finishScavenge(id) {
@@ -165,19 +155,64 @@ export default class Scavenges {
     let found = false;
 
     while (i < scavenges.length && found == false) {
-      if (scavenges.id == id) {
+      if (scavenges[i].id == id) {
         found = true;
         scavenges[i].state = "FINISHED";
-        scavenges[i].success = Math.random() * 100 > scavenges[i].successRate;
-        return await fileUtil.postFileData("scavenges.json", scavenges);
+        scavenges[i].success = Math.random() * 100 < scavenges[i].successRate;
+        scavenges[i].loot = [];
+        if (scavenges[i].success == true) {
+          for (const [key, material] of Object.entries(
+            config.scavenges.materials
+          )) {
+            if (
+              material.category == undefined ||
+              cmaterial.category == scavenges[i].category
+            ) {
+              if (Math.random() < material.occurrence) {
+                scavenges[i].loot.push({
+                  name: material.name,
+                  count: Math.round(
+                    Math.random() * (material.countmax - material.countmin) +
+                      material.countmin
+                  ),
+                });
+              }
+            }
+          }
+        } else {
+          scavenges[i].loot.push({
+            name: config.scavenges.materials.experience.name,
+            count: Math.round(
+              (Math.random() *
+                (config.scavenges.materials.experience.countmax -
+                  config.scavenges.materials.experience.countmin) +
+                config.scavenges.materials.experience.countmin) /
+                2
+            ),
+          });
+          scavenges[i].loot.push({
+            name: config.scavenges.materials.anima.name,
+            count: Math.round(
+              (Math.random() *
+                (config.scavenges.materials.anima.countmax -
+                  config.scavenges.materials.anima.countmin) +
+                config.scavenges.materials.anima.countmin) /
+                2
+            ),
+          });
+        }
+
+        fileUtil.postFileData("scavenges.json", scavenges);
+        return this.toFrontendDto(scavenges[i]);
       }
       i++;
     }
+    return false;
   }
 
   async generateScavenges(category) {
     const scavenges = await Scavenges.getScavenges();
-    this.generatedScavenges = [];
+    const generatedScavenges = [];
     for (let i = 0; i < 3; i++) {
       const newScavenge = {
         category: category,
@@ -215,12 +250,12 @@ export default class Scavenges {
           newScavenge.keeperbonus,
         100
       );
-      this.generatedScavenges.push(this.toFrontendDto(newScavenge));
+      generatedScavenges.push(this.toFrontendDto(newScavenge));
       scavenges.push(newScavenge);
     }
 
     fileUtil.postFileData(`scavenges.json`, scavenges);
-    return this.generatedScavenges;
+    return generatedScavenges;
   }
 
   toFrontendDto(scavenge) {

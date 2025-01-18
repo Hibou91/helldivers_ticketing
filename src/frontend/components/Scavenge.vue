@@ -37,7 +37,7 @@
                     <div class="scavenge-data pointer-link" >
                         
                             {{ scavenge.targetName }} quest in the {{ scavenge.typeName }}
-                        <tButton >Start </tButton>
+                        <tButton @click="() => {postScavenge(scavenge.id)}">Start </tButton>
                     </div>
                     
                 </div>
@@ -61,7 +61,7 @@
 import TCardClosable from './tCardClosable.vue'
 import tCard from './tCard.vue'
 import tButton from './tButton.vue'
-import tButtonRed from './tButtonRed.vue'
+
 import tButtonRound from './tButtonRound.vue'
 
 import { ref, onMounted, watch } from 'vue'
@@ -84,15 +84,20 @@ onMounted(() => {
 })
 
 const generateScavenge = async () => {
-
+    
     let rawData = await window.keeperUtils.generateScavenges(props.category)
-    console.log(rawData);
+
     state.value.generatedScavenges = rawData.scavenges
     state.value.scavengeAction = rawData.action
-    console.log(state.value.generatedScavenges);
     
-
 }
+
+const postScavenge = async (id) => {
+    let rawData = await window.keeperUtils.postScavenge(id)
+    generateScavenge(props.category)
+}
+
+//utils
 
 const calculateDifficulty = (successRate) => {
     if(successRate < 33){

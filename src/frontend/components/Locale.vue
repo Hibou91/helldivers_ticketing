@@ -10,7 +10,7 @@
             </RouterLink>
 
         </tMenu>
-        <div v-if="state.openEditQuests == false && state.openScavenge == false && state.openNewQuests == false"
+        <div v-if="state.openEditQuests == false && state.openScavenge == false && state.openNewQuests == false && state.openCategories == false"
             class="tCardHolder">
             <div class="tCardHolderRow">
                 <tCard>
@@ -24,11 +24,12 @@
                     <div class="flex-row">
                         <div class="w-50 ">
                             <div class="relative">
-                                <img :src="`../../../static/buttons/round frame.png`" alt="" height="100" class="absolute">
-                                <img :src="`../../../static/icons/keepers/${config.category}.png`" alt="" height="100" >
+                                <img :src="`../../../static/buttons/round frame.png`" alt="" height="100"
+                                    class="absolute">
+                                <img :src="`../../../static/icons/keepers/${config.category}.png`" alt="" height="100">
                             </div>
                             <p>"{{ state.keeperDialog }}"</p>
-                            
+
 
                         </div>
                         <div class="w-50">
@@ -45,7 +46,7 @@
                 <div v-for="(quest, index) in state.quests" class="scroll-main scroll-main-frame">
                     <div class="scroll-image" :class="{ 'scroll-panic': quest.priority == 2 }">
                         <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
-                            class="scroll-main">
+                            class="scroll-main" :style="getFrameColor(quest.questCategory)">
                         <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
                             class="scroll-addons">
                         <img v-if="quest.priority == 0" src="../../../static/icons/scrolls/seal blue.png" alt=""
@@ -55,10 +56,15 @@
                         <img v-if="quest.priority == 2" src="../../../static/icons/scrolls/seal red.png" alt=""
                             width="100" height="100" class="scroll-addons">
                     </div>
-                    <div class="scroll-data pointer-link" @click="() => { openQuest(index) }">
-                        <h3 >{{ quest.title }}</h3>
-                        <p>{{ quest.progressName }} <span v-if="quest.progress == 2">on {{ quest.waitingFor }}</span>
-                        </p>
+                    <div class="scroll-data pointer-link" @click="() => { openQuest(index) }"
+                        :style="getFrameColor(quest.questCategory)">
+                        <div>
+                            <h3>{{ quest.title }}</h3>
+                            <p>{{ quest.progressName }} <span v-if="quest.progress == 2">on {{ quest.waitingFor
+                                    }}</span>
+                            </p>
+                        </div>
+
 
                     </div>
 
@@ -69,15 +75,22 @@
 
         </div>
 
-        <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests" v-model:questId="state.editQuest" :category="config.category"></QuestEditor>
-        <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge"  :category="config.category"></Scavenge>
+        <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests"
+            v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories">
+        </QuestEditor>
+        <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category">
+        </Scavenge>
+        <QuestCategories v-if="state.openCategories == true" v-model:openPanel="state.openCategories"
+            :category="config.category"></QuestCategories>
 
         <modal v-if="state.openNewQuests == true" v-model:modalOpen="state.openNewQuests">
             <div class="modal-form">
                 <p>Title</p>
                 <input type="text" v-model="state.new.title">
                 <p>Category</p>
-                <input type="text" v-model="state.new.category">
+                <select name="" id="" v-model="state.new.questCategory">
+                    <option v-for="cat in state.questCategories" :value="cat.id">{{ cat.name }}</option>
+                </select>
                 <p>Description</p>
                 <textarea type="text" v-model="state.new.description"></textarea>
                 <p>Progress</p>
@@ -121,6 +134,7 @@ import tCard from './tCard.vue';
 import BottomMenu from './BottomMenu.vue';
 import QuestEditor from './QuestEditor.vue';
 import Scavenge from './Scavenge.vue';
+import QuestCategories from './QuestCategories.vue';
 
 
 import { ref, onMounted, watch } from 'vue';
@@ -134,10 +148,12 @@ const state = ref({
     openKeeper: true,
     openLocale: true,
     openScavenge: false,
+    openCategories: false,
     editQuest: 0,
     keeper: {},
     menu: "",
     keeperDialog: '',
+    questCategories: []
 });
 
 
@@ -146,7 +162,7 @@ state.value.quests = []
 
 state.value.new = {
     title: "test01",
-    category: 0,
+    questCategory: 0,
     description: "test",
     progress: "1",
     priority: "1",
@@ -158,6 +174,7 @@ state.value.new = {
 onMounted(() => {
     getAllQuests()
     getKeeper()
+    getLocale()
 })
 
 //methods
@@ -167,13 +184,25 @@ const openQuest = (index) => {
     state.value.openEditQuests = true
 }
 
+const getFrameColor = (questCategory) => {
+    if(!questCategory){
+        return `filter:hue-rotate(0deg);`
+    }
+
+    const category = state.value.questCategories.find((e) => e.id == questCategory)
+    if (category) {
+
+        return `filter:hue-rotate(${category.color}deg);`
+    }
+    return `filter:hue-rotate(0deg);`
+}
+
 //backend
 
 const getAllQuests = async () => {
     const response = await window.questUtils.getAllQuests(props.config.category)
 
     state.value.quests = response
-
 
 }
 
@@ -192,30 +221,39 @@ const getKeeper = async () => {
     const response = await window.generic.getLocaleKeeperData(props.config.category)
 
     state.value.keeper = response
-    console.log(state.value.keeper);
-    
-    state.value.keeperDialog = state.value.keeper.config.dialogs[Math.round(Math.random() * (state.value.keeper.config.dialogs.length - 1))]
-    console.log(state.value.keeperDialog);
-    
 
+    state.value.keeperDialog = state.value.keeper.config.dialogs[Math.round(Math.random() * (state.value.keeper.config.dialogs.length - 1))]
 
 }
 
+const getLocale = async () => {
+    const rawData = await window.generic.getLocaleData(props.config.category)
+    if (rawData.questCategories) {
+        state.value.questCategories = rawData.questCategories
+
+    }
+
+}
+
+//watchers
 
 watch(() => state.value.menu, (newValue) => {
 
     if (newValue == "NEWQUEST") {
         state.value.openNewQuests = true;
     }
-    state.value.menu=""
+    if (newValue == "QUESTCATEGORY") {
+        state.value.openCategories = true;
+    }
+    state.value.menu = ""
 
 })
 
 watch(() => state.value.openEditQuests, (newValue) => {
 
-if (newValue == false) {
-   getAllQuests()
-}
+    if (newValue == false) {
+        getAllQuests()
+    }
 
 })
 

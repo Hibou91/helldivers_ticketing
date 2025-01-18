@@ -38,7 +38,11 @@ export default {
     },
     library:{
         buttons:[
-            
+            {
+                name: "QUESTCATEGORY",
+                icon: "newquest",
+                isRouterLink: false, 
+            },
             {
                 name: "LOCALE",
                 icon: "library",

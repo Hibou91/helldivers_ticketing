@@ -32,18 +32,32 @@ export default class Castle {
     ipcMain.handle("getLocaleKeeperData", (event, category) =>
       this.getLocaleKeeperData(category)
     );
+
+    ipcMain.handle("getQuestCategoryData", (event, category) =>
+      this.getQuestCategoryData(category)
+    );
+    ipcMain.handle("postQuestCategoryData", (event, category, data) =>
+      this.postQuestCategoryData(category, data)
+    );
+    ipcMain.handle("putQuestCategoryData", (event, category, id, data) =>
+      this.putQuestCategoryData(category, id, data)
+    );
+    ipcMain.handle("deleteQuestCategoryData", (event, category, id) =>
+      this.deleteQuestCategoryData(category, id)
+    );
   }
 
   getLocale(category) {
+
     switch (category) {
-      case 0:
-        return this.library.getLocale()
+      case "0":
+        return this.library.getLocale();
         break;
-      case 1:
-        return this.salon.getLocale()
+      case "1":
+        return this.salon.getLocale();
         break;
-      case 2:
-        return this.garden.getLocale()
+      case "2":
+        return this.garden.getLocale();
         break;
 
       default:
@@ -53,16 +67,88 @@ export default class Castle {
   }
 
   getLocaleKeeperData(category) {
+    switch (category) {
+      case "0":
+        return this.library.getClassKeeperData();
+        break;
+      case "1":
+        return this.salon.getClassKeeperData();
+        break;
+      case "2":
+        return this.garden.getClassKeeperData();
+        break;
+
+      default:
+        return {};
+        break;
+    }
+  }
+
+  getQuestCategoryData(category) {
+    switch (category) {
+      case "0":
+        return this.library.getQuestCategoryData(category);
+        break;
+      case "1":
+        return this.salon.getQuestCategoryData(category);
+        break;
+      case "2":
+        return this.garden.getQuestCategoryData(category);
+        break;
+
+      default:
+        return {};
+        break;
+    }
+  }
+
+  async postQuestCategoryData(category, data) {
     
     switch (category) {
       case "0":
-        return this.library.getClassKeeperData()
+        return await this.library.postQuestCategoryData(category, data);
         break;
       case "1":
-        return this.salon.getClassKeeperData()
+        return await this.salon.postQuestCategoryData(category, data);
         break;
       case "2":
-        return this.garden.getClassKeeperData()
+        return await this.garden.postQuestCategoryData(category, data);
+        break;
+
+      default:
+        return {};
+        break;
+    }
+  }
+
+  putQuestCategoryData(category, id, data) {
+    switch (category) {
+      case "0":
+        return this.library.putQuestCategoryData(category, id, data);
+        break;
+      case "1":
+        return this.salon.putQuestCategoryData(category, id, data);
+        break;
+      case "2":
+        return this.garden.putQuestCategoryData(category, id, data);
+        break;
+
+      default:
+        return {};
+        break;
+    }
+  }
+
+  deleteQuestCategoryData(category, id) {
+    switch (category) {
+      case "0":
+        return this.library.deleteQuestCategoryData(id);
+        break;
+      case "1":
+        return this.salon.deleteQuestCategoryData(id);
+        break;
+      case "2":
+        return this.garden.deleteQuestCategoryData(id);
         break;
 
       default:
@@ -72,18 +158,16 @@ export default class Castle {
   }
 
   async getCastleData() {
-    
-    let castleData = await fileUtil.getFileData('castle.json')
-    if(castleData == false){
+    let castleData = await fileUtil.getFileData("castle.json");
+    if (castleData == false) {
       castleData = {
-        locales: config.locales.locales
-      }
-    }else{
-      castleData.locales = config.locales.locales
+        locales: config.locales.locales,
+      };
+    } else {
+      castleData.locales = config.locales.locales;
     }
 
     return castleData;
-
   }
 
   async saveCastleData(data) {
