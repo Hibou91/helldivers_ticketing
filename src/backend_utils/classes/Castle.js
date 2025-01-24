@@ -3,6 +3,7 @@ import Locale from "./Locale";
 import fs from "node:fs/promises";
 import { ipcMain } from "electron";
 import fileUtil from "../utils/fileUtil";
+import Scavenges from "./Scavenges";
 
 export default class Castle {
   constructor() {
@@ -44,6 +45,9 @@ export default class Castle {
     );
     ipcMain.handle("deleteQuestCategoryData", (event, category, id) =>
       this.deleteQuestCategoryData(category, id)
+    );
+    ipcMain.handle("claimScavenge", (event, id) =>
+      this.claimScavenge(id)
     );
   }
 
@@ -157,8 +161,17 @@ export default class Castle {
     }
   }
 
-  async getCastleData() {
+  async getRawCastleData() {
     let castleData = await fileUtil.getFileData("castle.json");
+    if (castleData == false) {
+      castleData = { };
+    } 
+
+    return castleData;
+  }
+
+  async getCastleData() {
+    let castleData = await this.getRawCastleData();
     if (castleData == false) {
       castleData = {
         locales: config.locales.locales,
@@ -171,19 +184,43 @@ export default class Castle {
   }
 
   async saveCastleData(data) {
-    let url =
-      process.env.APPDATA ||
-      (process.platform == "darwin"
-        ? process.env.HOME + "/Library/Preferences"
-        : process.env.HOME + "/.local/share");
-    url += "/forge_first" + "/castle.json";
-    const result = await fs.writeFile(url, JSON.stringify(data), (err) => {
-      if (err) {
-        return false;
-      } else {
-        return true;
+    return await fileUtil.postFileData("castle.json", data)
+  }
+
+  async claimScavenge(id){
+    const scavenge = await Scavenges.claimScavenge(id);
+    const castleData = await this.getRawCastleData();
+
+    if(castleData == false){
+      castleData = {}
+    }
+
+    if(!castleData.materials){
+      castleData.materials = {}
+    }
+
+    scavenge.loot.forEach((loot) => {
+      
+ 
+      
+      if(!castleData.materials[loot.name]){
+        if(config.scavenges.materials[loot.name.toLowerCase()].storeMax){
+          castleData.materials[loot.name] = Math.min(loot.count, config.scavenges.materials[loot.name.toLowerCase()].storeMax)
+        }else{
+
+        }
+        castleData.materials[loot.name] = loot.count
+      }else{
+        if(config.scavenges.materials[loot.name.toLowerCase()].storeMax){
+          castleData.materials[loot.name.toLowerCase()] = Math.min(loot.count*1 + castleData.materials[loot.name]*1, config.scavenges.materials[loot.name.toLowerCase()].storeMax);
+        }else{
+          castleData.materials[loot.name.toLowerCase()] = loot.count*1 + castleData.materials[loot.name]*1;
+        }
+        
       }
     });
-    return result;
+    return await fileUtil.postFileData("castle.json", castleData)
   }
+
+  
 }

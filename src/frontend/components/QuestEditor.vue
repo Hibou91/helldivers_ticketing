@@ -35,11 +35,13 @@
 
 
             <tButton @click="putQuests">Save</tButton>
-            <tButton color="RED" @click="deleteQuests">Delete</tButton>
             <tButton @click="getNotifications">Notifications</tButton>
+            <tButton @click="getSubQuests">Sub Quests</tButton>
+            <tButton color="RED" @click="deleteQuests">Delete</tButton>
         </TCardClosable>
 
-        <div class="tCardHolderRow" v-if="state.openNotifications == true || state.openEditNotifications == true">
+        <div class="tCardHolderRow"
+            v-if="state.openSubQuests == false && (state.openNotifications == true || state.openEditNotifications == true)">
             <TCardClosable v-if="state.openNotifications == true" v-model:modalOpen="state.openNotifications"
                 :closeMethod="cardCloseMethod">
                 <tButton @click="state.openNewNotifications = !state.openNewNotifications">{{
@@ -86,6 +88,32 @@
 
         </div>
 
+        <div class="tCardHolderRow"
+            v-if="state.openSubQuests == true && (state.openNotifications == false || state.openEditNotifications == false)">
+            <TCardClosable v-model:modalOpen="state.openSubQuests"
+                :closeMethod="cardCloseMethod">
+
+                <div>
+                    <div v-for="subquest in state.editable.subQuests" v-bind:key="subquest.id"
+                        class="mt-10">
+                        <div class="flex-row">
+                            <input type="text" v-model="subquest.name">
+                            <input type="checkBox" v-model="subquest.done">
+                            <tButtonRoundSmall color="YELLOW" @click="deleteSubQuests">Delete</tButtonRoundSmall>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <div class="flex-row">
+                        <input type="text" v-model="state.newSubQuest.name">
+                        <tButtonRoundSmall color="YELLOW" @click="addSubQuests">Add</tButtonRoundSmall>
+                    </div>
+                </div>
+
+            </TCardClosable>
+
+        </div>
+
 
 
     </div>
@@ -94,6 +122,7 @@
 <script setup>
 import TCardClosable from './tCardClosable.vue'
 import tButton from './tButton.vue'
+import tButtonRoundSmall from './tButtonRoundSmall.vue'
 
 
 import { ref, onMounted } from 'vue'
@@ -107,6 +136,7 @@ const state = ref({
     openNotifications: false,
     openNewNotifications: false,
     openEditNotifications: false,
+    openSubQuests: false
 })
 
 state.value.editable = {
@@ -116,6 +146,7 @@ state.value.editable = {
     progress: "1",
     priority: "1",
     waitingFor: "",
+    subQuests:[]
 }
 
 state.value.newNotification = {
@@ -129,6 +160,11 @@ state.value.editNotification = {
     title: "",
     body: '',
     time: '',
+}
+
+state.value.newSubQuest = {
+    name: '',
+    done: false,
 }
 
 onMounted(() => {
@@ -169,6 +205,7 @@ const getNotifications = async () => {
 
     state.value.notifications = response;
     state.value.openNotifications = true;
+    state.value.openSubQuests = false;
 }
 
 const postNotification = async () => {
@@ -203,9 +240,24 @@ const deleteNotification = async () => {
 
 }
 
+const getSubQuests = () => {
+    state.value.openEditNotifications = false;
+    state.value.openNotifications = false;
+    state.value.openSubQuests = true;
+}
+
+const addSubQuests = () => {
+    state.value.editable.subQuests.push(structuredClone(state.value.newSubQuest))
+    state.value.newSubQuest.name = ''
+}
+
+const deleteSubQuests = (index) => {
+    state.value.editable.subQuests.splice(index,1)
+}
+
 const cardCloseMethod = () => {
 
-    const varArray = ['openEditQuests', 'openNotifications', 'openEditNotifications']
+    const varArray = ['openSubQuests', 'openEditQuests', 'openNotifications', 'openEditNotifications']
     let lever = 0
     for (let i = 0; i < varArray.length; i++) {
         if (state.value[varArray[i]] == false) {

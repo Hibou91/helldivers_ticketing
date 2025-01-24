@@ -6,25 +6,26 @@
             <div class="modal-form">
 
 
-                <div class="scavenge-holder">
+                <div class="questCategory-holder">
                     <div v-for="(category, index) in state.categories" v-bind:key="category.id"
-                        class="scavenge-data-main ">
-                        <div class="scavenge-data-image">
+                        class="questCategory-data-main ">
+                        <div class="questCategory-data-image">
                             <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
-                                class="scavenge-data-main" :style="`filter:hue-rotate(${category.color}deg);`">
+                                class="questCategory-data-main" :style="`filter:hue-rotate(${category.color}deg) ;`">
                             <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
-                                class="scavenge-data-addons">
+                                class="questCategory-data-addons">
                             <img src="../../../static/icons/scrolls/seal red.png" alt="" width="100" height="100"
-                                class="scavenge-data-addons">
+                                class="questCategory-data-addons">
                         </div>
                         <div class="questCategory-data pointer-link"
-                            :style="`filter:hue-rotate(${category.color}deg);`">
-                            <div :style="`filter:hue-rotate(${360 - category.color}deg);`">
+                            :style="`filter:hue-rotate(${category.color}deg) ;`">
+                            <div :style="`filter:hue-rotate(${360- category.color}deg) ;`">
                                 <div class="flex-row">
+                                    
                                     <div class="flex-col">
-                                        
-                                        <input type="text" v-model="category.name" />
+                                        <input type="text" v-model="category.name" class="input-small "/>
                                         <input type="range" min="0" max="360" v-model="category.color" />
+                                        <!--<input type="range" min="0" max="100" v-model="category.brightness" />-->
                                     </div>
                                     <tButtonRoundSmall color="YELLOW" @click="() => {putCategory(category)}" class="ml-10">Save</tButtonRoundSmall >
                                     <tButtonRoundSmall color="RED" @click="() => {deleteCategory(category.id, index)}" class="ml-10">Delete</tButtonRoundSmall >
@@ -36,21 +37,21 @@
                         </div>
 
                     </div>
-                    <div class="scavenge-data-main ">
-                        <div class="scavenge-data-image">
+                    <div class="questCategory-data-main ">
+                        <div class="questCategory-data-image">
                             <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
-                                class="scavenge-data-main" :style="`filter:hue-rotate(${state.newCategory.color}deg);`">
+                                class="questCategory-data-main" :style="`filter:hue-rotate(${state.newCategory.color}deg);`">
                             <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
-                                class="scavenge-data-addons">
+                                class="questCategory-data-addons">
                             <img src="../../../static/icons/scrolls/seal red.png" alt="" width="100" height="100"
-                                class="scavenge-data-addons">
+                                class="questCategory-data-addons">
                         </div>
                         <div class="questCategory-data pointer-link"
                             :style="`filter:hue-rotate(${state.newCategory.color}deg);`">
                             <div :style="`filter:hue-rotate(${360 - state.newCategory.color}deg);`">
                                 <div class="flex-row">
                                     <div class="flex-col">
-                                        <input type="text" v-model="state.newCategory.name" />
+                                        <input type="text" v-model="state.newCategory.name" class="input-small "/>
                                         <input type="range" min="0" max="360" v-model="state.newCategory.color" />
                                     </div>
                                     <tButtonRoundSmall color="YELLOW" @click="postCategory" class="ml-10">Save</tButtonRoundSmall >
@@ -95,6 +96,7 @@ const state = ref({
         id:0,
         name: "",
         color: 0,
+        brightness:100,
     }
 })
 
@@ -118,11 +120,13 @@ const postCategory = async () => {
         state.value.categories.push({
             id: rawData.id,
             name: state.value.newCategory.name,
-            color: state.value.newCategory.color
+            color: state.value.newCategory.color,
+            brightness: state.value.newCategory.brightness
         })
         state.value.newCategory.name = ''
         state.value.newCategory.color = 0
         state.value.newCategory.id = 0
+        state.value.newCategory.brightness = 100
     }
 
 }
@@ -169,7 +173,7 @@ const deleteCategory = async (id, index) => {
     margin-bottom: 20px;
 }
 
-.scavenge-bg {
+.questCategory-bg {
     width: calc(100% - 80px - 100px);
     ;
     height: calc(100% - 80px);
@@ -196,7 +200,7 @@ const deleteCategory = async (id, index) => {
     opacity: 0;
 }
 
-.scavenge-holder {
+.questCategory-holder {
     margin: 20px;
     background-color: rgba(0, 0, 0, .7);
     min-width: 0;
@@ -218,20 +222,20 @@ const deleteCategory = async (id, index) => {
     padding: 13px;
 }
 
-.scavenge-data-main {
+.questCategory-data-main {
 
     display: flex;
     flex-direction: row;
 
 }
 
-.scavenge-data-image {
+.questCategory-data-image {
     position: relative;
     width: fit-content;
 
 }
 
-.scavenge-data-addons {
+.questCategory-data-addons {
     position: absolute;
     top: 0;
     left: 0;

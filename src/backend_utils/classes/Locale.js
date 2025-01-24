@@ -31,12 +31,13 @@ export default class Locale {
   static async getKeeperData(category) {
     const response = await fileUtil.getFileData(`locale${category}.json`);
 
-    if (response == false) {
+    if (response == false || !response.keeper) {
       return {
         config: config.locales.keepers[category],
       };
     } else {
       response.keeper.config = config.locales.keepers[category];
+      
       return response.keeper;
     }
   }
@@ -95,6 +96,7 @@ export default class Locale {
         id: genericUtils.createId(locale.questCategories),
         name: data.name,
         color: data.color,
+        brightness: data.brightness
       }
       locale.questCategories.push(newCategory);
       if(await fileUtil.postFileData(`locale${category}.json`, locale) == true) {
@@ -122,6 +124,7 @@ export default class Locale {
         found = true;
         locale.questCategories[i].name = data.name;
         locale.questCategories[i].color = data.color;
+        locale.questCategories[i].brightness = data.brightness
         return await fileUtil.postFileData(`locale${category}.json`, locale);
       }
 

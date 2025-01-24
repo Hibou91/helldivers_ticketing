@@ -37,14 +37,12 @@ export default class Quest {
   }
 
   async getAllQuestsData(category) {
-    const data = await fileUtil.getFileData(`quests${category}.json`)
-    if(data == false){
-      return []
+    const data = await fileUtil.getFileData(`quests${category}.json`);
+    if (data == false) {
+      return [];
+    } else {
+      return data;
     }
-    else{
-      return data
-    }
-   
   }
 
   async postQuest(category, data) {
@@ -60,16 +58,20 @@ export default class Quest {
     newQuest.progress = questToPost.progress;
     newQuest.waitingFor = questToPost.waitingFor;
     newQuest.questCategory = questToPost.questCategory;
+    newQuest.needSubQuest = questToPost.needSubQuest;
+    newQuest.subQuests = questToPost.subQuests;
 
     quests.push(newQuest);
 
-    const result = await fileUtil.postFileData(`quests${category}.json`, quests)
-    if(result == false){
-      return false
-    }else{
+    const result = await fileUtil.postFileData(
+      `quests${category}.json`,
+      quests
+    );
+    if (result == false) {
+      return false;
+    } else {
       return this.toFrontendDto(newQuest);
     }
-    
   }
 
   async putQuest(category, data) {
@@ -82,14 +84,19 @@ export default class Quest {
         e.priority = updateQuest.priority;
         e.progress = updateQuest.progress;
         e.waitingFor = updateQuest.waitingFor;
-        e.questCategory = updateQuest.questCategory
+        e.questCategory = updateQuest.questCategory;
+        e.needSubQuest = updateQuest.needSubQuest;
+        e.subQuests = updateQuest.subQuests;
       }
     });
 
-    const result = await fileUtil.postFileData(`quests${category}.json`, quests)
-    if(result == false){
-      return false
-    }else{
+    const result = await fileUtil.postFileData(
+      `quests${category}.json`,
+      quests
+    );
+    if (result == false) {
+      return false;
+    } else {
       return this.toFrontendDto(updateQuest);
     }
   }
@@ -104,12 +111,14 @@ export default class Quest {
       }
     }
 
-    const result = await fileUtil.postFileData(`quests${category}.json`, quests)
-    
+    const result = await fileUtil.postFileData(
+      `quests${category}.json`,
+      quests
+    );
 
-    Notifications.deleteQuestNotifications(updateQuest.id)
+    Notifications.deleteQuestNotifications(updateQuest.id);
 
-    return result
+    return result;
   }
 
   async getQuestById(category, id) {

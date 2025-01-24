@@ -53,17 +53,10 @@ export default class Notifications {
     let notifications = await this.getNotifications();
 
     let i = 0;
-   
-    while (i < notifications.length ) {
-      if (notifications[i].questId == id) {
-        
-        notifications.splice(i, 1);
-        i--;
-      }
-      i++;
-    }
+   const newArray = notifications.filter((e) =>  e.questId != id)
+    
 
-    return await fileUtil.postFileData('notifications.json', notifications)
+    return await fileUtil.postFileData('notifications.json', newArray)
   }
 
   static async putNotification(id, data) {

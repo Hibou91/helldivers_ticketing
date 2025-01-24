@@ -71,11 +71,11 @@ export default class Scavenges {
     if (scavenges.length == 1) {
       if (scavenges[0].state == "ACTIVE") {
         result.action = "ACTIVE";
-        result.scavenges = [this.toFrontendDto(scavenges[0])];
+        result.scavenges = [Scavenges.toFrontendDto(scavenges[0])];
         return result;
       } else if (scavenges[0].state == "FINISHED") {
         result.action = "FINISHED";
-        result.scavenges = [this.toFrontendDto(scavenges[0])];
+        result.scavenges = [Scavenges.toFrontendDto(scavenges[0])];
         return result;
       }
     }
@@ -96,15 +96,9 @@ export default class Scavenges {
 
   static async deleteScavengesConditional(category, state) {
     const scavenges = await Scavenges.getScavenges();
-
-    for (let i = 0; i < scavenges.length; i++) {
-      if (scavenges[i].category == category && scavenges[i].state == state) {
-        scavenges.splice(i, 1);
-        i--;
-      }
-    }
-
-    fileUtil.postFileData("scavenges.json", scavenges);
+    const newArray = scavenges.filter((e) => !(e.category == category && e.state == state))
+    
+    fileUtil.postFileData("scavenges.json", newArray);
   }
 
   async deleteScavenge(id) {
@@ -141,10 +135,16 @@ export default class Scavenges {
         );
         category = scavenges[i].category;
         await fileUtil.postFileData("scavenges.json", scavenges);
+        
       }
       i++;
     }
-    Scavenges.deleteScavengesConditional(category, "GENERATED");
+    if(found){
+      await Scavenges.deleteScavengesConditional(category, "GENERATED");
+      
+      
+    }
+    
     return found;
   }
 
@@ -166,7 +166,7 @@ export default class Scavenges {
           )) {
             if (
               material.category == undefined ||
-              cmaterial.category == scavenges[i].category
+              material.category == scavenges[i].category
             ) {
               if (Math.random() < material.occurrence) {
                 scavenges[i].loot.push({
@@ -203,7 +203,7 @@ export default class Scavenges {
         }
 
         fileUtil.postFileData("scavenges.json", scavenges);
-        return this.toFrontendDto(scavenges[i]);
+        return Scavenges.toFrontendDto(scavenges[i]);
       }
       i++;
     }
@@ -233,16 +233,15 @@ export default class Scavenges {
           ? Math.round(Math.random() * (10 - 5) + 5)
           : 0;
       const keeper = await Locale.getKeeperData(category);
+      newScavenge.skillBonus = 0;
       if (keeper && keeper.skills) {
-        newScavenge.skillBonus = 0;
+
         config.scavenges.targets[newScavenge.target].skills.forEach((e) => {
           newScavenge.skillBonus += Math.round(
             Math.random() * keeper.skills[e]
           );
         });
-      } else {
-        newScavenge.skillBonus = 0;
-      }
+      } 
 
       newScavenge.successRate = Math.min(
         newScavenge.difficulty +
@@ -250,7 +249,7 @@ export default class Scavenges {
           newScavenge.keeperbonus,
         100
       );
-      generatedScavenges.push(this.toFrontendDto(newScavenge));
+      generatedScavenges.push(Scavenges.toFrontendDto(newScavenge));
       scavenges.push(newScavenge);
     }
 
@@ -258,7 +257,25 @@ export default class Scavenges {
     return generatedScavenges;
   }
 
-  toFrontendDto(scavenge) {
+  static async claimScavenge(id){
+    let scavenges = await Scavenges.getScavenges();
+
+    let i = 0;
+    let found = false;
+
+    while (i < scavenges.length && found == false) {
+      if (scavenges[i].id == id) {
+        found = structuredClone(scavenges[i]);
+        scavenges.splice(i, 1)
+        await fileUtil.postFileData("scavenges.json", scavenges);
+      }
+      i++;
+    }
+    
+    return found;
+  }
+
+  static toFrontendDto(scavenge) {
     switch (scavenge.type) {
       case 0:
         scavenge.typeName = "Dungeons";

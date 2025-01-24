@@ -22,14 +22,8 @@ export default {
                 to: "/garden"
             },
             {
-                name: '',
-                icon: "library",
-                isRouterLink: false,
-                to: "/"
-            },
-            {
-                name: '',
-                icon: "library",
+                name: 'CASTLE',
+                icon: "castle",
                 isRouterLink: false,
                 to: "/"
             },

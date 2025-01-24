@@ -5,10 +5,10 @@ body {
   background-color: black;
   width: 100%;
   height: 100%;
-  font-family: 'PirataOne-Regular', serif;
+  font-family: "PirataOne-Regular", serif;
 }
 
-input{
+input[type=text], input[type=date], input[type=datetime-local] {
   border: none;
   background-image: url("../static/generic ui/input long.png");
   background-size: 100% 100%;
@@ -20,21 +20,22 @@ input{
   padding-right: 10px;
   color: #ffffff;
   color-scheme: dark;
-  font-family: 'PirataOne-Regular', serif;
+  font-family: "PirataOne-Regular", serif;
   font-size: medium;
 }
 
-
-
-input:focus{
-  border: none;
-  outline: none;
-  
+input[type=text].input-small, input[type=date].input-small, input[type=datetime-local].input-small{
+  background-image: url("../static/generic ui/input.png");
+  height: 40px;
+  width: 185px;
 }
 
+input:focus {
+  border: none;
+  outline: none;
+}
 
-
-select{
+select {
   border: none;
   background-image: url("../static/generic ui/input.png");
   background-size: 100% 100%;
@@ -44,103 +45,174 @@ select{
   width: 185px;
   padding-left: 15px;
   color: #ffffff;
-  font-family: 'PirataOne-Regular', serif;
+  font-family: "PirataOne-Regular", serif;
   font-size: medium;
 }
 
-select:focus{
+select:focus {
   border: none;
   outline: none;
 }
 
-textarea{
+textarea {
   background-color: #000000;
   color: #ffffff;
   border: none;
-  font-family: 'PirataOne-Regular', serif;
+  font-family: "PirataOne-Regular", serif;
   font-size: medium;
   width: 300px;
 }
 
-textarea:focus{
+textarea:focus {
   border: none;
   outline: none;
 }
 
-html{
+html {
   margin: 0;
   padding: 0;
 }
 
-h1{
+h1 {
   margin: 0;
 }
 
-h1, h2, h3, h4{
+h1,
+h2,
+h3,
+h4 {
   font-weight: unset;
-  
 }
 
-a{
+a {
   text-decoration: none;
   color: #ffffff;
 }
 
-.fit-content{
+.fit-content {
   display: block;
   width: fit-content;
 }
 
-.w-50{
+.w-50 {
   width: 50%;
 }
 
-.absolute{
+.absolute {
   position: absolute;
 }
 
-.relative{
+.relative {
   position: relative;
 }
 
-.flex-col{
+.flex-col {
   display: flex;
   flex-direction: column;
 }
 
-.flex-row{
+.flex-row {
   display: flex;
   flex-direction: row;
 }
 
-.pointer-link{
+.pointer-link {
   cursor: pointer;
 }
 
-.mt-10{
+.mt-10 {
   margin-top: 10px;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+
+  border-radius: 6px;
+  padding: 5px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 @font-face {
-  font-family: 'PirataOne-Regular';
-  src: url('../static/fonts/PirataOne-Regular.ttf');
+  font-family: "PirataOne-Regular";
+  src: url("../static/fonts/PirataOne-Regular.ttf");
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 20px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #000000;
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  
+  width: 50px;
+  height: 50px;
+  background-image: url("../static/generic ui/scroll slider.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: repeat;
 }
+
+::-webkit-scrollbar-thumb:horizontal{
+  background-image: url("../static/generic ui/scroll slider horizontal.png");
+}
+
+
+
+
+/* range input */
+input[type=range] {
+  -webkit-appearance: none; 
+  appearance: none;
+  background: #00000000;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  width: 100%;
+  background-image: url("../static/generic ui/input round.png");
+  background-size: 100% 100%; ;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-top: 10px;
+}
+
+
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: calc((10px / 2) - (20px/2) );
+  border: 0;
+  border-radius: 50%;
+  background-image: url("../static/buttons/round frame.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+

@@ -78,7 +78,8 @@
         <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests"
             v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories">
         </QuestEditor>
-        <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category">
+        <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category"
+            :keeperData="state.keeper">
         </Scavenge>
         <QuestCategories v-if="state.openCategories == true" v-model:openPanel="state.openCategories"
             :category="config.category"></QuestCategories>
@@ -181,11 +182,12 @@ onMounted(() => {
 
 const openQuest = (index) => {
     state.value.editQuest = state.value.quests[index].id
-    state.value.openEditQuests = true
+    state.value.openEditQuests 
+    switchPanels('openEditQuests')
 }
 
 const getFrameColor = (questCategory) => {
-    if(!questCategory){
+    if (!questCategory) {
         return `filter:hue-rotate(0deg);`
     }
 
@@ -235,15 +237,26 @@ const getLocale = async () => {
 
 }
 
+const switchPanels = (panel) => {
+
+    const panelArray = ['openNewQuests', 'openEditQuests', 'openKeeper', 'openLocale', 'openScavenge', 'openCategories']
+    panelArray.forEach((e) => {
+        state.value[e] = false
+    })
+    state.value[panel] = true
+    //panel = true
+}
+
 //watchers
 
 watch(() => state.value.menu, (newValue) => {
 
     if (newValue == "NEWQUEST") {
-        state.value.openNewQuests = true;
+        switchPanels('openNewQuests')
+        
     }
     if (newValue == "QUESTCATEGORY") {
-        state.value.openCategories = true;
+        switchPanels('openCategories')
     }
     state.value.menu = ""
 

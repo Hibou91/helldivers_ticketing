@@ -1,7 +1,8 @@
 <template>
 
-    <div class="tCardHolder" v-if="openPanel == true">
 
+
+    <div class="tCardHolder">
         <TCardClosable v-model:modalOpen="openPanel" :closeMethod="() => { }">
             <div class="modal-form">
 
@@ -25,32 +26,88 @@
         </TCardClosable>
 
         <div class="tCardHolderRow">
-            <div class="scavenge-holder">
+            <TCardClosable v-model:modalOpen="state.openClaimPanel" :closeMethod="() => { }"
+                v-if="state.openClaimPanel == true">
+                <div class="modal-form">
+                    <div v-for="loot in state.generatedScavenges[0].loot" v-bind:key="loot.name" class="flex-row">
+
+                        <tButtonRoundSmall color="GREEN">{{ loot.name }}</tButtonRoundSmall> {{ loot.count }}
+                    </div>
+
+                    <tButton @click="() => { claimScavenge() }" color="YELLOW" class="ml-10">Claim </tButton>
+                </div>
+
+            </TCardClosable>
+
+            <div class="scavenge-holder" v-if="state.openClaimPanel == false">
                 <div v-for="scavenge in state.generatedScavenges" v-bind:key="scavenge.id"
-                    @mouseover="state.hover = scavenge.typeModel" @mouseleave="state.hover = ''" class="scavenge-data-main ">
-                    <div class="scavenge-data-image" >
+                    @mouseover="state.hover = scavenge.typeModel" @mouseleave="state.hover = ''"
+                    class="scavenge-data-main ">
+                    <div class="scavenge-data-image">
                         <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
                             class="scavenge-data-main">
-                        <tButtonRound class="scavenge-data-addons" :color="calculateDifficulty(scavenge.successRate)"> {{ scavenge.successRate }}</tButtonRound>
-                        
+                        <tButtonRound class="scavenge-data-addons" :color="calculateDifficulty(scavenge.successRate)">
+                            {{ scavenge.successRate }} %</tButtonRound>
+
                     </div>
-                    <div class="scavenge-data pointer-link" >
-                        
-                            {{ scavenge.targetName }} quest in the {{ scavenge.typeName }}
-                        <tButton @click="() => {postScavenge(scavenge.id)}">Start </tButton>
+                    <div class="scavenge-data pointer-link">
+                        <div class="flex-row">
+                            <div>
+                                <p class="scavenge-data-text">{{ scavenge.targetName }} quest in the {{
+                                    scavenge.typeName }}</p>
+                                <div class="tooltip">
+                                    <p class="scavenge-data-text ">{{ scavenge.successRate }} %</p>
+                                    <span class="tooltiptext">
+                                        <p>Difficulty: {{ scavenge.difficulty }}%</p>
+                                        <p>Keeper: {{ scavenge.keeperbonus }} %</p>
+                                        <p>Skills: {{ scavenge.targetSkills }}</p>
+                                        <p>Skill Bonus: {{ scavenge.skillBonus }}%</p>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <tButton @click="() => { postScavenge(scavenge.id) }"
+                                :color="state.action == 'ACTIVE' ? 'RED' : 'YELLOW'" class="ml-10">{{
+                                    state.buttonLabel
+                                }} </tButton>
+                        </div>
+
+
                     </div>
-                    
+
                 </div>
 
 
             </div>
 
             <tCard>
+                <div class="flex-row max-h-100">
+                    <div class="w-50 keeper-img-container">
+                        <div class="relative max-h-100">
+                            <img src="../../../static/generic ui/keepers bg.png" alt=""
+                                class="mscavenge-data-addons keeper-img">
+                            <img :src="`../../../static/${state.categoryName}/keeper/1.png`" alt=""
+                                class="scavenge-data-addons keeper-img">
+                        </div>
+
+                    </div>
+                    <div class="w-50 ">
+                        <p><i>{{ keeperData.config ? `"${keeperData.config.description}""` : "" }}</i> </p>
+                        <p>Homeland: {{ keeperData.config ? keeperData.config.homeLand : "" }}</p>
+                        <p>Cunning: {{ keeperData.skills ? keeperData.skills.cunning : 0 }}</p>
+                        <p>Charisma: {{ keeperData.skills ? keeperData.skills.charisma : 0 }}</p>
+                        <p>Strength: {{ keeperData.skills ? keeperData.skills.strength : 0 }}</p>
+                    </div>
+                </div>
+
 
 
             </tCard>
 
         </div>
+
+
+
 
 
 
@@ -63,48 +120,98 @@ import tCard from './tCard.vue'
 import tButton from './tButton.vue'
 
 import tButtonRound from './tButtonRound.vue'
+import tButtonRoundSmall from './tButtonRoundSmall.vue'
 
 import { ref, onMounted, watch } from 'vue'
 import TButtonRound from './tButtonRound.vue'
 
 
 const openPanel = defineModel('openPanel')
-const props = defineProps(['category'])
+const props = defineProps(['category', 'keeperData'])
 
 const state = ref({
+    categoryName: '',
     generatedScavenges: [],
     scavengeAction: '',
+    buttonLabel: '',
     hover: '',
+    openClaimPanel: false,
 })
 
 
 
 onMounted(() => {
     generateScavenge()
+
+    switch (props.category) {
+        case "0":
+            state.value.categoryName = "library"
+            break;
+        case "1":
+            state.value.categoryName = "salon"
+            break;
+        case "2":
+            state.value.categoryName = "garden"
+            break;
+    }
+
+
 })
 
 const generateScavenge = async () => {
-    
+
     let rawData = await window.keeperUtils.generateScavenges(props.category)
+console.log(rawData);
 
     state.value.generatedScavenges = rawData.scavenges
     state.value.scavengeAction = rawData.action
-    
+    switch (state.value.scavengeAction) {
+        case "GENERATE":
+            state.value.buttonLabel = "Start"
+            break;
+        case "ACTIVE":
+            state.value.buttonLabel = "Cancel"
+            break;
+        case "FINISHED":
+            state.value.buttonLabel = "Claim"
+            break;
+    }
+
+
+
 }
 
 const postScavenge = async (id) => {
-    let rawData = await window.keeperUtils.postScavenge(id)
+    if (state.value.scavengeAction == "GENERATE") {
+        if(await window.keeperUtils.postScavenge(id) == true){
+            generateScavenge(props.category)
+        }
+        
+    } else if (state.value.scavengeAction == "ACTIVE") {
+        if (await window.keeperUtils.deleteScavenge(id) == true){
+            generateScavenge(props.category)
+        }
+       
+    } else if (state.value.scavengeAction == "FINISHED") {
+        state.value.openClaimPanel = true
+    }
+
+}
+
+const claimScavenge = async () => {
+    await window.keeperUtils.claimScavenge(state.value.generatedScavenges[0].id)
+    state.value.openClaimPanel = false
     generateScavenge(props.category)
 }
 
 //utils
 
 const calculateDifficulty = (successRate) => {
-    if(successRate < 33){
+    if (successRate < 33) {
         return "RED"
-    }else if(successRate > 33 && successRate < 66){
+    } else if (successRate > 33 && successRate < 66) {
         return "YELLOW"
-    }else{
+    } else {
         return "GREEN"
     }
 }
@@ -221,26 +328,50 @@ watch(() => state.value.hover, (newValue) => {
     width: calc(100% - 40px);
     background-image: url("./static/icons/scrolls/scroll frame fade.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 600px 100px;
     padding: 20px;
 }
 
 .scavenge-data-main {
 
-display: flex;
-flex-direction: row;
+    display: flex;
+    flex-direction: row;
 
 }
 
 .scavenge-data-image {
-position: relative;
-width: fit-content;
+    position: relative;
+    width: fit-content;
 
 }
 
 .scavenge-data-addons {
-position: absolute;
-top: 0;
-left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ml-10 {
+    margin: auto 0 auto 20px;
+}
+
+.scavenge-data-text {
+    margin: 0;
+    padding: 5px 0 5px 0;
+}
+
+.max-h-100 {
+    max-height: 100%;
+    height: 100%;
+}
+
+.keeper-img-container {
+    max-height: calc(100% - 10px);
+}
+
+.keeper-img {
+    height: 100%;
+    max-height: 100%;
+    width: fit-content;
 }
 </style>

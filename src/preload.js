@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld("keeperUtils", {
   postScavenge:(id) => ipcRenderer.invoke("postScavenge", id),
   deleteScavenge:(id) => ipcRenderer.invoke("deleteScavenge", id),
   generateScavenges:(category) => ipcRenderer.invoke("generateScavenges", category),
+  claimScavenge:(id) => ipcRenderer.invoke("claimScavenge", id),
 });
 
 contextBridge.exposeInMainWorld("localeUtils", {

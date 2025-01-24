@@ -24,14 +24,21 @@
             </RouterLink>
         </tMenu>
 
-        <div v-if="state.hover == 'GARDEN' || state.hover == 'SALON' || state.hover == 'LIBRARY'" class="label-card">
+        <div v-if="(state.hover == 'GARDEN' || state.hover == 'SALON' || state.hover == 'LIBRARY') && state.openCastlePanel == false" class="label-card">
+            
             <tCard>
                 <h2>{{ state.hoveredLocale.name }}</h2>
                 <p>{{ state.hoveredLocale.description }}</p>
             </tCard>
-
-
         </div>
+        <div v-if="state.openCastlePanel == true">
+            
+            <tCard>
+                <h2>Castle</h2>
+                <p>{{ state.hoveredLocale.description }}</p>
+            </tCard>
+        </div>
+        
 
         <BottomMenu name="castle" v-model:onHover="state.hover" v-model:clickValue="state.menu"></BottomMenu>
 
@@ -62,7 +69,8 @@ const state = ref({
         name: "",
         description: ''
     },
-    menu: ""
+    menu: "",
+    openCastlePanel: false
 })
 
 onMounted(() => {
@@ -113,8 +121,8 @@ watch(() => state.value.hover, (newValue) => {
 
 watch(() => state.value.menu, (newValue) => {
 
-    if (newValue != '') {
-
+    if (newValue == 'CASTLE') {
+        state.value.openCastlePanel = true
     }
 
 })

@@ -1,4 +1,8 @@
 export default {
+  castle:{
+    desctiptions: [],
+    levelMultiplier: 7,
+  },
   quests: {
     categories: {
       0: "Library",
@@ -49,12 +53,10 @@ export default {
           "Truth is just the matter of perspective.",
           "Secret is what I know and you don't.",
           "I can find it out for you. No obligations.",
+          "Knowing too much means that either you die, or others."
         ],
-        skills: {
-          cunning: 0, 
-          charisma: 0,
-          strength: 0,
-        }
+        homeLand: "Dungeon",
+        
       },
       2: {
           name: "The Hound",
@@ -66,11 +68,8 @@ export default {
             "I smell the blood to be spilled in the night.",
             "Noone escapes me.",
           ],
-          skills: {
-            cunning: 0, 
-            charisma: 0,
-            strength: 0,
-          }
+          homeLand: "Forest",
+          
         },
         1:{
           name: "Madmoiselle Reatard",
@@ -81,12 +80,11 @@ export default {
             "I hope you don't come up anything silly this time",
             "You can serve me, of course",
             "Whatever, I don't think it's important.",
+            "Did you bring something for me?",
+            "Come before my throne.",
           ],
-          skills: {
-            cunning: 0, 
-            charisma: 0,
-            strength: 0,
-          }
+          homeLand: "Village",
+          
         }
       }
 
@@ -96,9 +94,7 @@ export default {
     types: [
       {
         place: "Dungeons",
-        materials: {
-          
-        },
+        
       },
       {
         place: "Village",
@@ -132,6 +128,7 @@ export default {
         countmin: 5,
         countmax: 10,
         keeperbonus: 0,
+        storeMax: 10,
       },
       experience: {
         name: "Experience",
@@ -143,23 +140,26 @@ export default {
       wood: {
         name: "Wood",
         occurrence: 0.1,
-        countmin: 5,
-        countmax: 10,
-        category: 2
+        countmin: 1,
+        countmax: 5,
+        category: 2,
+        storeMax: 7,
       },
       silk: {
         name: "Silk",
         occurrence: 0.1,
-        countmin: 5,
-        countmax: 10,
-        category: 1
+        countmin: 1,
+        countmax: 5,
+        category: 1,
+        storeMax: 7,
       },
       paper: {
         name: "Paper",
         occurrence: 0.1,
-        countmin: 5,
-        countmax: 10,
-        category: 0
+        countmin: 1,
+        countmax: 5,
+        category: 0,
+        storeMax: 7,
       },
     }
   },

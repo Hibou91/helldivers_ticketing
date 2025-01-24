@@ -44,13 +44,9 @@ export default class Scheduler {
       }
       const dValue = new Date(scanvenges[i].time);
       if (d >= dValue) {
-        new Notification({
-          title: scanvenges[i] + " has finished",
-          body: scanvenges[i].time,
-        }).show();
         const finished = await Scavenges.finishScavenge(scanvenges[i].id);
         new Notification({
-          title: `${finished.targetName} quest in the ${ scavenge.typeName }`,
+          title: `${finished.targetName} quest in the ${ finished.typeName }`,
           body: ` has finished with ${finished.success == true ? "success" : "faliure"}!`,
         }).show();
       }

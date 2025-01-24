@@ -1,5 +1,5 @@
 <template>
-    <div class="br-button-main relative" @mouseover="onHover = true" @mouseleave="onHover = false">
+    <div class="br-button-main  relative" :class="{'br-button-main-hover': !(icon == true)}" @mouseover="onHover = true" @mouseleave="onHover = false">
         
        
         <img v-if="color == 'GREEN'" src="../../../static/buttons/round bg green.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
@@ -23,7 +23,7 @@
 
 import {ref} from 'vue'
 
-defineProps(['color'])
+defineProps(['color', 'icon'])
 
 const onHover = ref(false)
 </script>
@@ -42,15 +42,15 @@ const onHover = ref(false)
 }
 
 
-.br-button-main .button-image-bg{
+.br-button-main-hover .button-image-bg{
     filter: brightness(0.7);
 }
 
-.br-button-main:hover .button-image-bg{
+.br-button-main-hover:hover .button-image-bg{
     filter: none;
 }
 
-.br-button-main:active .button-image-bg{
+.br-button-main-hover:active .button-image-bg{
     filter: brightness(1.3);
 }
 
