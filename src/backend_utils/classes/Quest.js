@@ -26,6 +26,9 @@ export default class Quest {
     ipcMain.handle("deleteQuest", (event, category, data) =>
       this.deleteQuest(category, data)
     );
+    ipcMain.handle("getQuestConfig", (event) =>
+      this.getQuestConfig()
+    );
   }
 
   async getAllQuests(category) {
@@ -140,5 +143,9 @@ export default class Quest {
     quest.progressName = config.quests.progress[quest.progress];
     quest.priorityName = config.quests.priority[quest.priority];
     return quest;
+  }
+
+  getQuestConfig(){
+    return config.quests;
   }
 }

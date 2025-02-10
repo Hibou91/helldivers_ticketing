@@ -2,7 +2,7 @@
 
 
 
-    <div class="tCardHolder">
+    <div class="tCardHolder" v-if="state.loaded == true">
         <TCardClosable v-model:modalOpen="openPanel" :closeMethod="() => { }">
             <div class="modal-form">
 
@@ -55,7 +55,7 @@
                             <div>
                                 <p class="scavenge-data-text">{{ scavenge.targetName }} quest in the {{
                                     scavenge.typeName }}</p>
-                                <div class="tooltip">
+                                <div class="tooltip flex-row">
                                     <p class="scavenge-data-text ">{{ scavenge.successRate }} %</p>
                                     <span class="tooltiptext">
                                         <p>Difficulty: {{ scavenge.difficulty }}%</p>
@@ -85,18 +85,18 @@
                     <div class="w-50 keeper-img-container">
                         <div class="relative max-h-100">
                             <img src="../../../static/generic ui/keepers bg.png" alt=""
-                                class="mscavenge-data-addons keeper-img">
+                                class="keeper-img">
                             <img :src="`../../../static/${state.categoryName}/keeper/1.png`" alt=""
                                 class="scavenge-data-addons keeper-img">
                         </div>
 
                     </div>
                     <div class="w-50 ">
-                        <p><i>{{ keeperData.config ? `"${keeperData.config.description}""` : "" }}</i> </p>
-                        <p>Homeland: {{ keeperData.config ? keeperData.config.homeLand : "" }}</p>
-                        <p>Cunning: {{ keeperData.skills ? keeperData.skills.cunning : 0 }}</p>
-                        <p>Charisma: {{ keeperData.skills ? keeperData.skills.charisma : 0 }}</p>
-                        <p>Strength: {{ keeperData.skills ? keeperData.skills.strength : 0 }}</p>
+                        <p><i>{{ state.keeperData.config ? `"${state.keeperData.config.description}""` : "" }}</i> </p>
+                        <p>Homeland: {{ state.keeperData.config ? state.keeperData.config.homeLand : "" }}</p>
+                        <p>Cunning: {{ state.keeperData.skills ? state.keeperData.skills.cunning : 0 }}</p>
+                        <p>Charisma: {{ state.keeperData.skills ? state.keeperData.skills.charisma : 0 }}</p>
+                        <p>Strength: {{ state.keeperData.skills ? state.keeperData.skills.strength : 0 }}</p>
                     </div>
                 </div>
 
@@ -124,12 +124,14 @@ import tButtonRoundSmall from './tButtonRoundSmall.vue'
 
 import { ref, onMounted, watch } from 'vue'
 import TButtonRound from './tButtonRound.vue'
+import toast from '../misc/toast';
 
 
 const openPanel = defineModel('openPanel')
-const props = defineProps(['category', 'keeperData'])
+const props = defineProps(['category'])
 
 const state = ref({
+    loaded: false,
     categoryName: '',
     generatedScavenges: [],
     scavengeAction: '',
@@ -141,7 +143,13 @@ const state = ref({
 
 
 onMounted(() => {
-    generateScavenge()
+    setMeUp()
+
+})
+
+const setMeUp = async () => {
+    await generateScavenge()
+    await getKeeper()
 
     switch (props.category) {
         case "0":
@@ -154,14 +162,22 @@ onMounted(() => {
             state.value.categoryName = "garden"
             break;
     }
+    state.value.loaded = true
+}
 
+const getKeeper = async () => {
+    const response = await window.generic.getLocaleKeeperData(props.category)
 
-})
+    state.value.keeperData = response
+
+    
+
+}
 
 const generateScavenge = async () => {
 
     let rawData = await window.keeperUtils.generateScavenges(props.category)
-console.log(rawData);
+
 
     state.value.generatedScavenges = rawData.scavenges
     state.value.scavengeAction = rawData.action
@@ -184,11 +200,13 @@ console.log(rawData);
 const postScavenge = async (id) => {
     if (state.value.scavengeAction == "GENERATE") {
         if(await window.keeperUtils.postScavenge(id) == true){
+            toast.toast('Scavenge started')
             generateScavenge(props.category)
         }
         
     } else if (state.value.scavengeAction == "ACTIVE") {
         if (await window.keeperUtils.deleteScavenge(id) == true){
+            toast.toast('Scavenge cancelled')
             generateScavenge(props.category)
         }
        
@@ -240,6 +258,13 @@ watch(() => state.value.hover, (newValue) => {
 
 })
 
+window.keeperUtils.onUpdateCounter((event, category) => {
+    
+    if(category == props.category){
+        generateScavenge(props.category)
+    }
+  
+})
 
 
 

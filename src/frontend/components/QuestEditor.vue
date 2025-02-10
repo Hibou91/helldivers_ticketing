@@ -14,11 +14,7 @@
                 <textarea type="text" v-model="state.editable.description"></textarea>
                 <p>Progress</p>
                 <select v-model="state.editable.progress">
-                    <option value="0">New</option>
-                    <option value="1">In Progress</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Fed Up</option>
-                    <option value="4">Finished</option>
+                    <option v-for="(value, key) in questConfig.progress" :value="key">{{value}}</option>
                 </select>
                 <div v-if="state.editable.progress == 2">
                     <p>Waiting for</p>
@@ -27,9 +23,7 @@
 
                 <p>Priority</p>
                 <select v-model="state.editable.priority">
-                    <option value="0">Who Cares</option>
-                    <option value="1">Should be done</option>
-                    <option value="2">PANIC</option>
+                    <option v-for="(value, key) in questConfig.priority" :value="key">{{value}}</option>
                 </select>
             </div>
 
@@ -97,15 +91,15 @@
                     <div v-for="subquest in state.editable.subQuests" v-bind:key="subquest.id"
                         class="mt-10">
                         <div class="flex-row">
-                            <input type="text" v-model="subquest.name">
-                            <input type="checkBox" v-model="subquest.done">
-                            <tButtonRoundSmall color="YELLOW" @click="deleteSubQuests">Delete</tButtonRoundSmall>
+                            <input type="text" v-model="subquest.name" class="mr-20">
+                            <input type="checkbox" v-model="subquest.done" class="mr-20" style="margin-right:15px; ">
+                            <tButtonRoundSmall color="YELLOW" @click="deleteSubQuests" >Delete</tButtonRoundSmall>
                         </div>
                     </div>
                 </div>
                 <div class="mt-10">
                     <div class="flex-row">
-                        <input type="text" v-model="state.newSubQuest.name">
+                        <input type="text" v-model="state.newSubQuest.name" class="mr-20">
                         <tButtonRoundSmall color="YELLOW" @click="addSubQuests">Add</tButtonRoundSmall>
                     </div>
                 </div>
@@ -126,10 +120,11 @@ import tButtonRoundSmall from './tButtonRoundSmall.vue'
 
 
 import { ref, onMounted } from 'vue'
+import toast from '../misc/toast'
 
 const openPanel = defineModel('openPanel')
 const questId = defineModel('questId')
-const props = defineProps(['category', 'questCategories'])
+const props = defineProps(['category', 'questCategories', "questConfig"])
 
 const state = ref({
     openEditQuests: true,
@@ -164,7 +159,6 @@ state.value.editNotification = {
 
 state.value.newSubQuest = {
     name: '',
-    done: false,
 }
 
 onMounted(() => {
@@ -186,6 +180,7 @@ const putQuests = async () => {
     if (response != false) {
 
         //state.value.openEditQuests = false
+        toast.toast('Not only you change with the journey. Sometimes the journey changes too...')
     }
 
 }
@@ -195,7 +190,8 @@ const deleteQuests = async () => {
 
     const response = await window.questUtils.deleteQuest(props.category, JSON.stringify(state.value.editable))
     if (response != false) {
-        state.value.openEditQuests = false
+        state.value.openEditQuests = false;
+        toast.toast("As the road ends, it's time to say goodbye.")
     }
 
 }
@@ -213,13 +209,15 @@ const postNotification = async () => {
     const response = await window.questUtils.postNotification(state.value.editable.id, JSON.stringify(state.value.newNotification))
     if (response != false) {
         state.value.notifications.push(response)
+        toast.toast('Words whispered to the wind may come back later...')
     }
+   
 
 }
 
 const putNotification = async () => {
     const response = await window.questUtils.putNotification(state.value.editNotification.id, JSON.stringify(state.value.editNotification))
-
+    toast.toast('The message is the same, only the words are different')
 
 }
 
@@ -236,6 +234,7 @@ const deleteNotification = async () => {
 
             }
         });
+        toast.toast("A message from the past... silenced..")
     }
 
 }
@@ -247,12 +246,17 @@ const getSubQuests = () => {
 }
 
 const addSubQuests = () => {
-    state.value.editable.subQuests.push(structuredClone(state.value.newSubQuest))
+    let temp = {
+        name: state.value.newSubQuest.name,
+        done: false
+    }
+    state.value.editable.subQuests.push(temp)
     state.value.newSubQuest.name = ''
 }
 
 const deleteSubQuests = (index) => {
     state.value.editable.subQuests.splice(index,1)
+    
 }
 
 const cardCloseMethod = () => {
@@ -290,5 +294,9 @@ const cardCloseMethod = () => {
 
 .modal-form {
     margin-bottom: 20px;
+}
+
+.mr-20{
+    margin-right: 15px;
 }
 </style>

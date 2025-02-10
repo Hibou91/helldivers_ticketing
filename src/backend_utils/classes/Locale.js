@@ -9,7 +9,6 @@ export default class Locale {
   }
 
   async getLocale() {
-
     const data = await fileUtil.getFileData(`locale${this.category}.json`);
 
     if (data == false) {
@@ -34,10 +33,20 @@ export default class Locale {
     if (response == false || !response.keeper) {
       return {
         config: config.locales.keepers[category],
+        skills: {
+          cunning: 0,
+          strength: 0,
+          charisma: 0,
+        },
       };
     } else {
       response.keeper.config = config.locales.keepers[category];
-      
+      response.keeper.skills = {
+        cunning: response.keeper.skills.cunning ? response.keeper.skills.cunning : 0,
+        strength: response.keeper.skills.strength ? response.keeper.skills.strength : 0,
+        charisma: response.keeper.skills.charisma ? response.keeper.skills.charisma : 0,
+      };
+
       return response.keeper;
     }
   }
@@ -48,16 +57,26 @@ export default class Locale {
     if (response == false) {
       return {
         config: config.locales.keepers[this.category],
+        skills: {
+          cunning: 0,
+          strength: 0,
+          charisma: 0,
+        },
       };
     } else {
-      if (response.keeper) {
-        response.keeper.config = config.locales.keepers[this.category];
-        return response.keeper;
-      } else {
-        return {
-          config: config.locales.keepers[this.category],
-        };
+      if (!response.keeper) {
+        response.keeper = {};
       }
+      response.keeper.skills = {
+        cunning: response.keeper.skills.cunning ? response.keeper.skills.cunning : 0,
+        strength: response.keeper.skills.strength ? response.keeper.skills.strength : 0,
+        charisma: response.keeper.skills.charisma ? response.keeper.skills.charisma : 0,
+      
+      }
+
+      response.keeper.config = config.locales.keepers[this.category];
+
+      return response.keeper;
     }
   }
 
@@ -75,44 +94,41 @@ export default class Locale {
   }
 
   async postQuestCategoryData(category, data) {
-    
     const locale = await this.getLocale();
     data = JSON.parse(data);
     if (locale == false) {
-   
       locale = {
         questCategories: [],
       };
     }
 
-    
     if (locale && !locale.questCategories) {
       locale.questCategories = [];
     }
 
     if (locale && locale.questCategories) {
-  
       const newCategory = {
         id: genericUtils.createId(locale.questCategories),
         name: data.name,
         color: data.color,
-        brightness: data.brightness
-      }
+        brightness: data.brightness,
+      };
       locale.questCategories.push(newCategory);
-      if(await fileUtil.postFileData(`locale${category}.json`, locale) == true) {
-        return newCategory
+      if (
+        (await fileUtil.postFileData(`locale${category}.json`, locale)) == true
+      ) {
+        return newCategory;
       }
     }
-    
-    return false
+
+    return false;
   }
 
   async putQuestCategoryData(category, id, data) {
     const locale = await this.getLocale();
-    
 
     if (locale == false || !locale.questCategories) {
-      log('locale not found')
+      log("locale not found");
       return false;
     }
     data = JSON.parse(data);
@@ -124,7 +140,7 @@ export default class Locale {
         found = true;
         locale.questCategories[i].name = data.name;
         locale.questCategories[i].color = data.color;
-        locale.questCategories[i].brightness = data.brightness
+        locale.questCategories[i].brightness = data.brightness;
         return await fileUtil.postFileData(`locale${category}.json`, locale);
       }
 
@@ -157,5 +173,39 @@ export default class Locale {
     }
 
     return false;
+  }
+
+  async levelUpKeeper(skill) {
+    const locale = await this.getLocale();
+    if (!locale.keeper) {
+      locale.keeper = {};
+    }
+
+    if (!locale.keeper.skills) {
+      locale.keeper.skills = {};
+    }
+
+    if (!locale.keeper.skills[skill]) {
+      locale.keeper.skills[skill] = 1;
+    } else {
+      locale.keeper.skills[skill] += 1;
+    }
+    return await fileUtil.postFileData(`locale${this.category}.json`, locale);
+  }
+
+  async levelDownKeeper(skill) {
+    const locale = await this.getLocale();
+
+    if (
+      locale.keeper &&
+      locale.keeper.skills &&
+      locale.keeper.skills[skill] &&
+      locale.keeper.skills[skill] > 0
+    ) {
+      locale.keeper.skills[skill] -= 1;
+      return await fileUtil.postFileData(`locale${this.category}.json`, locale);
+    } else {
+      return false;
+    }
   }
 }

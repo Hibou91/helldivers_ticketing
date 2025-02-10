@@ -34,12 +34,7 @@ export default {
         buttons:[
             {
                 name: "QUESTCATEGORY",
-                icon: "newquest",
-                isRouterLink: false, 
-            },
-            {
-                name: "LOCALE",
-                icon: "library",
+                icon: "necategory",
                 isRouterLink: false, 
             },
             {

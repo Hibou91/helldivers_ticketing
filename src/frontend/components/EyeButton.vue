@@ -4,24 +4,24 @@
         <div class="btn-img" >
 
 
-            <img v-if="color == 'GREEN'" src="../../../static/buttons/eye bg green.jpg" alt="" srcset="" width="100px" height="100"
+            <img v-if="color == 'GREEN'" src="../../../static/buttons/eye bg green.jpg" alt="" srcset="" width="60px" height="60"
                 class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
-            <img v-if="color == 'RED'" src="../../../static/buttons/eye bg red.jpg" alt="" srcset="" width="100px" height="100"
+            <img v-if="color == 'RED'" src="../../../static/buttons/eye bg red.jpg" alt="" srcset="" width="60px" height="60"
                 class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
-            <img src="../../../static/buttons/eye pupil.png" alt="" srcset="" width="100" height="100" class="btn-bg "
+            <img src="../../../static/buttons/eye pupil.png" alt="" srcset="" width="60" height="60" class="btn-bg "
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyePupil'">
-            <img src="../../../static/buttons/eye pupil b.png" alt="" srcset="" width="100" height="100"
+            <img src="../../../static/buttons/eye pupil b.png" alt="" srcset="" width="60" height="60"
                 class="btn-bg big-pupil"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyePupilB'">
         </div>
 
-        <img src="../../../static/buttons/eye frame.png" alt="" srcset="" width="100" height="100" class="btn-img">
+        <img src="../../../static/buttons/eye frame.png" alt="" srcset="" width="60" height="60" class="btn-img">
     </div>
 </template>
 
@@ -58,8 +58,8 @@ const moveEye = (e) => {
     let centerX = state.value.rect.left + ((state.value.rect.right - state.value.rect.left) / 2)
     if (state.value.onHover == true) {
         if (EyePupilB.value) {
-            EyePupilB.value.style.width = '100px' // Math.min((EyePupilB.value.style.width + state.value.eyemovementSpeed), 100) + 'px'
-            EyePupilB.value.style.height = '100px'//Math.min((EyePupilB.value.style.width + state.value.eyemovementSpeed), 100)  + 'px'
+            EyePupilB.value.style.width = '60px' // Math.min((EyePupilB.value.style.width + state.value.eyemovementSpeed), 60) + 'px'
+            EyePupilB.value.style.height = '60px'//Math.min((EyePupilB.value.style.width + state.value.eyemovementSpeed), 60)  + 'px'
         }
 
         if (e.clientY > centerY) {

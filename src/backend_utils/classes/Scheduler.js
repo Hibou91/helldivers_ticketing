@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 
-import { Notification } from "electron";
+import { Notification, BrowserWindow } from "electron";
+
 
 import Notifications from "./Notifications";
 import Scavenges from "./Scavenges";
@@ -49,6 +50,7 @@ export default class Scheduler {
           title: `${finished.targetName} quest in the ${ finished.typeName }`,
           body: ` has finished with ${finished.success == true ? "success" : "faliure"}!`,
         }).show();
+        BrowserWindow.getAllWindows()[0].webContents.send('update-scavenge', finished.category)
       }
     }
   }
@@ -67,5 +69,9 @@ export default class Scheduler {
         Notifications.deleteNotification(notifications[i].id);
       }
     }
+  }
+
+  setMainWindow(mainWindow){
+    this.mainWindow = mainWindow
   }
 }

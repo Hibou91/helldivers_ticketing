@@ -13,12 +13,11 @@ export default class Game {
     this.quests = new Quest();
     this.notifications = new Notifications();
     this.scheduler = new Scheduler();
-    this.scavenges = new Scavenges
+    this.scavenges = new Scavenges();
+    
 
     ipcMain.handle("quitProgram", () => app.quit());
     
   }
-
-
 
 }

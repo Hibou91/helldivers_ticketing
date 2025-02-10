@@ -82,6 +82,7 @@ import TCardClosable from './tCardClosable.vue'
 import tCard from './tCard.vue'
 import tButton from './tButton.vue'
 import tButtonRoundSmall from './tButtonRoundSmall.vue'
+import toast from '../misc/toast'
 
 import { ref, onMounted } from 'vue'
 
@@ -127,12 +128,16 @@ const postCategory = async () => {
         state.value.newCategory.color = 0
         state.value.newCategory.id = 0
         state.value.newCategory.brightness = 100
+        toast.toast('The Gods granted you the new category')
     }
 
 }
 
 const putCategory = async (data) => {
     let rawData = await window.localeUtils.putQuestCategoryData(props.category, data.id, JSON.stringify(data))
+    if(rawData != false){
+        toast.toast('Change is the way of life. Even for a category')
+    }
 
 }
 
@@ -140,6 +145,7 @@ const deleteCategory = async (id, index) => {
     let rawData = await window.localeUtils.deleteQuestCategoryData(props.category,id)
     if(rawData == true){
         state.value.categories.splice(index, 1)
+        toast.toast('Death lingers.. A category is lost forewer')
     }
 
 }
@@ -157,8 +163,8 @@ const deleteCategory = async (id, index) => {
 .tCardHolder {
     display: flex;
     flex-direction: row;
-    max-height: calc(100% - 350px);
-    height: calc(100% - 350px);
+    max-height: calc(100% - 250px);
+    height: calc(100% - 250px);
     overflow-y: visible;
     min-height: 0;
 }

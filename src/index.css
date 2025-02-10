@@ -8,7 +8,9 @@ body {
   font-family: "PirataOne-Regular", serif;
 }
 
-input[type=text], input[type=date], input[type=datetime-local] {
+input[type="text"],
+input[type="date"],
+input[type="datetime-local"] {
   border: none;
   background-image: url("../static/generic ui/input long.png");
   background-size: 100% 100%;
@@ -24,7 +26,9 @@ input[type=text], input[type=date], input[type=datetime-local] {
   font-size: medium;
 }
 
-input[type=text].input-small, input[type=date].input-small, input[type=datetime-local].input-small{
+input[type="text"].input-small,
+input[type="date"].input-small,
+input[type="datetime-local"].input-small {
   background-image: url("../static/generic ui/input.png");
   height: 40px;
   width: 185px;
@@ -95,6 +99,7 @@ a {
 }
 
 .w-50 {
+  max-width: 50%;
   width: 50%;
 }
 
@@ -134,7 +139,23 @@ a {
   width: 120px;
   background-color: black;
   color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
 
+.tooltipp .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
   border-radius: 6px;
   padding: 5px;
 
@@ -146,6 +167,48 @@ a {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.toast{
+  width: 200px;
+  height: 200px;
+  top: 30px;
+  left: calc(50% - 100px);
+  position: absolute;
+  background-image: url("../static/generic ui/modal.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  
+}
+
+.toast-invisible{
+  visibility: hidden;
+  z-index: -500;
+  opacity: 0;
+}
+
+.toast-toinvisible{
+  opacity: 0;
+  transition: opacity 3s ;
+}
+
+.toast-visible{
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+  z-index: 500;
+}
+
+.toast-invisible *{
+  opacity: 0;
+}
+
+.ttoast-text{
+  width: fit-content;
+  max-width: 160px;
+  margin: 70px auto 0 auto;
+}
+
+
 
 @font-face {
   font-family: "PirataOne-Regular";
@@ -163,7 +226,6 @@ a {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  
   width: 50px;
   height: 50px;
   background-image: url("../static/generic ui/scroll slider.png");
@@ -172,40 +234,35 @@ a {
   background-repeat: repeat;
 }
 
-::-webkit-scrollbar-thumb:horizontal{
+::-webkit-scrollbar-thumb:horizontal {
   background-image: url("../static/generic ui/scroll slider horizontal.png");
 }
 
-
-
-
 /* range input */
-input[type=range] {
-  -webkit-appearance: none; 
+input[type="range"] {
+  -webkit-appearance: none;
   appearance: none;
   background: #00000000;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   appearance: none;
   height: 10px;
   width: 100%;
   background-image: url("../static/generic ui/input round.png");
-  background-size: 100% 100%; ;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   margin-top: 10px;
 }
 
-
-
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
   height: 20px;
-  margin-top: calc((10px / 2) - (20px/2) );
+  margin-top: calc((10px / 2) - (20px / 2));
   border: 0;
   border-radius: 50%;
   background-image: url("../static/buttons/round frame.png");
@@ -215,4 +272,24 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: auto 0 auto 0;
+  width: 25px;
+  height: 25px;
+  background-image: url("../static/buttons/round frame.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
 
+input[type="checkbox"]:checked {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("../static/buttons/round frame.png"),
+    url("../static/buttons/round bg white.png");
+  /* or whatever styles you want depending on your design */
+  /* be as obvious as possible that it's a checkbox and that it's checked! */
+}

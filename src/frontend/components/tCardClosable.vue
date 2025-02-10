@@ -39,6 +39,6 @@ const closeModal = () => {
 }
 
 .modal-slot {
-    margin-top: 100px;
+    margin-top: 80px;
 }
 </style>

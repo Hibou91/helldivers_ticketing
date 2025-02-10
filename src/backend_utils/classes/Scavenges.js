@@ -131,7 +131,7 @@ export default class Scavenges {
         scavenges[i].time = new Date();
         scavenges[i].time.setTime(
           scavenges[i].time.getTime() +
-            scavenges[i].duration /* * 60 * 60*/ * 1000
+            scavenges[i].duration * 60 * 60 * 1000
         );
         category = scavenges[i].category;
         await fileUtil.postFileData("scavenges.json", scavenges);
@@ -237,8 +237,9 @@ export default class Scavenges {
       if (keeper && keeper.skills) {
 
         config.scavenges.targets[newScavenge.target].skills.forEach((e) => {
+  
           newScavenge.skillBonus += Math.round(
-            Math.random() * keeper.skills[e]
+            Math.random() * keeper.skills[e.toLowerCase()]
           );
         });
       } 

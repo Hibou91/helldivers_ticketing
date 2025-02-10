@@ -2,6 +2,8 @@ export default {
   castle:{
     desctiptions: [],
     levelMultiplier: 7,
+    storageMultiplier: 2,
+    animaLevelMultiplier: 100,
   },
   quests: {
     categories: {
@@ -14,6 +16,7 @@ export default {
       1: "In progress",
       2: "Pending",
       3: "Fed Up",
+      5: "Temporarly Dead",
       4: "Finished",
     },
     priority: {
@@ -56,7 +59,6 @@ export default {
           "Knowing too much means that either you die, or others."
         ],
         homeLand: "Dungeon",
-        
       },
       2: {
           name: "The Hound",
@@ -124,22 +126,15 @@ export default {
     materials: {
       anima: {
         name: "Anima",
-        occurrence: 0.8,
+        occurrence: 1,
         countmin: 5,
         countmax: 10,
         keeperbonus: 0,
         storeMax: 10,
       },
-      experience: {
-        name: "Experience",
-        occurrence: 1,
-        countmin: 5,
-        countmax: 10,
-        keeperbonus: 0,
-      },
       wood: {
         name: "Wood",
-        occurrence: 0.1,
+        occurrence: 0.5,
         countmin: 1,
         countmax: 5,
         category: 2,
@@ -147,7 +142,7 @@ export default {
       },
       silk: {
         name: "Silk",
-        occurrence: 0.1,
+        occurrence: 0.5,
         countmin: 1,
         countmax: 5,
         category: 1,
@@ -155,12 +150,31 @@ export default {
       },
       paper: {
         name: "Paper",
-        occurrence: 0.1,
+        occurrence: 0.5,
         countmin: 1,
         countmax: 5,
         category: 0,
         storeMax: 7,
       },
+      magefish: {
+        name: "Magefish",
+        occurrence: 0.5,
+        countmin: 1,
+        countmax: 2,
+      },
+      witseed: {
+        name: "Witseed",
+        occurrence: 0.5,
+        countmin: 1,
+        countmax: 2,
+      },
+      lionheart: {
+        name: "Lionheart",
+        occurrence: 0.5,
+        countmin: 1,
+        countmax: 2,
+      },
+
     }
   },
 };

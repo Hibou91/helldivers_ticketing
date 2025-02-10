@@ -39,8 +39,8 @@ const modalOpen = defineModel('modalOpen')
     position: absolute;
     display: flex;
    width: calc(100% - 40px);
-   max-height: calc(100% - 40px - 350px);
-   height: calc(100% - 40px - 350px);
+   max-height: calc(100% - 40px - 250px);
+   height: calc(100% - 40px - 250px);
    padding: 20px;
 }
 

@@ -3,28 +3,28 @@
         <div class="menu-frame">
             <div>
                 <img src="../../../static/generic ui/bottom menu panel.png" class="menu-panel" alt="" srcset=""
-                    width="300">
+                    width="250">
             </div>
             <div v-for="(button, index) in bottomMenuConfig[props.name].buttons" class="menu-long-frame-img"
                 :style="`rotate: ${state.maxAngle - (index * state.distance)}deg; animation-duration: ${(index + 1) * 0.5}s;`"
                 @mouseover="onHover = button.name" @mouseleave="onHover = ''">
                 <div v-if="button.isRouterLink == true">
                     <RouterLink :to="button.to" class="relative ">
-                        <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="100" 
+                        <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="70" 
                             :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
                             class="menu-long-frame-img-bg-default absolute">
                         <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
-                            width="100" class="absolute">
-                        <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100" >
+                            width="70" class="absolute">
+                        <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="70" >
                     </RouterLink>
                 </div>
                 <div v-else @click="clickValue = button.name">
-                    <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="100"
+                    <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="70"
                         :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
                         class="menu-long-frame-img-bg-default absolute" >
                     <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
-                        width="100" class="absolute">
-                    <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="100">
+                        width="70" class="absolute">
+                    <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="70">
 
                 </div>
 
@@ -32,7 +32,7 @@
             </div>
             <div>
                 <img src="../../../static/generic ui/bottom menu panel middle.png" class="menu-panel-middle" alt="" srcset=""
-                    width="125">
+                    width="105">
             </div>
 
 
@@ -79,11 +79,11 @@ state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state
 
 .menu-long-frame-img {
     position: absolute;
-    left: calc(50% - 50px);
+    left: calc(50% - 38px);
     bottom: 0;
     transform-origin: 50% 100%;
     animation: rotateIn 1.5s ease-in-out;
-    height: 250px;
+    height: 200px;
     overflow: hidden;
 }
 
@@ -107,13 +107,13 @@ state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state
 
 .menu-panel {
     position: absolute;
-    left: calc(50% - 145px);
+    left: calc(50% - 125px);
     bottom: 0;
 }
 
 .menu-panel-middle{
     position: absolute;
-    left: calc(50% - 57px);
+    left: calc(50% - 52px);
     bottom: 0;
 }
 

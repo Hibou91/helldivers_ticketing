@@ -10,7 +10,7 @@
             </RouterLink>
 
         </tMenu>
-        <div v-if="state.openEditQuests == false && state.openScavenge == false && state.openNewQuests == false && state.openCategories == false"
+        <div v-if="state.openEditQuests == false && state.openScavenge == false && state.openNewQuests == false && state.openCategories == false && state.openKeeper == false"
             class="tCardHolder">
             <div class="tCardHolderRow">
                 <tCard>
@@ -76,13 +76,15 @@
         </div>
 
         <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests"
-            v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories">
+            v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories" :questConfig="state.questConfig">
         </QuestEditor>
         <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category"
             :keeperData="state.keeper">
         </Scavenge>
         <QuestCategories v-if="state.openCategories == true" v-model:openPanel="state.openCategories"
             :category="config.category"></QuestCategories>
+        <Keeper v-if="state.openKeeper == true" v-model:openPanel="state.openKeeper"
+            :category="config.category" :keeperData="state.keeper"></Keeper>
 
         <modal v-if="state.openNewQuests == true" v-model:modalOpen="state.openNewQuests">
             <div class="modal-form">
@@ -96,11 +98,7 @@
                 <textarea type="text" v-model="state.new.description"></textarea>
                 <p>Progress</p>
                 <select name="" id="" v-model="state.new.progress">
-                    <option value="0">New</option>
-                    <option value="1">In Progress</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Fed Up</option>
-                    <option value="4">Finished</option>
+                    <option v-for="(value, key) in state.questConfig.progress" :value="key">{{value}}</option>
                 </select>
                 <div v-if="state.new.progress == 2">
                     <p>Waiting for</p>
@@ -109,9 +107,7 @@
 
                 <p>Priority</p>
                 <select name="" id="" v-model="state.new.priority">
-                    <option value="0">Who Cares</option>
-                    <option value="1">Should be done</option>
-                    <option value="2">PANIC</option>
+                    <option v-for="(value, key) in state.questConfig.priority" :value="key">{{value}}</option>
                 </select>
 
             </div>
@@ -139,6 +135,8 @@ import QuestCategories from './QuestCategories.vue';
 
 
 import { ref, onMounted, watch } from 'vue';
+import Keeper from './Keeper.vue';
+import toast from '../misc/toast'
 
 
 const props = defineProps(['config'])
@@ -154,7 +152,8 @@ const state = ref({
     keeper: {},
     menu: "",
     keeperDialog: '',
-    questCategories: []
+    questCategories: [],
+    questConfig: {}
 });
 
 
@@ -168,21 +167,24 @@ state.value.new = {
     progress: "1",
     priority: "1",
     waitingFor: "",
+    subQuests: []
 }
 
 
 
 onMounted(() => {
     getAllQuests()
+    getQuestConfig()
     getKeeper()
     getLocale()
+    
 })
 
 //methods
 
 const openQuest = (index) => {
     state.value.editQuest = state.value.quests[index].id
-    state.value.openEditQuests 
+    state.value.openEditQuests
     switchPanels('openEditQuests')
 }
 
@@ -215,6 +217,7 @@ const postQuests = async () => {
     if (response != false) {
         state.value.quests.push(response)
         state.value.openNewQuests = false
+        toast.toast('A new journey begins...')
     }
 
 }
@@ -236,10 +239,18 @@ const getLocale = async () => {
     }
 
 }
+const getQuestConfig = async () => {
+    const rawData = await window.questUtils.getQuestConfig()
+    if (rawData) {
+        state.value.questConfig = rawData
+
+    }
+
+}
 
 const switchPanels = (panel) => {
 
-    const panelArray = ['openNewQuests', 'openEditQuests', 'openKeeper', 'openLocale', 'openScavenge', 'openCategories']
+    const panelArray = ['openNewQuests', 'openEditQuests', 'openKeeper', 'openLocale', 'openScavenge', 'openCategories', 'openKeeper']
     panelArray.forEach((e) => {
         state.value[e] = false
     })
@@ -253,10 +264,13 @@ watch(() => state.value.menu, (newValue) => {
 
     if (newValue == "NEWQUEST") {
         switchPanels('openNewQuests')
-        
+
     }
     if (newValue == "QUESTCATEGORY") {
         switchPanels('openCategories')
+    }
+    if (newValue == "KEEPER") {
+        switchPanels('openKeeper')
     }
     state.value.menu = ""
 
@@ -288,8 +302,8 @@ watch(() => state.value.openEditQuests, (newValue) => {
 .tCardHolder {
     display: flex;
     flex-direction: row;
-    max-height: calc(100% - 350px);
-    height: calc(100% - 350px);
+    max-height: calc(100% - 250px);
+    height: calc(100% - 250px);
     overflow-y: visible;
     min-height: 0;
 }

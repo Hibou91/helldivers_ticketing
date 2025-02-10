@@ -41,7 +41,7 @@ defineProps(['menuName'])
 <style scoped>
 .menu-main {
     background-color: rgba(0, 0, 0, .7);
-    width: 250px;
+    width: 130px;
     height: calc(100vh - 40px);
     max-height: 100vh;
     position: absolute;
@@ -62,6 +62,6 @@ defineProps(['menuName'])
 
 .menu-main-enter-from,
 .menu-main-leave-to {
-    left: -300px;
+    left: -200px;
 }
 </style>

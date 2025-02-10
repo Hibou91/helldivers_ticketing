@@ -22,18 +22,22 @@ export default class Castle {
 
     this.setUpHandlers();
 
-    this.getCastleData();
+    //this.getCastleData();
   }
 
   setUpHandlers() {
     ipcMain.handle("getCastleData", (event, category) => this.getCastleData());
+    ipcMain.handle("getCastleConfig", (event) => this.getCastleConfig());
+  
     ipcMain.handle("getLocaleData", (event, category) =>
       this.getLocale(category)
     );
     ipcMain.handle("getLocaleKeeperData", (event, category) =>
       this.getLocaleKeeperData(category)
     );
-
+    ipcMain.handle("levelKeeper", (event, category, skill, upOrDown) =>
+      this.levelKeeper(category, skill, upOrDown)
+    );
     ipcMain.handle("getQuestCategoryData", (event, category) =>
       this.getQuestCategoryData(category)
     );
@@ -161,13 +165,94 @@ export default class Castle {
     }
   }
 
+  async levelKeeper(category, skill, upOrDown){
+    let categoryName = ""
+    switch (category) {
+      case "0":
+        categoryName = "library"
+        break;
+      case "1":
+         categoryName = "salon"
+        break;
+      case "2":
+         categoryName = "garden"
+        break;
+    }
+
+    let materialName = ""
+    switch (skill) {
+      case "cunning":
+        materialName = "witseed"
+        break;
+      case "strength":
+        materialName = "lionheart"
+        break;
+      case "charisma":
+        materialName = "magefish"
+        break;
+    }
+
+    const keeperData = await this[categoryName].getClassKeeperData();
+ 
+    
+    const castleData = await this.getRawCastleData()
+
+    if(upOrDown == 1){
+      let requirement = (keeperData.skills[skill] * config.castle.levelMultiplier) + config.castle.levelMultiplier
+      if(castleData.materials[materialName] && requirement < castleData.materials[materialName]){
+        await this[categoryName].levelUpKeeper(skill);
+        castleData.materials[materialName] = castleData.materials[materialName] - requirement
+        fileUtil.postFileData("castle.json", castleData)
+      }
+    }else{
+      if(keeperData.skills[skill] == 0){
+        return false;
+      }
+      let cashBack = Math.floor((((keeperData.skills[skill] - 1) * config.castle.levelMultiplier) + config.castle.levelMultiplier) / 2) 
+      castleData.materials[materialName] = castleData.materials[materialName] + cashBack
+      fileUtil.postFileData("castle.json", castleData)
+      this[categoryName].levelDownKeeper(skill);
+      return true
+    }
+    
+
+  }
+
   async getRawCastleData() {
     let castleData = await fileUtil.getFileData("castle.json");
     if (castleData == false) {
-      castleData = { };
+      castleData = await this.setUpLevelRequirement(true);
     } 
 
     return castleData;
+  }
+
+  async setUpLevelRequirement(firstRun){
+    let castleData = {}
+    let castleLevel = 0
+    if(!firstRun){
+      castleData = await this.getRawCastleData()
+      castleLevel = castleData.castleLevel
+    }
+
+    castleData.levelRequirement = {}
+    castleData.levelRequirement.anima = ( castleLevel + 1) * config.castle.animaLevelMultiplier
+    let materialArray = ['paper', 'wood', 'silk']
+    
+    while (materialArray.length > 0){
+      let i = Math.floor(Math.random() * (materialArray.length - 1))
+      const max = ( castleLevel + 1) * config.castle.levelMultiplier
+      castleData.levelRequirement[materialArray[i]] = Math.round(max / materialArray.length )
+      materialArray.splice(i, 1)
+    }
+
+    if(firstRun){
+      castleData.materials = {}
+      fileUtil.postFileData('castle.json', castleData)
+    }
+
+    return castleData
+    
   }
 
   async getCastleData() {
@@ -183,6 +268,19 @@ export default class Castle {
     return castleData;
   }
 
+  async getCastleConfig() {
+    let castleData = await this.getRawCastleData();
+    if (castleData == false) {
+      castleData = {
+        castleConfig: config.castle,
+      };
+    } else {
+      castleData.castleConfig = config.castle;
+    }
+
+    return castleData;
+  }
+
   async saveCastleData(data) {
     return await fileUtil.postFileData("castle.json", data)
   }
@@ -191,31 +289,29 @@ export default class Castle {
     const scavenge = await Scavenges.claimScavenge(id);
     const castleData = await this.getRawCastleData();
 
-    if(castleData == false){
-      castleData = {}
-    }
-
     if(!castleData.materials){
       castleData.materials = {}
     }
 
     scavenge.loot.forEach((loot) => {
-      
- 
-      
-      if(!castleData.materials[loot.name]){
-        if(config.scavenges.materials[loot.name.toLowerCase()].storeMax){
-          castleData.materials[loot.name] = Math.min(loot.count, config.scavenges.materials[loot.name.toLowerCase()].storeMax)
-        }else{
 
-        }
-        castleData.materials[loot.name] = loot.count
+      let castleLevel = 0
+      if(castleData.castleLevel){
+        castleLevel = castleData.castleLevel
+      }
+
+      if(loot.name == 'anima'){
+        let storeMax = (castleLevel + 1) * config.castle.animaLevelMultiplier * config.castle.storageMultiplier
       }else{
-        if(config.scavenges.materials[loot.name.toLowerCase()].storeMax){
-          castleData.materials[loot.name.toLowerCase()] = Math.min(loot.count*1 + castleData.materials[loot.name]*1, config.scavenges.materials[loot.name.toLowerCase()].storeMax);
-        }else{
-          castleData.materials[loot.name.toLowerCase()] = loot.count*1 + castleData.materials[loot.name]*1;
-        }
+        let storeMax = (castleLevel + 1) * config.castle.levelMultiplier * config.castle.storageMultiplier
+      }
+      let storeMax = (castleLevel + 1) * config.castle.levelMultiplier * config.castle.storageMultiplier
+      
+      if(!castleData.materials[loot.name.toLowerCase()]){
+        castleData.materials[loot.name.toLowerCase()] = Math.min(loot.count, storeMax)
+        
+      }else{
+        castleData.materials[loot.name.toLowerCase()] = castleData.materials[loot.name.toLowerCase()] + Math.min(loot.count, storeMax)
         
       }
     });
