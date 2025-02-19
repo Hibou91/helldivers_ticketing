@@ -30,6 +30,9 @@ export default class Castle {
     ipcMain.handle("getCastleConfig", (event) => this.getCastleConfig());
     ipcMain.handle("levelupCastle", (event) => this.levelUpCastle());
     ipcMain.handle("saveCastleConfig", (event, config) => this.saveCastleConfig(config));
+
+    ipcMain.handle("getMaterialConfig", (event) => this.getMaterialConfig());
+    ipcMain.handle("saveMaterialConfig", (event, config) => this.saveMaterialConfig(config));
   
     ipcMain.handle("getLocaleData", (event, category) =>
       this.getLocale(category)
@@ -237,6 +240,7 @@ export default class Castle {
       castleLevel = castleData.castleLevel
     }else{
       castleData.config = config.castle
+      
     }
 
     castleData.levelRequirement = {}
@@ -254,6 +258,7 @@ export default class Castle {
       castleData.materials = {}
       
       fileUtil.postFileData('castle.json', castleData)
+      fileUtil.postFileData('materialConfig.json', config.scavenges.materials)
     }
 
     return castleData
@@ -367,5 +372,26 @@ export default class Castle {
     return await fileUtil.postFileData("castle.json", castleData)
   }
 
+  async getMaterialConfig () {
+
+    let materialConfig = await fileUtil.getFileData('materialConfig.json')
+    if(materialConfig == false){
+      materialConfig = config.scavenges.materials
+      await fileUtil.postFileData("materialConfig.json", materialConfig)
+    }
+    return materialConfig
+  }
+
+  async saveMaterialConfig (data) {
+    const materialConfig = structuredClone(config.scavenges.materials)
+    for (const [key, material] of Object.entries(materialConfig)){
+      material.occurrence = data[key].occurrence
+      material.countmin = data[key].countmin
+      material.countmax = data[key].countmax
+      material.category = data[key].category
+    }
+
+    return await fileUtil.postFileData("materialConfig.json", materialConfig)
+  }
   
 }

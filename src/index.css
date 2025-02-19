@@ -141,6 +141,11 @@ a {
   margin-top: 10px;
 }
 
+.inner-scroll{
+  max-height: 100%;
+  overflow-y: scroll;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -187,7 +192,7 @@ a {
   top: 30px;
   left: calc(50% - 100px);
   position: absolute;
-  background-image: url("../static/generic ui/modal.png");
+  background-image: url("../static/generic_ui/modal.png");
   background-repeat: no-repeat;
   background-size: contain;
   text-align: center;

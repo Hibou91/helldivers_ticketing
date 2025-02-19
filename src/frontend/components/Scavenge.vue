@@ -33,7 +33,7 @@
                             state.hover.typeName }}</h3>
                         <p class="scavenge-data-text">Chance: {{ state.hover.difficulty }}%</p>
                         <p class="scavenge-data-text">Keeper: {{ state.hover.keeperbonus }} %</p>
-                        <p class="scavenge-data-text">Skills: {{ state.hover.targetSkills }}</p>
+                        <p class="scavenge-data-text">Skills: {{ state.hover.targetSkills[0] }}, {{ state.hover.targetSkills[1] }}</p>
                         <p class="scavenge-data-text">Skill Bonus: {{ state.hover.skillBonus }}%</p>
                         <div class="flex-row">
                             <p class="scavenge-data-text">Prize:</p>
@@ -53,7 +53,7 @@
         </div>
 
 
-        <div class="tCardHolderRow">
+        <div class="tCardHolderRow w-50">
             <TCardClosable v-model:modalOpen="state.openClaimPanel" :closeMethod="() => { }"
                 v-if="state.openClaimPanel == true">
                 <div class="modal-form">
@@ -96,14 +96,14 @@
 
                     </div>
                     <div class="scavenge-data pointer-link">
-                        <div class="flex-row">
+                        <div class="flex-row" style="justify-content: space-between; height: 100%;">
 
-                            <div>
-                                <p class="scavenge-data-text">{{ scavenge.targetName }} quest in the {{
+                            <div class="flex-col" style="justify-content: space-around; ">
+                                <p style="margin: 0;">{{ scavenge.targetName }} quest in the {{
                                     scavenge.typeName }}</p>
                                 <div class="flex-row">
-                                    <p class="scavenge-data-text ">{{ scavenge.successRate }} %</p>
-                                    <p class="scavenge-data-text ">{{ scavenge.duration }} hours</p>
+                                    <p style="margin: 0 20px 0 0;">{{ scavenge.successRate }} %</p>
+                                    <p style="margin: 0;">{{ scavenge.duration }} hours</p>
 
                                 </div>
 
@@ -132,12 +132,12 @@
                         </div>
 
                     </div>
-                    <div class="w-50 ">
+                    <div class="w-50 inner-scroll">
                         <p><i>{{ state.keeperData.config ? `"${state.keeperData.config.description}""` : "" }}</i> </p>
-                        <p>Homeland: {{ state.keeperData.config ? state.keeperData.config.homeLand : "" }}</p>
-                        <p>Cunning: {{ state.keeperData.skills ? state.keeperData.skills.cunning : 0 }}</p>
-                        <p>Charisma: {{ state.keeperData.skills ? state.keeperData.skills.charisma : 0 }}</p>
-                        <p>Strength: {{ state.keeperData.skills ? state.keeperData.skills.strength : 0 }}</p>
+                        <p class="scavenge-data-text">Homeland: {{ state.keeperData.config ? state.keeperData.config.homeLand : "" }}</p>
+                        <p class="scavenge-data-text">Cunning: {{ state.keeperData.skills ? state.keeperData.skills.cunning : 0 }}</p>
+                        <p class="scavenge-data-text">Charisma: {{ state.keeperData.skills ? state.keeperData.skills.charisma : 0 }}</p>
+                        <p class="scavenge-data-text">Strength: {{ state.keeperData.skills ? state.keeperData.skills.strength : 0 }}</p>
                     </div>
                 </div>
 
@@ -173,7 +173,7 @@ const openPanel = defineModel('openPanel')
 const updateKey = defineModel('updateKey')
 const props = defineProps(['category'])
 
-const emit = defineEmits(['update:scavenge'])
+const emit = defineEmits(['updateScavenge'])
 
 const state = ref({
     loaded: false,
@@ -245,20 +245,20 @@ const generateScavenge = async () => {
 const postScavenge = async (id) => {
     if (state.value.scavengeAction == "GENERATE") {
         if (await window.keeperUtils.postScavenge(id) == true) {
-            toast.toast('Scavenge started')
+            toast.toast(`${state.keeperData.config.name} left to the darkness. But she allways comes back, does she..?`)
             generateScavenge(props.category)
         }
 
     } else if (state.value.scavengeAction == "ACTIVE") {
         if (await window.keeperUtils.deleteScavenge(id) == true) {
-            toast.toast('Scavenge cancelled')
+            toast.toast('Az unsuccesfull adventure... this time')
             generateScavenge(props.category)
         }
 
     } else if (state.value.scavengeAction == "FINISHED") {
         state.value.openClaimPanel = true
     }
-    emit('update:scavenge')
+    setTimeout(() => {emit('updateScavenge'), 1000})
 }
 
 const claimScavenge = async () => {
@@ -301,7 +301,7 @@ watch(() => state.value.hover, (newValue) => {
 
     if (newValue != '') {
         filcker();
-        console.log(state.value.hover);
+   
     }
 
 })
@@ -440,6 +440,7 @@ window.keeperUtils.onUpdateCounter((event, category) => {
 
 .keeper-img-container {
     max-height: calc(100% - 10px);
+    max-width: calc(50% - 10px);
 }
 
 .keeper-img {

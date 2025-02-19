@@ -129,8 +129,7 @@ export default {
         occurrence: 1,
         countmin: 5,
         countmax: 10,
-        keeperbonus: 0,
-        storeMax: 10,
+        category: ''
       },
       wood: {
         name: "Wood",
@@ -138,7 +137,7 @@ export default {
         countmin: 1,
         countmax: 5,
         category: 2,
-        storeMax: 7,
+      
       },
       silk: {
         name: "Silk",
@@ -146,7 +145,7 @@ export default {
         countmin: 1,
         countmax: 5,
         category: 1,
-        storeMax: 7,
+   
       },
       paper: {
         name: "Paper",
@@ -154,25 +153,28 @@ export default {
         countmin: 1,
         countmax: 5,
         category: 0,
-        storeMax: 7,
+   
       },
       magefish: {
         name: "Magefish",
         occurrence: 0.5,
         countmin: 1,
         countmax: 2,
+        category: '',
       },
       witseed: {
         name: "Witseed",
         occurrence: 0.5,
         countmin: 1,
         countmax: 2,
+        category: '',
       },
       lionheart: {
         name: "Lionheart",
         occurrence: 0.5,
         countmin: 1,
         countmax: 2,
+        category: '',
       },
 
     }

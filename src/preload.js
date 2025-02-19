@@ -39,6 +39,10 @@ contextBridge.exposeInMainWorld("generic", {
   getCastleConfig:() => ipcRenderer.invoke("getCastleConfig"),
   levelupCastle:() => ipcRenderer.invoke("levelupCastle"),
   saveCastleConfig:(config) => ipcRenderer.invoke("saveCastleConfig", config),
+
+  getMaterialConfig:() => ipcRenderer.invoke("getMaterialConfig"),
+  saveMaterialConfig:(config) => ipcRenderer.invoke("saveMaterialConfig", config),
+
   getLocaleData:(category) => ipcRenderer.invoke("getLocaleData", category),
   getLocaleKeeperData:(category) => ipcRenderer.invoke("getLocaleKeeperData", category),
   quitProgram: () => ipcRenderer.invoke("quitProgram"),

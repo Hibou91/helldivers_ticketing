@@ -1,5 +1,5 @@
 <template>
-    <div class="library-bg" :style="`background-image: url('./static/${config.model}/first.jpg');`" @update:scavenge="console.log(updated)">
+    <div class="library-bg" :style="`background-image: url('./static/${config.model}/first.jpg');`" >
         <tMenu menuName="Library">
 
             <RouterLink to="/castle">
@@ -110,7 +110,7 @@
             :questConfig="state.questConfig">
         </QuestEditor>
         <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category"
-            :keeperData="state.keeper" :updateKey="state.updateKey">
+            :keeperData="state.keeper" :updateKey="state.updateKey" @update-scavenge="() => {getScavenge()}">
         </Scavenge>
         <QuestCategories v-if="state.openCategories == true" v-model:openPanel="state.openCategories"
             :category="config.category"></QuestCategories>
@@ -171,7 +171,7 @@ import toast from '../misc/toast'
 
 const props = defineProps(['config'])
 
-console.log(props.config);
+
 
 
 const state = ref({
@@ -285,7 +285,9 @@ const getQuestConfig = async () => {
 
 const getScavenge = async () => {
 
-    let rawData = await window.keeperUtils.generateScavenges(props.category)
+    let rawData = await window.keeperUtils.generateScavenges(props.config.category)
+    console.log(rawData);
+    
 
     switch (rawData.action) {
         case "GENERATE":

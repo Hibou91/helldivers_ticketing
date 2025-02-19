@@ -12,15 +12,42 @@
 
         <div class="castle-card">
             <tCard>
-                <h2>Castle</h2>
-                <p>Level Multiplier</p>
-                <input type="text" v-model="state.castleData.levelMultiplier">
-                <p>Anima level multiplier</p>
-                <input type="text" v-model="state.castleData.animaLevelMultiplier">
-                <p>Storage multiplier</p>
-                <input type="text" v-model="state.castleData.storageMultiplier">
+                <div>
+                    <h2>Castle</h2>
+                    <p></p>
+                    <p>Level Multiplier</p>
+                    <input type="text" v-model="state.castleData.levelMultiplier">
+                    <p>Anima level multiplier</p>
+                    <input type="text" v-model="state.castleData.animaLevelMultiplier">
+                    <p>Storage multiplier</p>
+                    <input type="text" v-model="state.castleData.storageMultiplier">
 
-                <tButton @click="saveCastleData">Save settings</tButton>
+                    <tButton @click="saveCastleData" style="margin: 30px 0 50px 0;">Save settings</tButton>
+                </div>
+                <h2>Materials</h2>
+
+                <div v-for="material in state.materialData">
+                    <h3 @click="material.open = !material.open" class="pointer-link">{{ material.name }}</h3>
+                    <div v-if="material.open == true">
+                        <p>Occurrence</p>
+                        <input type="text" v-model="material.occurrence">
+                        <p>Maximum find</p>
+                        <input type="text" v-model="material.countmin">
+                        <p>Minimum find</p>
+                        <input type="text" v-model="material.countmax">
+                        <p>Category restriction</p>
+                        <select  v-model="material.category">
+                            <option value="0">Dungeon</option>
+                            <option value="1">Village</option>
+                            <option value="2">Forest</option>
+                        </select>
+
+
+                        <tButton @click="saveMaterialConfig" style="margin: 30px 0 50px 0;">Save settings</tButton>
+                    </div>
+
+                </div>
+
 
             </tCard>
         </div>
@@ -36,23 +63,26 @@ import tButton from '../components/tButton.vue';
 import tMenu from '../components/tMenu.vue';
 import tCard from '../components/tCard.vue';
 
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import toast from '../misc/toast';
 
 const state = ref({
-    castleData:{
+    castleData: {
         levelMultiplier: 0,
         animaLevelMultiplier: 0,
         storageMultiplier: 0,
-    }
+    },
+    materialData: {},
+
 })
 
 onMounted(() => {
     setMeUp()
 })
 
-const setMeUp = async() => {
+const setMeUp = async () => {
     getCastleData()
+    getMaterialConfig()
 }
 
 const getCastleData = async () => {
@@ -71,9 +101,36 @@ const saveCastleData = async () => {
     }
     const cd = await window.generic.saveCastleConfig(config)
 
-    if(cd != false){
+    if (cd != false) {
         toast.toast("Your castle updated itself. Who know if for better or worse")
-    }else{
+    } else {
+        toast.toast("Ruins everywhere. The foundation of your castle is broken.")
+    }
+
+}
+
+const getMaterialConfig = async () => {
+    const mc = await window.generic.getMaterialConfig()
+
+    
+    if(mc != false){
+        state.value.materialData = mc
+
+       
+    }
+
+    
+
+}
+
+const saveMaterialConfig = async () => {
+
+
+    const cd = await window.generic.saveMaterialConfig(JSON.parse(JSON.stringify(state.value.materialData)))
+
+    if (cd != false) {
+        toast.toast("Your castle updated itself. Who know if for better or worse")
+    } else {
         toast.toast("Ruins everywhere. The foundation of your castle is broken.")
     }
 

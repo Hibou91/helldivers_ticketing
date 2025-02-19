@@ -56,6 +56,9 @@ export default class Scavenges {
   }
 
   async getScavengesforFrontend(category) {
+    if(!category){
+      return
+    }
     const scavenges = await Scavenges.getScavengesForCategory(category);
 
     const result = {
@@ -131,7 +134,7 @@ export default class Scavenges {
         scavenges[i].time = new Date();
         scavenges[i].time.setTime(
           scavenges[i].time.getTime() +
-            scavenges[i].duration /** 60 * 60 * 1000*/
+            scavenges[i].duration * 60 * 60 * 1000
         );
         category = scavenges[i].category;
         await fileUtil.postFileData("scavenges.json", scavenges);
@@ -147,7 +150,11 @@ export default class Scavenges {
 
   static async finishScavenge(id) {
     let scavenges = await Scavenges.getScavenges();
-
+    let materialConfig = await fileUtil.getFileData('materialConfig.json')
+    if(materialConfig == false){
+      materialConfig = config.scavenges.materials;
+      await fileUtil.postFileData('materialConfig.json', materialConfig)
+    }
     let i = 0;
     let found = false;
 
@@ -159,7 +166,7 @@ export default class Scavenges {
         scavenges[i].loot = [];
         if (scavenges[i].success == true) {
           for (const [key, material] of Object.entries(
-            config.scavenges.materials
+            materialConfig
           )) {
             if (
               material.category == undefined ||
@@ -179,12 +186,12 @@ export default class Scavenges {
         } else {
           
           scavenges[i].loot.push({
-            name: config.scavenges.materials.anima.name,
+            name: materialConfig.anima.name,
             count: Math.round(
               (Math.random() *
-                (config.scavenges.materials.anima.countmax -
-                  config.scavenges.materials.anima.countmin) +
-                config.scavenges.materials.anima.countmin) /
+                (materialConfig.anima.countmax -
+                  materialConfig.anima.countmin) +
+                  materialConfig.anima.countmin) /
                 2
             ),
           });
