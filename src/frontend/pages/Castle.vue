@@ -32,57 +32,85 @@
                 <p>{{ state.hoveredLocale.description }}</p>
             </tCard>
         </div>
-        <div v-if="state.openCastlePanel == true" class="label-card">
+        <div v-if="state.openMaterialsPanel == true" class="label-card">
 
-            <tCardClosable v-model:modalOpen="state.openCastlePanel" :closeMethod="() => { }">
-                <h2>Castle</h2>
+            <tCardClosable v-model:modalOpen="state.openMaterialsPanel" :closeMethod="() => { }">
+                <h2>Materials</h2>
                 <div class="flex-row">
                     <div class="flex-col material-col">
                         <div class="flex-row">
-                            <img src="../../../static/icons/materials/paper.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.paper ? state.castleData.materials.paper : 0 }}</p>
+                            <img src="../../../static/icons/materials/paper.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.paper ? state.castleData.materials.paper : 0 }} / {{
+                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                state.castleData.config.levelMultiplier *
+                                state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
-                            <img src="../../../static/icons/materials/silk.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.silk ? state.castleData.materials.silk : 0 }}</p>
+                            <img src="../../../static/icons/materials/silk.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.silk ? state.castleData.materials.silk : 0 }} / {{
+                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                state.castleData.config.levelMultiplier *
+                                state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
-                            <img src="../../../static/icons/materials/wood.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.wood ? state.castleData.materials.wood : 0 }}</p>
+                            <img src="../../../static/icons/materials/wood.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.wood ? state.castleData.materials.wood : 0 }} / {{
+                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                state.castleData.config.levelMultiplier *
+                                state.castleData.config.storageMultiplier }}</p>
                         </div>
                     </div>
 
                     <div class="flex-col">
                         <div class="flex-row">
-                            <img src="../../../static/icons/foods/magefish.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.magefish ? state.castleData.materials.magefish : 0 }}</p>
+                            <img src="../../../static/icons/foods/magefish.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.magefish ? state.castleData.materials.magefish : 0 }} /
+                                {{ (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                    state.castleData.config.levelMultiplier *
+                                    state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
-                            <img src="../../../static/icons/foods/witseed.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.witseed ? state.castleData.materials.witseed : 0 }}</p>
+                            <img src="../../../static/icons/foods/witseed.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.witseed ? state.castleData.materials.witseed : 0 }} / {{
+                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                state.castleData.config.levelMultiplier *
+                                state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
-                            <img src="../../../static/icons/foods/lionheart.png" alt="" width="50" height="50"
-                                >
-                            <p>: {{ state.castleData.materials.lionheart ? state.castleData.materials.lionheart : 0 }}
+                            <img src="../../../static/icons/foods/lionheart.png" alt="" width="50" height="50">
+                            <p>: {{ state.castleData.materials.lionheart ? state.castleData.materials.lionheart : 0 }} /
+                                {{ (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                                    state.castleData.config.levelMultiplier *
+                                    state.castleData.config.storageMultiplier }}
                             </p>
                         </div>
                     </div>
                 </div>
+            </tCardClosable>
+        </div>
+
+        <div v-if="state.openCastlePanel == true" class="label-card">
+
+            <tCardClosable v-model:modalOpen="state.openCastlePanel" :closeMethod="() => { }">
+                <h2>Castle</h2>
+                <div class="flex-col">
+                    <div class="flex-row" v-for="(value, key) in state.castleData.levelRequirement">
+                        <img :src="`../../../static/icons/materials/${key}.png`" alt="" width="50" height="50">
+                        <p>:{{ state.castleData.materials[key] ? state.castleData.materials[key] : 0 }} / {{ value }}
+                        </p>
+                    </div>
+
+
+                </div>
 
 
 
-                <tButton @click="toast.toast('Level up messager')">Level up</tButton>
+                <tButton @click="levelUpcaste()">Level up</tButton>
             </tCardClosable>
         </div>
 
 
-        <BottomMenu name="castle" v-model:onHover="state.hover" v-model:clickValue="state.menu"></BottomMenu>
+        <BottomMenu name="castle" v-model:onHover="state.hover" v-model:clickValue="state.menu" :key="state.updatekey"></BottomMenu>
 
 
     </div>
@@ -115,7 +143,8 @@ const state = ref({
     },
     menu: "",
     openCastlePanel: false,
-    openCastleLevelup: false,
+    openMaterialsPanel: false,
+    updatekey: 0,
 })
 
 onMounted(() => {
@@ -124,13 +153,21 @@ onMounted(() => {
 })
 
 const getCastleData = async () => {
-    const response = await window.generic.getCastleData()
+    const cd = await window.generic.getCastleData()
 
-    state.value.castleData = response
-    console.log(response);
+    state.value.castleData = cd
 
+}
 
-
+const levelUpcaste = async () => {
+    const cd = await window.generic.levelupCastle()
+    if (cd != false) {
+        toast.toast("Power... and more power... ")
+        state.value.castleData = cd
+        state.value.updatekey = state.value.updatekey + 1
+    } else {
+        toast.toast("Poverty and misery is your fate...")
+    }
 }
 
 const filcker = () => {
@@ -169,7 +206,14 @@ watch(() => state.value.hover, (newValue) => {
 watch(() => state.value.menu, (newValue) => {
 
     if (newValue == 'CASTLE') {
+        state.value.openMaterialsPanel = false
         state.value.openCastlePanel = true
+
+    }
+    if (newValue == 'MATERIALS') {
+        state.value.openCastlePanel = false
+        state.value.openMaterialsPanel = true
+
     }
     state.value.menu = ''
 
@@ -202,19 +246,19 @@ watch(() => state.value.menu, (newValue) => {
 }
 
 .castle-library {
-    background-image: url("./static/castle/castle library.png");
+    background-image: url("./static/castle/castle_library.png");
     z-index: -9;
     transition: opacity 0.3s ease;
 }
 
 .castle-salon {
-    background-image: url("./static/castle/castle salon.png");
+    background-image: url("./static/castle/castle_salon.png");
     z-index: -9;
     transition: opacity 0.3s ease;
 }
 
 .castle-garden {
-    background-image: url("./static/castle/castle garden.png");
+    background-image: url("./static/castle/castle_garden.png");
     z-index: -9;
     transition: opacity 0.3s ease;
 }
@@ -229,7 +273,7 @@ watch(() => state.value.menu, (newValue) => {
     opacity: 0;
 }
 
-.material-col{
+.material-col {
     margin-right: 40px;
 }
 </style>

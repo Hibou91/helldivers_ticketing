@@ -10,11 +10,11 @@
                     <div v-for="(category, index) in state.categories" v-bind:key="category.id"
                         class="questCategory-data-main ">
                         <div class="questCategory-data-image">
-                            <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
+                            <img src="../../../static/icons/scrolls/scroll_frame.png" alt="" width="100" height="100"
                                 class="questCategory-data-main" :style="`filter:hue-rotate(${category.color}deg) ;`">
                             <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
                                 class="questCategory-data-addons">
-                            <img src="../../../static/icons/scrolls/seal red.png" alt="" width="100" height="100"
+                            <img src="../../../static/icons/scrolls/seal_red.png" alt="" width="100" height="100"
                                 class="questCategory-data-addons">
                         </div>
                         <div class="questCategory-data pointer-link"
@@ -39,11 +39,11 @@
                     </div>
                     <div class="questCategory-data-main ">
                         <div class="questCategory-data-image">
-                            <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
+                            <img src="../../../static/icons/scrolls/scroll_frame.png" alt="" width="100" height="100"
                                 class="questCategory-data-main" :style="`filter:hue-rotate(${state.newCategory.color}deg);`">
                             <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
                                 class="questCategory-data-addons">
-                            <img src="../../../static/icons/scrolls/seal red.png" alt="" width="100" height="100"
+                            <img src="../../../static/icons/scrolls/seal_red.png" alt="" width="100" height="100"
                                 class="questCategory-data-addons">
                         </div>
                         <div class="questCategory-data pointer-link"
@@ -222,7 +222,7 @@ const deleteCategory = async (id, index) => {
 .questCategory-data {
     height: calc(100px - ( 2 * 13px));
     width: calc(100% - 26px);
-    background-image: url("./static/icons/scrolls/scroll frame fade.png");
+    background-image: url("./static/icons/scrolls/scroll_frame_fade.png");
     background-repeat: no-repeat;
     background-size: 600px 100px;
     padding: 13px;

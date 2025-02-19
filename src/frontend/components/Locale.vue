@@ -1,12 +1,15 @@
 <template>
-    <div class="library-bg" :style="`background-image: url('./static/${config.model}/first.jpg');`">
+    <div class="library-bg" :style="`background-image: url('./static/${config.model}/first.jpg');`" @update:scavenge="console.log(updated)">
         <tMenu menuName="Library">
 
             <RouterLink to="/castle">
-                <tButton>Back</tButton>
+                <tButton>Castle</tButton>
             </RouterLink>
             <RouterLink to="/">
                 <tButton>Main Menu</tButton>
+            </RouterLink>
+            <RouterLink :to="`/documentation/${props.config.model}`">
+                <tButton>Documentation</tButton>
             </RouterLink>
 
         </tMenu>
@@ -14,55 +17,82 @@
             class="tCardHolder">
             <div class="tCardHolderRow">
                 <tCard>
-                    <h2>{{ config.namel }}</h2>
-                    <h3>Level: 0</h3>
+                    <h2>{{ config.name }}</h2>
+                    <div class="flex-row">
+                        <div class="left-col">
+                            <h3>Categories</h3>
+                            <div v-if="state.questCategories.length == 0">
+                                <p>No categories... yet</p>
+                            </div>
+                            <div v-else v-for="category in state.questCategories" class="flex-row">
+                                <img :src="`../../../static/buttons/round_frame.png`" alt="" height="15"
+                                    style="margin: auto 20px auto 10px;">
+                                <p>{{ category.name }}</p>
+                            </div>
+                        </div>
+                        <div class="right-col">
+
+                        </div>
+
+                    </div>
+
 
                 </tCard>
 
-                <tCard>
+                <tCard style="height: 600px;">
 
                     <div class="flex-row">
-                        <div class="w-50 ">
+                        <div class="left-col " style="text-align: center;">
                             <div class="relative">
-                                <img :src="`../../../static/buttons/round frame.png`" alt="" height="100"
+                                <img :src="`../../../static/buttons/round_frame.png`" alt="" height="100"
                                     class="absolute">
                                 <img :src="`../../../static/icons/keepers/${config.category}.png`" alt="" height="100">
                             </div>
-                            <p>"{{ state.keeperDialog }}"</p>
+                            <p><i>"{{ state.keeperDialog }}"</i></p>
 
 
                         </div>
-                        <div class="w-50">
-                            <h2>{{ state.keeper.config ? state.keeper.config.name : "" }}</h2>
-                            <h3>Level: {{ state.keeper.level ? state.keeper.level : 0 }}</h3>
-                            <tButton @click="state.openScavenge = true">Scavenge</tButton>
+                        <div class="right-col">
+                            <div class="flex-row">
+                                <h2>{{ state.keeper.config ? state.keeper.config.name : "" }} </h2>
+                                <span style="margin-top: 27px; margin-left: 10px;">the {{ state.keeper.title }}</span>
+                            </div>
+
+                            <p>{{ state.scavengeText }}</p>
+
 
                         </div>
                     </div>
+
                 </tCard>
 
             </div>
             <div class="scroll-holder">
                 <div v-for="(quest, index) in state.quests" class="scroll-main scroll-main-frame">
                     <div class="scroll-image" :class="{ 'scroll-panic': quest.priority == 2 }">
-                        <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
+                        <img src="../../../static/icons/scrolls/scroll_frame.png" alt="" width="100" height="100"
                             class="scroll-main" :style="getFrameColor(quest.questCategory)">
                         <img src="../../../static/icons/scrolls/scroll.png" alt="" width="100" height="100"
                             class="scroll-addons">
-                        <img v-if="quest.priority == 0" src="../../../static/icons/scrolls/seal blue.png" alt=""
+                        <img v-if="quest.priority == 0" src="../../../static/icons/scrolls/seal_blue.png" alt=""
                             width="100" height="100" class="scroll-addons">
-                        <img v-if="quest.priority == 1" src="../../../static/icons/scrolls/seal green.png" alt=""
+                        <img v-if="quest.priority == 1" src="../../../static/icons/scrolls/seal_green.png" alt=""
                             width="100" height="100" class="scroll-addons">
-                        <img v-if="quest.priority == 2" src="../../../static/icons/scrolls/seal red.png" alt=""
+                        <img v-if="quest.priority == 2" src="../../../static/icons/scrolls/seal_red.png" alt=""
                             width="100" height="100" class="scroll-addons">
                     </div>
                     <div class="scroll-data pointer-link" @click="() => { openQuest(index) }"
                         :style="getFrameColor(quest.questCategory)">
                         <div>
-                            <h3>{{ quest.title }}</h3>
-                            <p>{{ quest.progressName }} <span v-if="quest.progress == 2">on {{ quest.waitingFor
-                                    }}</span>
-                            </p>
+                            <h3 style="margin: 20px 0 20px 0;">{{ quest.title }}</h3>
+                            <div class="flex-row" style="margin: 0;">
+                                <p style="margin: 0;">{{ quest.progressName }} <span v-if="quest.progress == 2">on {{ quest.waitingFor
+                                        }}</span>
+                                </p>
+                                <p v-if="quest.subQuests.length > 0" style="margin: 0; margin-left: 15px;">{{ Math.round (((quest.subQuests.filter( e => e.done == true).length) / quest.subQuests.length) * 100)  }} %</p>
+                            </div>
+                            
+
                         </div>
 
 
@@ -76,15 +106,16 @@
         </div>
 
         <QuestEditor v-if="state.openEditQuests == true" v-model:openPanel="state.openEditQuests"
-            v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories" :questConfig="state.questConfig">
+            v-model:questId="state.editQuest" :category="config.category" :questCategories="state.questCategories"
+            :questConfig="state.questConfig">
         </QuestEditor>
         <Scavenge v-if="state.openScavenge == true" v-model:openPanel="state.openScavenge" :category="config.category"
-            :keeperData="state.keeper">
+            :keeperData="state.keeper" :updateKey="state.updateKey">
         </Scavenge>
         <QuestCategories v-if="state.openCategories == true" v-model:openPanel="state.openCategories"
             :category="config.category"></QuestCategories>
-        <Keeper v-if="state.openKeeper == true" v-model:openPanel="state.openKeeper"
-            :category="config.category" :keeperData="state.keeper"></Keeper>
+        <Keeper v-if="state.openKeeper == true" v-model:openPanel="state.openKeeper" :category="config.category"
+            :keeperData="state.keeper"></Keeper>
 
         <modal v-if="state.openNewQuests == true" v-model:modalOpen="state.openNewQuests">
             <div class="modal-form">
@@ -98,7 +129,7 @@
                 <textarea type="text" v-model="state.new.description"></textarea>
                 <p>Progress</p>
                 <select name="" id="" v-model="state.new.progress">
-                    <option v-for="(value, key) in state.questConfig.progress" :value="key">{{value}}</option>
+                    <option v-for="(value, key) in state.questConfig.progress" :value="key">{{ value }}</option>
                 </select>
                 <div v-if="state.new.progress == 2">
                     <p>Waiting for</p>
@@ -107,7 +138,7 @@
 
                 <p>Priority</p>
                 <select name="" id="" v-model="state.new.priority">
-                    <option v-for="(value, key) in state.questConfig.priority" :value="key">{{value}}</option>
+                    <option v-for="(value, key) in state.questConfig.priority" :value="key">{{ value }}</option>
                 </select>
 
             </div>
@@ -117,7 +148,7 @@
         </modal>
 
 
-        <BottomMenu name="library" v-model:onHover="state.hover" v-model:clickValue="state.menu"></BottomMenu>
+        <BottomMenu name="library" v-model:onHover="state.hover" v-model:clickValue="state.menu" :key="state.updateKey"></BottomMenu>
     </div>
 
 </template>
@@ -138,13 +169,15 @@ import { ref, onMounted, watch } from 'vue';
 import Keeper from './Keeper.vue';
 import toast from '../misc/toast'
 
-
 const props = defineProps(['config'])
+
+console.log(props.config);
+
 
 const state = ref({
     openNewQuests: false,
     openEditQuests: false,
-    openKeeper: true,
+    openKeeper: false,
     openLocale: true,
     openScavenge: false,
     openCategories: false,
@@ -153,7 +186,9 @@ const state = ref({
     menu: "",
     keeperDialog: '',
     questCategories: [],
-    questConfig: {}
+    questConfig: {},
+    scavengeText: "",
+    updateKey: 0
 });
 
 
@@ -177,7 +212,7 @@ onMounted(() => {
     getQuestConfig()
     getKeeper()
     getLocale()
-    
+    getScavenge()
 })
 
 //methods
@@ -248,6 +283,26 @@ const getQuestConfig = async () => {
 
 }
 
+const getScavenge = async () => {
+
+    let rawData = await window.keeperUtils.generateScavenges(props.category)
+
+    switch (rawData.action) {
+        case "GENERATE":
+            state.value.scavengeText = `${state.value.keeper.config.name} is planning on a scavenge. You should check`
+            break;
+        case "ACTIVE":
+            state.value.scavengeText = `${state.value.keeper.config.name} is out on scavenge trough darkness and danger..`
+            break;
+        case "FINISHED":
+            state.value.scavengeText = `${state.value.keeper.config.name} returned home with the prize. Ot did the prize return with her...?`
+            break;
+    }
+
+
+
+}
+
 const switchPanels = (panel) => {
 
     const panelArray = ['openNewQuests', 'openEditQuests', 'openKeeper', 'openLocale', 'openScavenge', 'openCategories', 'openKeeper']
@@ -272,6 +327,9 @@ watch(() => state.value.menu, (newValue) => {
     if (newValue == "KEEPER") {
         switchPanels('openKeeper')
     }
+    if (newValue == "SCAVENGE") {
+        switchPanels('openScavenge')
+    }
     state.value.menu = ""
 
 })
@@ -280,6 +338,22 @@ watch(() => state.value.openEditQuests, (newValue) => {
 
     if (newValue == false) {
         getAllQuests()
+    }
+
+})
+
+watch(() => state.value.openKeeper, (newValue) => {
+
+    if (newValue == false) {
+        getKeeper()
+    }
+
+})
+
+watch(() => state.value.openScavenge, (newValue) => {
+
+    if (newValue == false) {
+        getScavenge()
     }
 
 })
@@ -357,7 +431,7 @@ watch(() => state.value.openEditQuests, (newValue) => {
 .scroll-data {
     height: 100px;
     width: 100%;
-    background-image: url("./static/icons/scrolls/scroll frame fade.png");
+    background-image: url("../static/icons/scrolls/scroll_frame_fade.png");
     background-repeat: no-repeat;
     background-size: cover;
     padding-left: 20px;

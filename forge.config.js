@@ -4,11 +4,13 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './icons/icon'
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
+      icon: './icons/icon',
       config: {},
     },
     {
@@ -51,6 +53,7 @@ module.exports = {
         ],
       },
     },
+    
     // Fuses are used to enable/disable various Electron functionality
     // at package time, before code signing the application
     new FusesPlugin({

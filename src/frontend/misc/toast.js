@@ -5,8 +5,7 @@ export default {
 
         let toast = document.querySelector("#ttoast")
         let toastText = document.querySelector("#ttoasttext");
-        console.log(toast)
-
+       
         if(!toast){
             const body = document.querySelector("body")
             
@@ -34,8 +33,5 @@ export default {
             toast.classList.remove("toast-toinvisible")
             toast.classList.add("toast-invisible")
         }, 3000)
-
-        
-        
     }
 }

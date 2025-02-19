@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="castle-main castle-bg">
         <h1 class="title">Helldivers Ticketing</h1>
 
 
@@ -8,9 +8,13 @@
             <EyeButton name="mainMenuEnter" color="GREEN" />
             <h2 class="main-menu-title">Enter</h2>
         </RouterLink>
-        <RouterLink to="/options" class="fit-content main-menu-button">
+        <RouterLink to="/options/mainMenu" class="fit-content main-menu-button">
             <EyeButton name="mainMenuOptions" color="GREEN" />
             <h2 class="main-menu-title">Options</h2>
+        </RouterLink>
+        <RouterLink to="/documentation/mainMenu" class="fit-content main-menu-button">
+            <EyeButton name="mainMenuOptions" color="GREEN" />
+            <h2 class="main-menu-title">Documentation</h2>
         </RouterLink>
         <div @click="quitProgram" class="main-menu-button">
             <EyeButton name="mainMenuExit" color="GREEN" />
@@ -35,6 +39,22 @@ const quitProgram = () => {
 </script>
 
 <style scoped>
+.castle-bg {
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+
+.castle-main {
+    background-image: url("./static/castle/castle.jpg");
+    z-index: -10;
+}
+
 .title {
     padding: 20px
 }

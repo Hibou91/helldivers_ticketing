@@ -1,6 +1,6 @@
 export default {
   castle:{
-    desctiptions: [],
+    descriptions: [],
     levelMultiplier: 7,
     storageMultiplier: 2,
     animaLevelMultiplier: 100,

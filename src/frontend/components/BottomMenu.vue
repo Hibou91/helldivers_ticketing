@@ -2,7 +2,7 @@
     <div class="bottom-menu-main">
         <div class="menu-frame">
             <div>
-                <img src="../../../static/generic ui/bottom menu panel.png" class="menu-panel" alt="" srcset=""
+                <img src="../../../static/generic_ui/bottom_menu_panel.png" class="menu-panel" alt="" srcset=""
                     width="250">
             </div>
             <div v-for="(button, index) in bottomMenuConfig[props.name].buttons" class="menu-long-frame-img"
@@ -10,29 +10,32 @@
                 @mouseover="onHover = button.name" @mouseleave="onHover = ''">
                 <div v-if="button.isRouterLink == true">
                     <RouterLink :to="button.to" class="relative ">
-                        <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="70" 
+                        <img src="../../../static/buttons/eye_button_long_bg_yellow.png" alt="" srcset="" width="70"
                             :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
                             class="menu-long-frame-img-bg-default absolute">
-                        <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
+                        <img :src="`../../../static/buttons/eye_button_long_${button.icon}.png`" alt="" srcset=""
                             width="70" class="absolute">
-                        <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="70" >
+                        <img src="../../../static/buttons/eye_button_long_frame.png" alt="" srcset="" width="70">
                     </RouterLink>
                 </div>
                 <div v-else @click="clickValue = button.name">
-                    <img src="../../../static/buttons/eye button long bg yellow.png" alt="" srcset="" width="70"
+                    <img src="../../../static/buttons/eye_button_long_bg_yellow.png" alt="" srcset="" width="70"
                         :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
-                        class="menu-long-frame-img-bg-default absolute" >
-                    <img :src="`../../../static/buttons/eye button long ${button.icon}.png`" alt="" srcset=""
-                        width="70" class="absolute">
-                    <img src="../../../static/buttons/eye button long frame.png" alt="" srcset="" width="70">
+                        class="menu-long-frame-img-bg-default absolute">
+                    <img :src="`../../../static/buttons/eye_button_long_${button.icon}.png`" alt="" srcset="" width="70"
+                        class="absolute">
+                    <img src="../../../static/buttons/eye_button_long_frame.png" alt="" srcset="" width="70">
 
                 </div>
 
 
             </div>
-            <div>
-                <img src="../../../static/generic ui/bottom menu panel middle.png" class="menu-panel-middle" alt="" srcset=""
-                    width="105">
+            <div >
+                <img src="../../../static/generic_ui/bottom_menu_panel_middle.png" class="menu-panel-middle" alt=""
+                    srcset="" width="105">
+                <img src="../../../static/generic_ui/bottom_menu_anima.png" class="menu-panel-middle menu-panel-anima" alt=""
+                ref="menuPanelAnima" width="105" :style=" state.animaY != undefined ? `top:${state.animaY - 149}px;mask-position: 0 ${(state.animaY ) * -1}px;` : ''">
+                <!--mask-position: 0 ${state.animaY * -1}px;-->
             </div>
 
 
@@ -45,21 +48,53 @@
 
 
 import bottomMenuConfig from '../misc/bottomMenuConfig';
-import { ref } from 'vue'
+import { ref, onMounted, useTemplateRef } from 'vue'
 
 const props = defineProps(['name'])
 const onHover = defineModel('onHover')
 const clickValue = defineModel('clickValue')
 
+const minAnima = 80
+
 const state = ref({
     distance: 25,
+    animaY: 0, 
+    anima: 0,
+    castleLevel: 0
 })
 
 state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state.value.distance) / 2 - 11
 
+const anima = useTemplateRef("menuPanelAnima")
 
+onMounted(() => {
+  setMeUp()  
 
+})
 
+const setMeUp = async () => {
+    const cf = await window.generic.getCastleConfig();
+
+    state.value.castleConfig = cf;
+   
+
+    
+    if (state.value.castleConfig.materials && state.value.castleConfig.materials.anima) {
+        state.value.anima = state.value.castleConfig.materials.anima
+    }
+    if (state.value.castleConfig.castleLevel) {
+        state.value.castleLevel = state.value.castleConfig.castleLevel
+    }
+
+    state.value.animaY = minAnima
+    if(state.value.anima == 0){
+        return;
+    }
+    let maxAnima = state.value.castleConfig.config.animaLevelMultiplier * state.value.castleConfig.config.storageMultiplier
+
+    state.value.animaY = minAnima - (((state.value.anima / maxAnima) * minAnima))
+
+}
 
 
 </script>
@@ -111,10 +146,17 @@ state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state
     bottom: 0;
 }
 
-.menu-panel-middle{
+.menu-panel-middle {
     position: absolute;
     left: calc(50% - 52px);
     bottom: 0;
+}
+
+.menu-panel-anima{
+    mask-image: url("../../../static/generic_ui/bottom_menu_anima_mask.png");
+    mask-mode: alpha;
+    mask-size: cover;
+    mask-repeat: no-repeat;
 }
 
 @keyframes rotateIn {

@@ -5,6 +5,8 @@ import Castle from './pages/Castle.vue'
 import Library from './pages/Library.vue'
 import Salon from './pages/Salon.vue'
 import Garden from './pages/Garden.vue'
+import Options from './pages/Options.vue'
+import Documentation from './pages/Documentation.vue'
 
 const routes = [
   { path: '/', component: Entry },
@@ -12,6 +14,8 @@ const routes = [
   { path: '/library', component: Library },
   { path: '/salon', component: Salon },
   { path: '/garden', component: Garden },
+  { path: '/options/:backto', component: Options },
+  { path: '/documentation/:backto', component: Documentation },
 ]
 
 const router = createRouter({

@@ -1,13 +1,13 @@
 <template>
     <div class="tCard ">
         <div class="relative card-inner">
-            <img src="../../../static/generic ui/frame corner.png" alt="" srcset="" width="100"
+            <img src="../../../static/generic_ui/frame_corner.png" alt="" srcset="" width="100"
                 class="absolute card-frame-topleft">
-            <img src="../../../static/generic ui/frame corner.png" alt="" srcset="" width="100"
+            <img src="../../../static/generic_ui/frame_corner.png" alt="" srcset="" width="100"
                 class="absolute card-frame-topright">
-            <img src="../../../static/generic ui/frame corner.png" alt="" srcset="" width="100"
+            <img src="../../../static/generic_ui/frame_corner.png" alt="" srcset="" width="100"
                 class="absolute card-frame-bottomright">
-            <img src="../../../static/generic ui/frame corner.png" alt="" srcset="" width="100"
+            <img src="../../../static/generic_ui/frame_corner.png" alt="" srcset="" width="100"
                 class="absolute card-frame-bottomleft">
             <img src="" alt="">
             <div class="card-slot">

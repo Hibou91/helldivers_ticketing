@@ -66,9 +66,7 @@ export default class Scavenges {
       result.action = "GENERATE";
       result.scavenges = await this.generateScavenges(category);
       return result;
-    }
-
-    if (scavenges.length == 1) {
+    } else if (scavenges.length == 1) {
       if (scavenges[0].state == "ACTIVE") {
         result.action = "ACTIVE";
         result.scavenges = [Scavenges.toFrontendDto(scavenges[0])];
@@ -78,26 +76,28 @@ export default class Scavenges {
         result.scavenges = [Scavenges.toFrontendDto(scavenges[0])];
         return result;
       }
-    }
-
-    let d = new Date();
-    let dValue = new Date(scavenges[0].generationTime);
-    if (d.getMinutes() != dValue.getMinutes()) {
-      await Scavenges.deleteScavengesConditional(category, "GENERATED");
-      result.action = "GENERATE";
-      result.scavenges = await this.generateScavenges(category);
-      return result;
     } else {
-      result.action = "GENERATE";
-      result.scavenges = scavenges;
-      return result;
+      let d = new Date();
+      let dValue = new Date(scavenges[0].generationTime);
+      if (d.getDay() != dValue.getDay()) {
+        await Scavenges.deleteScavengesConditional(category, "GENERATED");
+        result.action = "GENERATE";
+        result.scavenges = await this.generateScavenges(category);
+        return result;
+      } else {
+        result.action = "GENERATE";
+        result.scavenges = scavenges;
+        return result;
+      }
     }
   }
 
   static async deleteScavengesConditional(category, state) {
     const scavenges = await Scavenges.getScavenges();
-    const newArray = scavenges.filter((e) => !(e.category == category && e.state == state))
-    
+    const newArray = scavenges.filter(
+      (e) => !(e.category == category && e.state == state)
+    );
+
     fileUtil.postFileData("scavenges.json", newArray);
   }
 
@@ -131,20 +131,17 @@ export default class Scavenges {
         scavenges[i].time = new Date();
         scavenges[i].time.setTime(
           scavenges[i].time.getTime() +
-            scavenges[i].duration * 60 * 60 * 1000
+            scavenges[i].duration /** 60 * 60 * 1000*/
         );
         category = scavenges[i].category;
         await fileUtil.postFileData("scavenges.json", scavenges);
-        
       }
       i++;
     }
-    if(found){
+    if (found) {
       await Scavenges.deleteScavengesConditional(category, "GENERATED");
-      
-      
     }
-    
+
     return found;
   }
 
@@ -166,7 +163,7 @@ export default class Scavenges {
           )) {
             if (
               material.category == undefined ||
-              material.category == scavenges[i].category
+              material.category == scavenges[i].type
             ) {
               if (Math.random() < material.occurrence) {
                 scavenges[i].loot.push({
@@ -180,16 +177,7 @@ export default class Scavenges {
             }
           }
         } else {
-          scavenges[i].loot.push({
-            name: config.scavenges.materials.experience.name,
-            count: Math.round(
-              (Math.random() *
-                (config.scavenges.materials.experience.countmax -
-                  config.scavenges.materials.experience.countmin) +
-                config.scavenges.materials.experience.countmin) /
-                2
-            ),
-          });
+          
           scavenges[i].loot.push({
             name: config.scavenges.materials.anima.name,
             count: Math.round(
@@ -221,7 +209,7 @@ export default class Scavenges {
         type: Math.round(Math.random() * 2),
         target: Math.round(Math.random() * 2),
         time: 1,
-        duration: 10, // Math.round(Math.random() * ( 6-3) + 3),
+        duration: Math.round(Math.random() * ( 6-3) + 3),
         keeperbonus: 0,
         skillBonus: 0,
         state: "GENERATED",
@@ -235,14 +223,12 @@ export default class Scavenges {
       const keeper = await Locale.getKeeperData(category);
       newScavenge.skillBonus = 0;
       if (keeper && keeper.skills) {
-
         config.scavenges.targets[newScavenge.target].skills.forEach((e) => {
-  
           newScavenge.skillBonus += Math.round(
             Math.random() * keeper.skills[e.toLowerCase()]
           );
         });
-      } 
+      }
 
       newScavenge.successRate = Math.min(
         newScavenge.difficulty +
@@ -258,7 +244,7 @@ export default class Scavenges {
     return generatedScavenges;
   }
 
-  static async claimScavenge(id){
+  static async claimScavenge(id) {
     let scavenges = await Scavenges.getScavenges();
 
     let i = 0;
@@ -267,12 +253,12 @@ export default class Scavenges {
     while (i < scavenges.length && found == false) {
       if (scavenges[i].id == id) {
         found = structuredClone(scavenges[i]);
-        scavenges.splice(i, 1)
+        scavenges.splice(i, 1);
         await fileUtil.postFileData("scavenges.json", scavenges);
       }
       i++;
     }
-    
+
     return found;
   }
 

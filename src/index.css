@@ -12,7 +12,7 @@ input[type="text"],
 input[type="date"],
 input[type="datetime-local"] {
   border: none;
-  background-image: url("../static/generic ui/input long.png");
+  background-image: url("../static/generic_ui/input_long.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: #000000;
@@ -29,7 +29,7 @@ input[type="datetime-local"] {
 input[type="text"].input-small,
 input[type="date"].input-small,
 input[type="datetime-local"].input-small {
-  background-image: url("../static/generic ui/input.png");
+  background-image: url("../static/generic_ui/input.png");
   height: 40px;
   width: 185px;
 }
@@ -41,7 +41,7 @@ input:focus {
 
 select {
   border: none;
-  background-image: url("../static/generic ui/input.png");
+  background-image: url("../static/generic_ui/input.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: #000000;
@@ -103,6 +103,18 @@ a {
   width: 50%;
 }
 
+.left-col{
+  width: calc(50%-20px);
+  max-width: calc(50%-20px);
+  margin-right: 20px;
+}
+
+.right-col{
+  width: calc(50%-20px);
+  max-width: calc(50%-20px);
+  margin-left: 20px;
+}
+
 .absolute {
   position: absolute;
 }
@@ -158,6 +170,7 @@ a {
   color: #fff;
   border-radius: 6px;
   padding: 5px;
+  text-align: center;
 
   /* Position the tooltip */
   position: absolute;
@@ -177,7 +190,7 @@ a {
   background-image: url("../static/generic ui/modal.png");
   background-repeat: no-repeat;
   background-size: contain;
-  
+  text-align: center;
 }
 
 .toast-invisible{
@@ -228,14 +241,14 @@ a {
 ::-webkit-scrollbar-thumb {
   width: 50px;
   height: 50px;
-  background-image: url("../static/generic ui/scroll slider.png");
+  background-image: url("../static/generic_ui/scroll_slider.png");
   background-size: contain;
   background-position: center;
   background-repeat: repeat;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-  background-image: url("../static/generic ui/scroll slider horizontal.png");
+  background-image: url("../static/generic_ui/scroll_slider_horizontal.png");
 }
 
 /* range input */
@@ -250,7 +263,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   appearance: none;
   height: 10px;
   width: 100%;
-  background-image: url("../static/generic ui/input round.png");
+  background-image: url("../static/generic_ui/input_round.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -265,7 +278,7 @@ input[type="range"]::-webkit-slider-thumb {
   margin-top: calc((10px / 2) - (20px / 2));
   border: 0;
   border-radius: 50%;
-  background-image: url("../static/buttons/round frame.png");
+  background-image: url("../static/buttons/round_frame.png");
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -278,7 +291,7 @@ input[type="checkbox"] {
   margin: auto 0 auto 0;
   width: 25px;
   height: 25px;
-  background-image: url("../static/buttons/round frame.png");
+  background-image: url("../static/buttons/round_frame.png");
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -288,8 +301,8 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
   -webkit-appearance: none;
   appearance: none;
-  background-image: url("../static/buttons/round frame.png"),
-    url("../static/buttons/round bg white.png");
+  background-image: url("../static/buttons/round_frame.png"),
+    url("../static/buttons/round_bg_white.png");
   /* or whatever styles you want depending on your design */
   /* be as obvious as possible that it's a checkbox and that it's checked! */
 }

@@ -4,24 +4,24 @@
         <div class="btn-img" >
 
 
-            <img v-if="color == 'GREEN'" src="../../../static/buttons/eye bg green.jpg" alt="" srcset="" width="60px" height="60"
+            <img v-if="color == 'GREEN'" src="../../../static/buttons/eye_bg_green.jpg" alt="" srcset="" width="60px" height="60"
                 class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
-            <img v-if="color == 'RED'" src="../../../static/buttons/eye bg red.jpg" alt="" srcset="" width="60px" height="60"
+            <img v-if="color == 'RED'" src="../../../static/buttons/eye_bg_red.jpg" alt="" srcset="" width="60px" height="60"
                 class="btn-bg eye-bg"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyeBg'">
-            <img src="../../../static/buttons/eye pupil.png" alt="" srcset="" width="60" height="60" class="btn-bg "
+            <img src="../../../static/buttons/eye_pupil.png" alt="" srcset="" width="60" height="60" class="btn-bg "
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyePupil'">
-            <img src="../../../static/buttons/eye pupil b.png" alt="" srcset="" width="60" height="60"
+            <img src="../../../static/buttons/eye_pupil_b.png" alt="" srcset="" width="60" height="60"
                 class="btn-bg big-pupil"
                 :style="`left:${state.eyeMovementX}px;top:${state.eyeMovementY}px;mask-position:${state.eyeMovementX * -1}px ${state.eyeMovementY * -1}px;`"
                 :ref="name + 'EyePupilB'">
         </div>
 
-        <img src="../../../static/buttons/eye frame.png" alt="" srcset="" width="60" height="60" class="btn-img">
+        <img src="../../../static/buttons/eye_frame.png" alt="" srcset="" width="60" height="60" class="btn-img">
     </div>
 </template>
 
@@ -117,7 +117,7 @@ onBeforeRouteLeave((to, from) => {
 
 .btn-bg {
     position: absolute;
-    mask-image: url("../../../static/buttons/eye mask.png");
+    mask-image: url("../../../static/buttons/eye_mask.png");
     mask-mode: alpha;
     mask-size: cover;
     mask-repeat: no-repeat;

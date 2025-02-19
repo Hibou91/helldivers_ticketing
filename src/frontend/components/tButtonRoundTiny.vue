@@ -7,7 +7,7 @@
   >
     <img
       v-if="color == 'GREEN'"
-      src="../../../static/buttons/round bg green.png"
+      src="../../../static/buttons/round_bg_green.png"
       alt=""
       srcset=""
       width="35"
@@ -15,7 +15,7 @@
     />
     <img
       v-if="color == 'RED'"
-      src="../../../static/buttons/round bg red.png"
+      src="../../../static/buttons/round_bg_red.png"
       alt=""
       srcset=""
       width="35"
@@ -23,7 +23,7 @@
     />
     <img
       v-if="color == 'YELLOW'"
-      src="../../../static/buttons/round bg yellow.png"
+      src="../../../static/buttons/round_bg_yellow.png"
       alt=""
       srcset=""
       width="35"
@@ -37,7 +37,7 @@
     </div>
 
     <img
-      src="../../../static/buttons/round frame.png"
+      src="../../../static/buttons/round_frame.png"
       alt=""
       srcset=""
       width="35"

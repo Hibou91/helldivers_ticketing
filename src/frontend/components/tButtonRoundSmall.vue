@@ -2,9 +2,9 @@
     <div class="br-button-main  relative" :class="{'br-button-main-hover': !(icon == true)}" @mouseover="onHover = true" @mouseleave="onHover = false">
         
        
-        <img v-if="color == 'GREEN'" src="../../../static/buttons/round bg green.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
-        <img v-if="color == 'RED'" src="../../../static/buttons/round bg red.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
-        <img v-if="color == 'YELLOW'" src="../../../static/buttons/round bg yellow.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
+        <img v-if="color == 'GREEN'" src="../../../static/buttons/round_bg_green.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
+        <img v-if="color == 'RED'" src="../../../static/buttons/round_bg_red.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
+        <img v-if="color == 'YELLOW'" src="../../../static/buttons/round_bg_yellow.png" alt="" srcset="" width="50" class="absolute button-image button-image-bg" >
     
         <div class="absolute transitionable wh-full ">
             <p class="auto-margin br-button-text">
@@ -15,7 +15,7 @@
         </p>
         </div>
         
-        <img src="../../../static/buttons/round frame.png" alt="" srcset="" width="50"  class="absolute button-image" >
+        <img src="../../../static/buttons/round_frame.png" alt="" srcset="" width="50"  class="absolute button-image" >
     </div>
 </template>
 

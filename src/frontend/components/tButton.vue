@@ -2,9 +2,9 @@
     <div class="button-main relative" @mouseover="onHover = true" @mouseleave="onHover = false">
         
        
-        <img v-if="color != 'RED' && color != 'GREEN'" src="../../../static/buttons/button standard bg yellow.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
-        <img v-if="color == 'GREEN'" src="../../../static/buttons/button standard bg green.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
-        <img v-if="color == 'RED'" src="../../../static/buttons/button standard bg red.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
+        <img v-if="color != 'RED' && color != 'GREEN'" src="../../../static/buttons/button_standard_bg_yellow.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
+        <img v-if="color == 'GREEN'" src="../../../static/buttons/button_standard_bg.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
+        <img v-if="color == 'RED'" src="../../../static/buttons/button_standard_bg_red.png" alt="" srcset="" width="150" class="absolute button-image button-image-bg" >
     
         <div class="absolute transitionable width-100">
             <p class="auto-margin">
@@ -15,7 +15,7 @@
         </p>
         </div>
         
-        <img src="../../../static/buttons/button standard.png" alt="" srcset="" width="150"  class="absolute button-image" >
+        <img src="../../../static/buttons/button_standard.png" alt="" srcset="" width="150"  class="absolute button-image" >
     </div>
 </template>
 

@@ -37,6 +37,8 @@ contextBridge.exposeInMainWorld("localeUtils", {
 contextBridge.exposeInMainWorld("generic", {
   getCastleData:() => ipcRenderer.invoke("getCastleData"),
   getCastleConfig:() => ipcRenderer.invoke("getCastleConfig"),
+  levelupCastle:() => ipcRenderer.invoke("levelupCastle"),
+  saveCastleConfig:(config) => ipcRenderer.invoke("saveCastleConfig", config),
   getLocaleData:(category) => ipcRenderer.invoke("getLocaleData", category),
   getLocaleKeeperData:(category) => ipcRenderer.invoke("getLocaleKeeperData", category),
   quitProgram: () => ipcRenderer.invoke("quitProgram"),

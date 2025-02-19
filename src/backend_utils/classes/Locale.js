@@ -31,14 +31,18 @@ export default class Locale {
     const response = await fileUtil.getFileData(`locale${category}.json`);
 
     if (response == false || !response.keeper) {
-      return {
+      let keeper = {
         config: config.locales.keepers[category],
         skills: {
           cunning: 0,
           strength: 0,
           charisma: 0,
         },
-      };
+      }
+
+      keeper.title = Locale.addKeeperTitle(keeper.skills)
+      
+      return keeper;
     } else {
       response.keeper.config = config.locales.keepers[category];
       response.keeper.skills = {
@@ -46,7 +50,8 @@ export default class Locale {
         strength: response.keeper.skills.strength ? response.keeper.skills.strength : 0,
         charisma: response.keeper.skills.charisma ? response.keeper.skills.charisma : 0,
       };
-
+      response.keeper.title = Locale.addKeeperTitle(response.keeper.skills)
+     
       return response.keeper;
     }
   }
@@ -55,14 +60,16 @@ export default class Locale {
     const response = await fileUtil.getFileData(`locale${this.category}.json`);
 
     if (response == false) {
-      return {
+      let keeper = {
         config: config.locales.keepers[this.category],
         skills: {
           cunning: 0,
           strength: 0,
           charisma: 0,
         },
-      };
+      }
+      keeper.title = Locale.addKeeperTitle(keeper.skills)
+      return keeper;
     } else {
       if (!response.keeper) {
         response.keeper = {};
@@ -75,6 +82,8 @@ export default class Locale {
       }
 
       response.keeper.config = config.locales.keepers[this.category];
+
+      response.keeper.title = Locale.addKeeperTitle(response.keeper.skills)
 
       return response.keeper;
     }
@@ -207,5 +216,36 @@ export default class Locale {
     } else {
       return false;
     }
+  }
+
+  static addKeeperTitle(skills){
+    
+
+    //one skill
+    if(skills.charisma > skills.strength && skills.charisma > skills.cunning){
+      return "Fair"
+    }
+    if(skills.strength > skills.charisma && skills.strength > skills.cunning){
+      return "Great"
+    }
+    if(skills.cunning > skills.charisma && skills.cunning > skills.strength){
+      return "Wise"
+    }
+
+    //two skills
+
+    if(skills.cunning > skills.charisma && skills.cunning == skills.strength){
+      return "Rouge"
+    }
+
+    if(skills.charisma > skills.cunning && skills.charisma == skills.strength){
+      return "Knight"
+    }
+
+    if(skills.cunning > skills.strength && skills.cunning == skills.charisma){
+      return "Trickster"
+    }
+
+    return "Opportunist"
   }
 }

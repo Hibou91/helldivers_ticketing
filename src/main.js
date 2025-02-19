@@ -1,7 +1,8 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeImage,Tray, } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import Game from './backend_utils/Game'
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -11,6 +12,7 @@ if (started) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    icon: '../icons/icon.png',
     width: 1200,
     height: 1600,
     webPreferences: {
@@ -36,6 +38,11 @@ const createWindow = () => {
 app.whenReady().then(() => {
   const game = new Game()
   createWindow()
+  const icon = nativeImage.createFromPath(path.join(__dirname, '../icons/icon.png'))
+  
+  
+  new Tray(icon)
+ 
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

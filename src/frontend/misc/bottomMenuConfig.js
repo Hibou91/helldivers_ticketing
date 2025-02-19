@@ -25,7 +25,13 @@ export default {
                 name: 'CASTLE',
                 icon: "castle",
                 isRouterLink: false,
-                to: "/"
+                
+            },
+            {
+                name: 'MATERIALS',
+                icon: "loot",
+                isRouterLink: false,
+                
             },
            
         ]
@@ -33,8 +39,8 @@ export default {
     library:{
         buttons:[
             {
-                name: "QUESTCATEGORY",
-                icon: "necategory",
+                name: "SCAVENGE",
+                icon: "scavenge",
                 isRouterLink: false, 
             },
             {
@@ -44,10 +50,16 @@ export default {
             },
             
             {
+                name: "QUESTCATEGORY",
+                icon: "necategory",
+                isRouterLink: false, 
+            },
+            {
                 name: "NEWQUEST",
                 icon: "newquest",
                 isRouterLink: false, 
             },
+            
            
         ]
     }

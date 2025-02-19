@@ -3,35 +3,74 @@
 
 
     <div class="tCardHolder" v-if="state.loaded == true">
-        <TCardClosable v-model:modalOpen="openPanel" :closeMethod="() => { }">
-            <div class="modal-form">
+        <div class="tCardHolderRow">
+            <TCardClosable v-model:modalOpen="openPanel" :closeMethod="() => { }">
+                <div class="flex-col" style="overflow-y: hidden;">
+                    <div style="height: 200px;">
+                        <div class="relative" style="height: 100%;">
+                            <div class="scavenge-main scavenge-bg">
+                            </div>
+                            <Transition name="scavenge-bg">
+                                <div v-if="state.hover.typeModel == 'DUNGEONS'" class="scavenge-dungeons scavenge-bg"
+                                    id="SCAVENGE_DUNGEONS">
+                                </div>
+                            </Transition>
+                            <Transition>
+                                <div v-if="state.hover.typeModel == 'FOREST'" class="scavenge-forest scavenge-bg"
+                                    id="SCAVENGE_FOREST">
+                                </div>
+                            </Transition>
+                            <Transition>
+                                <div v-if="state.hover.typeModel == 'VILLAGE'" class="scavenge-village scavenge-bg"
+                                    id="SCAVENGE_VILLAGE">
+                                </div>
+                            </Transition>
+                        </div>
 
+                    </div>
+                    <div v-if="state.hover != ''">
+                        <h3 class="scavenge-data-text">{{ state.hover.targetName }} quest in the {{
+                            state.hover.typeName }}</h3>
+                        <p class="scavenge-data-text">Chance: {{ state.hover.difficulty }}%</p>
+                        <p class="scavenge-data-text">Keeper: {{ state.hover.keeperbonus }} %</p>
+                        <p class="scavenge-data-text">Skills: {{ state.hover.targetSkills }}</p>
+                        <p class="scavenge-data-text">Skill Bonus: {{ state.hover.skillBonus }}%</p>
+                        <div class="flex-row">
+                            <p class="scavenge-data-text">Prize:</p>
+                            <img :src="`../../../static/icons/materials/anima.png`" alt="" width="40" height="40">
+                            <img :src="`../../../static/icons/foods/magefish.png`" alt="" width="40" height="40">
+                            <img :src="`../../../static/icons/foods/witseed.png`" alt="" width="40" height="40">
+                            <img :src="`../../../static/icons/foods/lionheart.png`" alt="" width="40" height="40">
+                            <img :src="`../../../static/icons/materials/${state.hover.type == 0 ?  'paper' : state.hover.type == 1 ? 'silk' : 'wood'}.png`" alt="" width="40" height="40">
+                        </div>
 
-                <div class="scavenge-main scavenge-bg">
+                    </div>
                 </div>
-                <Transition name="scavenge-bg">
-                    <div v-if="state.hover == 'DUNGEONS'" class="scavenge-dungeons scavenge-bg" id="SCAVENGE_DUNGEONS">
-                    </div>
-                </Transition>
-                <Transition>
-                    <div v-if="state.hover == 'FOREST'" class="scavenge-forest scavenge-bg" id="SCAVENGE_FOREST">
-                    </div>
-                </Transition>
-                <Transition>
-                    <div v-if="state.hover == 'VILLAGE'" class="scavenge-village scavenge-bg" id="SCAVENGE_VILLAGE">
-                    </div>
-                </Transition>
-            </div>
 
-        </TCardClosable>
+
+            </TCardClosable>
+
+        </div>
+
 
         <div class="tCardHolderRow">
             <TCardClosable v-model:modalOpen="state.openClaimPanel" :closeMethod="() => { }"
                 v-if="state.openClaimPanel == true">
                 <div class="modal-form">
-                    <div v-for="loot in state.generatedScavenges[0].loot" v-bind:key="loot.name" class="flex-row">
+                    <div v-for="loot in state.generatedScavenges[0].loot" v-bind:key="loot.name">
+                        <div v-if="loot.name == 'Magefish' || loot.name == 'Lionheart' || loot.name == 'Witseed'"
+                            class="flex-row">
+                            <img :src="`../../../static/icons/foods/${loot.name.toLowerCase()}.png`" alt="" width="50"
+                                height="50">
+                            <p>: {{ loot.count }}</p>
 
-                        <tButtonRoundSmall color="GREEN">{{ loot.name }}</tButtonRoundSmall> {{ loot.count }}
+                        </div>
+                        <div v-else class="flex-row">
+                            <img :src="`../../../static/icons/materials/${loot.name.toLowerCase()}.png`" alt=""
+                                width="50" height="50">
+                            <p>: {{ loot.count }}</p>
+                        </div>
+
                     </div>
 
                     <tButton @click="() => { claimScavenge() }" color="YELLOW" class="ml-10">Claim </tButton>
@@ -41,35 +80,38 @@
 
             <div class="scavenge-holder" v-if="state.openClaimPanel == false">
                 <div v-for="scavenge in state.generatedScavenges" v-bind:key="scavenge.id"
-                    @mouseover="state.hover = scavenge.typeModel" @mouseleave="state.hover = ''"
-                    class="scavenge-data-main ">
+                    @mouseover="state.hover = scavenge" @mouseleave="state.hover = ''" class="scavenge-data-main ">
                     <div class="scavenge-data-image">
-                        <img src="../../../static/icons/scrolls/scroll frame.png" alt="" width="100" height="100"
-                            class="scavenge-data-main">
-                        <tButtonRound class="scavenge-data-addons" :color="calculateDifficulty(scavenge.successRate)">
-                            {{ scavenge.successRate }} %</tButtonRound>
+
+                        <img :src="`../../../static/icons/scavenge/${scavenge.typeName.toLowerCase()}.jpg`" alt=""
+                            width="100" height="100" class="scavenge-data-main">
+                        <img :src="`../../../static/icons/scavenge/${calculateDifficulty(scavenge.successRate)}.png`"
+                            alt="" width="100" height="100" class="scavenge-data-addons">
+
+                        <img :src="`../../../static/icons/scavenge/${scavenge.targetName.toLowerCase()}.png`" alt=""
+                            width="100" height="100" class="scavenge-data-addons">
+                        <img src="../../../static/icons/scrolls/scroll_frame.png" alt="" width="100" height="100"
+                            class="scavenge-data-addons">
+
 
                     </div>
                     <div class="scavenge-data pointer-link">
                         <div class="flex-row">
+
                             <div>
                                 <p class="scavenge-data-text">{{ scavenge.targetName }} quest in the {{
                                     scavenge.typeName }}</p>
-                                <div class="tooltip flex-row">
+                                <div class="flex-row">
                                     <p class="scavenge-data-text ">{{ scavenge.successRate }} %</p>
-                                    <span class="tooltiptext">
-                                        <p>Difficulty: {{ scavenge.difficulty }}%</p>
-                                        <p>Keeper: {{ scavenge.keeperbonus }} %</p>
-                                        <p>Skills: {{ scavenge.targetSkills }}</p>
-                                        <p>Skill Bonus: {{ scavenge.skillBonus }}%</p>
-                                    </span>
+                                    <p class="scavenge-data-text ">{{ scavenge.duration }} hours</p>
+
                                 </div>
 
                             </div>
-                            <tButton @click="() => { postScavenge(scavenge.id) }"
+                            <tButtonRoundSmall @click="() => { postScavenge(scavenge.id) }"
                                 :color="state.action == 'ACTIVE' ? 'RED' : 'YELLOW'" class="ml-10">{{
                                     state.buttonLabel
-                                }} </tButton>
+                                }} </tButtonRoundSmall>
                         </div>
 
 
@@ -84,8 +126,7 @@
                 <div class="flex-row max-h-100">
                     <div class="w-50 keeper-img-container">
                         <div class="relative max-h-100">
-                            <img src="../../../static/generic ui/keepers bg.png" alt=""
-                                class="keeper-img">
+                            <img src="../../../static/generic_ui/keepers_bg.png" alt="" class="keeper-img">
                             <img :src="`../../../static/${state.categoryName}/keeper/1.png`" alt=""
                                 class="scavenge-data-addons keeper-img">
                         </div>
@@ -121,6 +162,7 @@ import tButton from './tButton.vue'
 
 import tButtonRound from './tButtonRound.vue'
 import tButtonRoundSmall from './tButtonRoundSmall.vue'
+import tButtonRoundTiny from './tButtonRoundTiny.vue'
 
 import { ref, onMounted, watch } from 'vue'
 import TButtonRound from './tButtonRound.vue'
@@ -128,7 +170,10 @@ import toast from '../misc/toast';
 
 
 const openPanel = defineModel('openPanel')
+const updateKey = defineModel('updateKey')
 const props = defineProps(['category'])
+
+const emit = defineEmits(['update:scavenge'])
 
 const state = ref({
     loaded: false,
@@ -170,7 +215,7 @@ const getKeeper = async () => {
 
     state.value.keeperData = response
 
-    
+
 
 }
 
@@ -199,38 +244,39 @@ const generateScavenge = async () => {
 
 const postScavenge = async (id) => {
     if (state.value.scavengeAction == "GENERATE") {
-        if(await window.keeperUtils.postScavenge(id) == true){
+        if (await window.keeperUtils.postScavenge(id) == true) {
             toast.toast('Scavenge started')
             generateScavenge(props.category)
         }
-        
+
     } else if (state.value.scavengeAction == "ACTIVE") {
-        if (await window.keeperUtils.deleteScavenge(id) == true){
+        if (await window.keeperUtils.deleteScavenge(id) == true) {
             toast.toast('Scavenge cancelled')
             generateScavenge(props.category)
         }
-       
+
     } else if (state.value.scavengeAction == "FINISHED") {
         state.value.openClaimPanel = true
     }
-
+    emit('update:scavenge')
 }
 
 const claimScavenge = async () => {
     await window.keeperUtils.claimScavenge(state.value.generatedScavenges[0].id)
     state.value.openClaimPanel = false
     generateScavenge(props.category)
+    updateKey.value = updateKey.value + 1
 }
 
 //utils
 
 const calculateDifficulty = (successRate) => {
-    if (successRate < 33) {
-        return "RED"
+    if (successRate <= 33) {
+        return "hard"
     } else if (successRate > 33 && successRate < 66) {
-        return "YELLOW"
+        return "medium"
     } else {
-        return "GREEN"
+        return "easy"
     }
 }
 
@@ -240,8 +286,10 @@ const filcker = () => {
         return;
     }
 
-    if (document.querySelector(`#SCAVENGE_${state.value.hover}`)) {
-        document.querySelector(`#SCAVENGE_${state.value.hover}`).style.opacity = Math.random() + 0.2;
+
+
+    if (document.querySelector(`#SCAVENGE_${state.value.hover.typeModel}`)) {
+        document.querySelector(`#SCAVENGE_${state.value.hover.typeModel}`).style.opacity = Math.random() + 0.2;
     }
 
     setTimeout(filcker, Math.random() * 900)
@@ -253,17 +301,17 @@ watch(() => state.value.hover, (newValue) => {
 
     if (newValue != '') {
         filcker();
-
+        console.log(state.value.hover);
     }
 
 })
 
 window.keeperUtils.onUpdateCounter((event, category) => {
-    
-    if(category == props.category){
+
+    if (category == props.category) {
         generateScavenge(props.category)
     }
-  
+
 })
 
 
@@ -291,36 +339,36 @@ window.keeperUtils.onUpdateCounter((event, category) => {
 }
 
 .scavenge-bg {
-    width: calc(100% - 80px - 100px);
+    width: 100%;
     ;
-    height: calc(100% - 80px);
+    height: 100%;
     background-repeat: no-repeat;
     background-size: contain;
     position: absolute;
-    top: 40px;
-    left: 40px;
+    top: 0;
+    left: 0;
 
 }
 
 .scavenge-main {
-    background-image: url("./static/scavenge/main map.png");
+    background-image: url("./static/scavenge/main_map.png");
     z-index: 9;
 }
 
 .scavenge-dungeons {
-    background-image: url("./static/scavenge/map dungeons.png");
+    background-image: url("./static/scavenge/map_dungeons.png");
     z-index: 10;
     transition: opacity 0.3s ease;
 }
 
 .scavenge-forest {
-    background-image: url("./static/scavenge/map forest.png");
+    background-image: url("./static/scavenge/map_forest.png");
     z-index: 10;
     transition: opacity 0.3s ease;
 }
 
 .scavenge-village {
-    background-image: url("./static/scavenge/map village.png");
+    background-image: url("./static/scavenge/map_village.png");
     z-index: 10;
     transition: opacity 0.3s ease;
 }
@@ -351,7 +399,7 @@ window.keeperUtils.onUpdateCounter((event, category) => {
 .scavenge-data {
     height: 60px;
     width: calc(100% - 40px);
-    background-image: url("./static/icons/scrolls/scroll frame fade.png");
+    background-image: url("./static/icons/scrolls/scroll_frame_fade.png");
     background-repeat: no-repeat;
     background-size: 600px 100px;
     padding: 20px;
@@ -382,7 +430,7 @@ window.keeperUtils.onUpdateCounter((event, category) => {
 
 .scavenge-data-text {
     margin: 0;
-    padding: 5px 0 5px 0;
+    padding: 5px 10px 5px 0;
 }
 
 .max-h-100 {
