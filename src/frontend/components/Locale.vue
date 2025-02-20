@@ -1,5 +1,5 @@
 <template>
-    <div class="library-bg" :style="`background-image: url('./static/${config.model}/first.jpg');`" >
+    <div class="library-bg" :class="{'library-bg': props.config.category == 0, 'salon-bg': props.config.category == 1, 'garden-bg': props.config.category == 1 }" >
         <tMenu menuName="Library">
 
             <RouterLink to="/castle">
@@ -25,7 +25,7 @@
                                 <p>No categories... yet</p>
                             </div>
                             <div v-else v-for="category in state.questCategories" class="flex-row">
-                                <img :src="`../../../static/buttons/round_frame.png`" alt="" height="15"
+                                <img src="../../../static/buttons/round_frame.png" alt="" height="15"
                                     style="margin: auto 20px auto 10px;">
                                 <p>{{ category.name }}</p>
                             </div>
@@ -44,9 +44,12 @@
                     <div class="flex-row">
                         <div class="left-col " style="text-align: center;">
                             <div class="relative">
-                                <img :src="`../../../static/buttons/round_frame.png`" alt="" height="100"
+                                <img src="../../../static/buttons/round_frame.png" alt="" height="100"
                                     class="absolute">
-                                <img :src="`../../../static/icons/keepers/${config.category}.png`" alt="" height="100">
+                                
+                                <img v-if="config.category == 0" src="../../../static/icons/keepers/0.png" alt="" height="100">
+                                <img v-if="config.category == 1" src="../../../static/icons/keepers/1.png" alt="" height="100">
+                                <img v-if="config.category == 2" src="../../../static/icons/keepers/2.png" alt="" height="100">
                             </div>
                             <p><i>"{{ state.keeperDialog }}"</i></p>
 
@@ -286,8 +289,6 @@ const getQuestConfig = async () => {
 const getScavenge = async () => {
 
     let rawData = await window.keeperUtils.generateScavenges(props.config.category)
-    console.log(rawData);
-    
 
     switch (rawData.action) {
         case "GENERATE":
@@ -430,12 +431,5 @@ watch(() => state.value.openScavenge, (newValue) => {
     left: 0;
 }
 
-.scroll-data {
-    height: 100px;
-    width: 100%;
-    background-image: url("../static/icons/scrolls/scroll_frame_fade.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-left: 20px;
-}
+
 </style>

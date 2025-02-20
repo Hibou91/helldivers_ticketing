@@ -13,8 +13,27 @@
                         <img src="../../../static/buttons/eye_button_long_bg_yellow.png" alt="" srcset="" width="70"
                             :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
                             class="menu-long-frame-img-bg-default absolute">
-                        <img :src="`../../../static/buttons/eye_button_long_${button.icon}.png`" alt="" srcset=""
-                            width="70" class="absolute">
+                            <img v-if="button.icon == 'castle'" src="../../../static/buttons/eye_button_long_castle.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'garden'" src="../../../static/buttons/eye_button_long_garden.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'keeper'" src="../../../static/buttons/eye_button_long_keeper.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'library'" src="../../../static/buttons/eye_button_long_library.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'loot'" src="../../../static/buttons/eye_button_long_loot.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'necategory'" src="../../../static/buttons/eye_button_long_necategory.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'newquest'" src="../../../static/buttons/eye_button_long_newquest.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'questcategory'"
+                        src="../../../static/buttons/eye_button_long_questcategory.png" alt="" srcset="" width="70"
+                        class="absolute">
+                    <img v-if="button.icon == 'salon'" src="../../../static/buttons/eye_button_long_salon.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'scavenge'" src="../../../static/buttons/eye_button_long_scavenge.png"
+                        alt="" srcset="" width="70" class="absolute">
                         <img src="../../../static/buttons/eye_button_long_frame.png" alt="" srcset="" width="70">
                     </RouterLink>
                 </div>
@@ -22,19 +41,39 @@
                     <img src="../../../static/buttons/eye_button_long_bg_yellow.png" alt="" srcset="" width="70"
                         :class="{ 'menu-long-frame-img-bg': onHover == button.name }"
                         class="menu-long-frame-img-bg-default absolute">
-                    <img :src="`../../../static/buttons/eye_button_long_${button.icon}.png`" alt="" srcset="" width="70"
+                    <img v-if="button.icon == 'castle'" src="../../../static/buttons/eye_button_long_castle.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'garden'" src="../../../static/buttons/eye_button_long_garden.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'keeper'" src="../../../static/buttons/eye_button_long_keeper.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'library'" src="../../../static/buttons/eye_button_long_library.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'loot'" src="../../../static/buttons/eye_button_long_loot.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'necategory'" src="../../../static/buttons/eye_button_long_necategory.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'newquest'" src="../../../static/buttons/eye_button_long_newquest.png"
+                        alt="" srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'questcategory'"
+                        src="../../../static/buttons/eye_button_long_questcategory.png" alt="" srcset="" width="70"
                         class="absolute">
+                    <img v-if="button.icon == 'salon'" src="../../../static/buttons/eye_button_long_salon.png" alt=""
+                        srcset="" width="70" class="absolute">
+                    <img v-if="button.icon == 'scavenge'" src="../../../static/buttons/eye_button_long_scavenge.png"
+                        alt="" srcset="" width="70" class="absolute">
                     <img src="../../../static/buttons/eye_button_long_frame.png" alt="" srcset="" width="70">
 
                 </div>
 
 
             </div>
-            <div >
+            <div>
                 <img src="../../../static/generic_ui/bottom_menu_panel_middle.png" class="menu-panel-middle" alt=""
                     srcset="" width="105">
-                <img src="../../../static/generic_ui/bottom_menu_anima.png" class="menu-panel-middle menu-panel-anima" alt=""
-                ref="menuPanelAnima" width="105" :style=" state.animaY != undefined ? `top:${state.animaY - 149}px;mask-position: 0 ${(state.animaY ) * -1}px;` : ''">
+                <img src="../../../static/generic_ui/bottom_menu_anima.png" class="menu-panel-middle menu-panel-anima"
+                    alt="" ref="menuPanelAnima" width="105"
+                    :style="state.animaY != undefined ? `top:${state.animaY - 149}px;mask-position: 0 ${(state.animaY) * -1}px;` : ''">
                 <!--mask-position: 0 ${state.animaY * -1}px;-->
             </div>
 
@@ -58,7 +97,7 @@ const minAnima = 80
 
 const state = ref({
     distance: 25,
-    animaY: 0, 
+    animaY: 0,
     anima: 0,
     castleLevel: 0
 })
@@ -68,7 +107,7 @@ state.value.maxAngle = (bottomMenuConfig[props.name + ''].buttons.length * state
 const anima = useTemplateRef("menuPanelAnima")
 
 onMounted(() => {
-  setMeUp()  
+    setMeUp()
 
 })
 
@@ -76,9 +115,9 @@ const setMeUp = async () => {
     const cf = await window.generic.getCastleConfig();
 
     state.value.castleConfig = cf;
-   
 
-    
+
+
     if (state.value.castleConfig.materials && state.value.castleConfig.materials.anima) {
         state.value.anima = state.value.castleConfig.materials.anima
     }
@@ -87,7 +126,7 @@ const setMeUp = async () => {
     }
 
     state.value.animaY = minAnima
-    if(state.value.anima == 0){
+    if (state.value.anima == 0) {
         return;
     }
     let maxAnima = state.value.castleConfig.config.animaLevelMultiplier * state.value.castleConfig.config.storageMultiplier
@@ -152,7 +191,7 @@ const setMeUp = async () => {
     bottom: 0;
 }
 
-.menu-panel-anima{
+.menu-panel-anima {
     mask-image: url("../../../static/generic_ui/bottom_menu_anima_mask.png");
     mask-mode: alpha;
     mask-size: cover;

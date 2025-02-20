@@ -219,14 +219,7 @@ const deleteCategory = async (id, index) => {
     overflow-y: auto;
 }
 
-.questCategory-data {
-    height: calc(100px - ( 2 * 13px));
-    width: calc(100% - 26px);
-    background-image: url("./static/icons/scrolls/scroll_frame_fade.png");
-    background-repeat: no-repeat;
-    background-size: 600px 100px;
-    padding: 13px;
-}
+
 
 .questCategory-data-main {
 

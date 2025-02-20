@@ -1,5 +1,5 @@
 <template>
-    <div class="castle-bg">
+    <div class="castle-bg castle-main">
         <tMenu menuName="Castle">
 
             <RouterLink to="/" class="fit-content">
@@ -147,8 +147,7 @@ const saveMaterialConfig = async () => {
     position: absolute;
     top: 0;
     right: 0;
-    background-image: url("./static/castle/castle.jpg");
-    z-index: -10;
+   
 }
 
 .castle-card {

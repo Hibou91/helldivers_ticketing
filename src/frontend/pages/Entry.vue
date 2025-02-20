@@ -50,10 +50,7 @@ const quitProgram = () => {
 
 }
 
-.castle-main {
-    background-image: url("./static/castle/castle.jpg");
-    z-index: -10;
-}
+
 
 .title {
     padding: 20px

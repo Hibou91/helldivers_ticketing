@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeImage,Tray, } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import Game from './backend_utils/Game'
@@ -28,7 +28,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   
 };
 
@@ -38,10 +38,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   const game = new Game()
   createWindow()
-  const icon = nativeImage.createFromPath(path.join(__dirname, '../icons/icon.png'))
   
-  
-  new Tray(icon)
  
 
   // On OS X it's common to re-create a window in the app when the

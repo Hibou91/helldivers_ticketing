@@ -191,6 +191,9 @@ const deleteQuests = async () => {
     const response = await window.questUtils.deleteQuest(props.category, JSON.stringify(state.value.editable))
     if (response != false) {
         state.value.openEditQuests = false;
+        state.value.openNotifications = false;
+        state.value.openSubQuests = false;
+        openPanel.value = false;
         toast.toast("As the road ends, it's time to say goodbye.")
     }
 

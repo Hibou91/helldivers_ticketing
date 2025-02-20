@@ -40,22 +40,22 @@
                     <div class="flex-col material-col">
                         <div class="flex-row">
                             <img src="../../../static/icons/materials/paper.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.paper ? state.castleData.materials.paper : 0 }} / {{
-                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.paper ?? 0 }} / {{
+                                (state.castleData.castleLevel ?? 1) *
                                 state.castleData.config.levelMultiplier *
                                 state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
                             <img src="../../../static/icons/materials/silk.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.silk ? state.castleData.materials.silk : 0 }} / {{
-                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.silk ?? 0 }} / {{
+                                (state.castleData.castleLevel ?? 1) *
                                 state.castleData.config.levelMultiplier *
                                 state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
                             <img src="../../../static/icons/materials/wood.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.wood ? state.castleData.materials.wood : 0 }} / {{
-                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.wood ?? 0 }} / {{
+                                (state.castleData.castleLevel  ?? 1) *
                                 state.castleData.config.levelMultiplier *
                                 state.castleData.config.storageMultiplier }}</p>
                         </div>
@@ -64,22 +64,22 @@
                     <div class="flex-col">
                         <div class="flex-row">
                             <img src="../../../static/icons/foods/magefish.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.magefish ? state.castleData.materials.magefish : 0 }} /
-                                {{ (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.magefish ?? 0 }} /
+                                {{ (state.castleData.castleLevel ?? 1) *
                                     state.castleData.config.levelMultiplier *
                                     state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
                             <img src="../../../static/icons/foods/witseed.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.witseed ? state.castleData.materials.witseed : 0 }} / {{
-                                (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.witseed ?? 0 }} / {{
+                                (state.castleData.castleLevel ?? 1) *
                                 state.castleData.config.levelMultiplier *
                                 state.castleData.config.storageMultiplier }}</p>
                         </div>
                         <div class="flex-row">
                             <img src="../../../static/icons/foods/lionheart.png" alt="" width="50" height="50">
-                            <p>: {{ state.castleData.materials.lionheart ? state.castleData.materials.lionheart : 0 }} /
-                                {{ (state.castleData.castleLevel ? state.castleData.castleLevel : 1) *
+                            <p>: {{ state.castleData.materials.lionheart ?? 0 }} /
+                                {{ (state.castleData.castleLevel ?? 1) *
                                     state.castleData.config.levelMultiplier *
                                     state.castleData.config.storageMultiplier }}
                             </p>
@@ -95,7 +95,11 @@
                 <h2>Castle</h2>
                 <div class="flex-col">
                     <div class="flex-row" v-for="(value, key) in state.castleData.levelRequirement">
-                        <img :src="`../../../static/icons/materials/${key}.png`" alt="" width="50" height="50">
+                        <img v-if="key == 'anima'" src="../../../static/icons/materials/anima.png" alt="" width="50" height="50">
+                        <img v-if="key == 'silk'" src="../../../static/icons/materials/silk.png" alt="" width="50" height="50">
+                        <img v-if="key == 'wood'" src="../../../static/icons/materials/wood.png" alt="" width="50" height="50">
+                        <img v-if="key == 'paper'" src="../../../static/icons/materials/paper.png" alt="" width="50" height="50">
+                        
                         <p>:{{ state.castleData.materials[key] ? state.castleData.materials[key] : 0 }} / {{ value }}
                         </p>
                     </div>
@@ -193,7 +197,7 @@ watch(() => state.value.hover, (newValue) => {
         filcker();
 
 
-        state.value.hoveredLocale = state.value.castleData.locales[newValue.toLowerCase()] ? state.value.castleData.locales[newValue.toLowerCase()] : {
+        state.value.hoveredLocale = state.value.castleData.locales[newValue.toLowerCase()] ?? {
             name: "",
             description: ''
         }
@@ -240,28 +244,7 @@ watch(() => state.value.menu, (newValue) => {
 
 }
 
-.castle-main {
-    background-image: url("./static/castle/castle.jpg");
-    z-index: -10;
-}
 
-.castle-library {
-    background-image: url("./static/castle/castle_library.png");
-    z-index: -9;
-    transition: opacity 0.3s ease;
-}
-
-.castle-salon {
-    background-image: url("./static/castle/castle_salon.png");
-    z-index: -9;
-    transition: opacity 0.3s ease;
-}
-
-.castle-garden {
-    background-image: url("./static/castle/castle_garden.png");
-    z-index: -9;
-    transition: opacity 0.3s ease;
-}
 
 .castle-bg-enter-active,
 .castle-bg-leave-active {

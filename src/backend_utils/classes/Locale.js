@@ -46,9 +46,9 @@ export default class Locale {
     } else {
       response.keeper.config = config.locales.keepers[category];
       response.keeper.skills = {
-        cunning: response.keeper.skills.cunning ? response.keeper.skills.cunning : 0,
-        strength: response.keeper.skills.strength ? response.keeper.skills.strength : 0,
-        charisma: response.keeper.skills.charisma ? response.keeper.skills.charisma : 0,
+        cunning: response.keeper.skills.cunning ?? 0,
+        strength: response.keeper.skills.strength ?? 0,
+        charisma: response.keeper.skills.charisma ?? 0,
       };
       response.keeper.title = Locale.addKeeperTitle(response.keeper.skills)
      
@@ -75,9 +75,9 @@ export default class Locale {
         response.keeper = {};
       }
       response.keeper.skills = {
-        cunning: response.keeper.skills.cunning ? response.keeper.skills.cunning : 0,
-        strength: response.keeper.skills.strength ? response.keeper.skills.strength : 0,
-        charisma: response.keeper.skills.charisma ? response.keeper.skills.charisma : 0,
+        cunning: response.keeper.skills.cunning  ?? 0,
+        strength: response.keeper.skills.strength ?? 0,
+        charisma: response.keeper.skills.charisma ?? 0,
       
       }
 

@@ -5,8 +5,14 @@
                 <div class="w-50 keeper-img-container">
                     <div class="relative max-h-100 keeper-img">
                         <img src="../../../static/generic_ui/keepers_bg.png" alt="" class="" width="300px" />
-                        <img :src="`../../../static/${state.categoryName}/keeper/1.png`" alt=""
+                        
+                            <img v-if="state.categoryName == 'library'" src="../../../static/library/keeper/1.png" alt=""
                             class="scavenge-data-addons" width="300px" />
+                            <img v-if="state.categoryName == 'salon'" src="../../../static/salon/keeper/1.png" alt=""
+                            class="scavenge-data-addons" width="300px" />
+                            <img v-if="state.categoryName == 'garden'" src="../../../static/garden/keeper/1.png" alt=""
+                            class="scavenge-data-addons" width="300px" />
+                            
                     </div>
                 </div>
                 <div class="w-50">
@@ -39,8 +45,7 @@
                                         <span> {{ (state.keeperData.skills.cunning *
                                             state.castleConfig.config.levelMultiplier) +
                                             state.castleConfig.config.levelMultiplier }} / {{
-                                                state.castleConfig.materials.witseed ? state.castleConfig.materials.witseed
-                                                    : 0
+                                                state.castleConfig.materials.witseed ?? 0
                                             }}</span>
                                         <img src="../../../static/icons/foods/witseed.png" alt="" width="20"
                                             height="20">
@@ -71,9 +76,7 @@
                                         <span> {{ (state.keeperData.skills.strength *
                                             state.castleConfig.config.levelMultiplier) +
                                             state.castleConfig.config.levelMultiplier }} / {{
-                                                state.castleConfig.materials.lionheart ?
-                                                    state.castleConfig.materials.lionheart
-                                                    : 0
+                                                state.castleConfig.materials.lionheart ?? 0
                                             }}</span>
                                         <img src="../../../static/icons/foods/lionheart.png" alt="" width="20"
                                             height="20">
@@ -104,9 +107,7 @@
                                         <span> {{ (state.keeperData.skills.charisma *
                                             state.castleConfig.config.levelMultiplier) +
                                             state.castleConfig.config.levelMultiplier }} / {{
-                                                state.castleConfig.materials.magefish ?
-                                                    state.castleConfig.materials.magefish :
-                                                    0
+                                                state.castleConfig.materials.magefish ?? 0
                                             }}</span>
                                         <img src="../../../static/icons/foods/magefish.png" alt="" width="20"
                                             height="20">

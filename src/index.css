@@ -226,7 +226,90 @@ a {
   margin: 70px auto 0 auto;
 }
 
+.castle-main {
+  background-image: url("../static/castle/castle.jpg");
+  z-index: -10;
+}
 
+.castle-library {
+  background-image: url("../static/castle/castle_library.png");
+  z-index: -9;
+  transition: opacity 0.3s ease;
+}
+
+.castle-salon {
+  background-image: url("../static/castle/castle_salon.png");
+  z-index: -9;
+  transition: opacity 0.3s ease;
+}
+
+.castle-garden {
+  background-image: url("../static/castle/castle_garden.png");
+  z-index: -9;
+  transition: opacity 0.3s ease;
+}
+
+.library-bg{
+  background-image: url('../static/library/first.jpg');
+}
+
+.salon-bg{
+  background-image: url('../static/salon/first.jpg');
+}
+
+.garden-bg{
+  background-image: url('../static/garden/first.jpg');
+}
+
+
+.scroll-data {
+  height: 100px;
+  width: 100%;
+  background-image: url("../static/icons/scrolls/scroll_frame_fade.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-left: 20px;
+}
+
+.questCategory-data {
+  height: calc(100px - ( 2 * 13px));
+  width: calc(100% - 26px);
+  background-image: url("../static/icons/scrolls/scroll_frame_fade.png");
+  background-repeat: no-repeat;
+  background-size: 600px 100px;
+  padding: 13px;
+}
+
+.scavenge-main {
+  background-image: url("../static/scavenge/main_map.png");
+  z-index: 9;
+}
+
+.scavenge-dungeons {
+  background-image: url("../static/scavenge/map_dungeons.png");
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.scavenge-forest {
+  background-image: url("../static/scavenge/map_forest.png");
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.scavenge-village {
+  background-image: url("../static/scavenge/map_village.png");
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+.scavenge-data {
+  height: 60px;
+  width: calc(100% - 40px);
+  background-image: url("../static/icons/scrolls/scroll_frame_fade.png");
+  background-repeat: no-repeat;
+  background-size: 600px 100px;
+  padding: 20px;
+}
 
 @font-face {
   font-family: "PirataOne-Regular";

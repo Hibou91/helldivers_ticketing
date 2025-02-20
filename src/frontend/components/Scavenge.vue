@@ -33,15 +33,22 @@
                             state.hover.typeName }}</h3>
                         <p class="scavenge-data-text">Chance: {{ state.hover.difficulty }}%</p>
                         <p class="scavenge-data-text">Keeper: {{ state.hover.keeperbonus }} %</p>
-                        <p class="scavenge-data-text">Skills: {{ state.hover.targetSkills[0] }}, {{ state.hover.targetSkills[1] }}</p>
+                        <p class="scavenge-data-text">Skills: {{ state.hover.targetSkills[0] }}, {{
+                            state.hover.targetSkills[1] }}</p>
                         <p class="scavenge-data-text">Skill Bonus: {{ state.hover.skillBonus }}%</p>
                         <div class="flex-row">
                             <p class="scavenge-data-text">Prize:</p>
-                            <img :src="`../../../static/icons/materials/anima.png`" alt="" width="40" height="40">
-                            <img :src="`../../../static/icons/foods/magefish.png`" alt="" width="40" height="40">
-                            <img :src="`../../../static/icons/foods/witseed.png`" alt="" width="40" height="40">
-                            <img :src="`../../../static/icons/foods/lionheart.png`" alt="" width="40" height="40">
-                            <img :src="`../../../static/icons/materials/${state.hover.type == 0 ?  'paper' : state.hover.type == 1 ? 'silk' : 'wood'}.png`" alt="" width="40" height="40">
+                            <img src="../../../static/icons/materials/anima.png" alt="" width="40" height="40">
+                            <img src="../../../static/icons/foods/magefish.png" alt="" width="40" height="40">
+                            <img src="../../../static/icons/foods/witseed.png" alt="" width="40" height="40">
+                            <img src="../../../static/icons/foods/lionheart.png" alt="" width="40" height="40">
+                            <img v-if="state.hover.type == 0" src="../../../static/icons/materials/paper.png" alt=""
+                                width="40" height="40">
+                            <img v-if="state.hover.type == 1" src="../../../static/icons/materials/silk.png" alt=""
+                                width="40" height="40">
+                            <img v-if="state.hover.type == 2" src="../../../static/icons/materials/wood.png" alt=""
+                                width="40" height="40">
+
                         </div>
 
                     </div>
@@ -60,13 +67,23 @@
                     <div v-for="loot in state.generatedScavenges[0].loot" v-bind:key="loot.name">
                         <div v-if="loot.name == 'Magefish' || loot.name == 'Lionheart' || loot.name == 'Witseed'"
                             class="flex-row">
-                            <img :src="`../../../static/icons/foods/${loot.name.toLowerCase()}.png`" alt="" width="50"
-                                height="50">
+                            <img v-if="loot.name == 'Magefish'" src="../../../static/icons/foods/magefish.png" alt=""
+                                width="50" height="50">
+                            <img v-if="loot.name == 'Lionheart'" src="../../../static/icons/foods/lionheart.png" alt=""
+                                width="50" height="50">
+                            <img v-if="loot.name == 'Witseed'" src="../../../static/icons/foods/witseed.png" alt=""
+                                width="50" height="50">
                             <p>: {{ loot.count }}</p>
 
                         </div>
                         <div v-else class="flex-row">
-                            <img :src="`../../../static/icons/materials/${loot.name.toLowerCase()}.png`" alt=""
+                            <img v-if="loot.name == 'Anima'" src="../../../static/icons/materials/anima.png" alt=""
+                                width="50" height="50">
+                            <img v-if="loot.name == 'Silk'" src="../../../static/icons/materials/silk.png" alt=""
+                                width="50" height="50">
+                            <img v-if="loot.name == 'Wood'" src="../../../static/icons/materials/wood.png" alt=""
+                                width="50" height="50">
+                            <img v-if="loot.name == 'Paper'" src="../../../static/icons/materials/paper.png" alt=""
                                 width="50" height="50">
                             <p>: {{ loot.count }}</p>
                         </div>
@@ -83,13 +100,28 @@
                     @mouseover="state.hover = scavenge" @mouseleave="state.hover = ''" class="scavenge-data-main ">
                     <div class="scavenge-data-image">
 
-                        <img :src="`../../../static/icons/scavenge/${scavenge.typeName.toLowerCase()}.jpg`" alt=""
+                        <img v-if="scavenge.typeName == 'Village'" src="../../../static/icons/scavenge/village.jpg"
+                            alt="" width="100" height="100" class="scavenge-data-main">
+                        <img v-if="scavenge.typeName == 'Dungeons'" src="../../../static/icons/scavenge/dungeons.jpg"
+                            alt="" width="100" height="100" class="scavenge-data-main">
+                        <img v-if="scavenge.typeName == 'Forest'" src="../../../static/icons/scavenge/forest.jpg" alt=""
                             width="100" height="100" class="scavenge-data-main">
-                        <img :src="`../../../static/icons/scavenge/${calculateDifficulty(scavenge.successRate)}.png`"
-                            alt="" width="100" height="100" class="scavenge-data-addons">
-
-                        <img :src="`../../../static/icons/scavenge/${scavenge.targetName.toLowerCase()}.png`" alt=""
+                        <img v-if="calculateDifficulty(scavenge.successRate) == 'easy'" src="../../../static/icons/scavenge/easy.png" alt=""
                             width="100" height="100" class="scavenge-data-addons">
+                        <img v-if="calculateDifficulty(scavenge.successRate) == 'medium'" src="../../../static/icons/scavenge/medium.png"
+                            alt="" width="100" height="100" class="scavenge-data-addons">
+                        <img v-if="calculateDifficulty(scavenge.successRate) == 'hard'" src="../../../static/icons/scavenge/hard.png" alt=""
+                            width="100" height="100" class="scavenge-data-addons">
+
+
+                        <img v-if="scavenge.targetName == 'Kill'" src="../../../static/icons/scavenge/kill.png" alt=""
+                            width="100" height="100" class="scavenge-data-addons">
+                        <img v-if="scavenge.targetName == 'Fetch'" src="../../../static/icons/scavenge/fetch.png" alt=""
+                            width="100" height="100" class="scavenge-data-addons">
+                        <img v-if="scavenge.targetName == 'Infiltrate'"
+                            src="../../../static/icons/scavenge/infiltrate.png" alt="" width="100" height="100"
+                            class="scavenge-data-addons">
+
                         <img src="../../../static/icons/scrolls/scroll_frame.png" alt="" width="100" height="100"
                             class="scavenge-data-addons">
 
@@ -127,17 +159,26 @@
                     <div class="w-50 keeper-img-container">
                         <div class="relative max-h-100">
                             <img src="../../../static/generic_ui/keepers_bg.png" alt="" class="keeper-img">
-                            <img :src="`../../../static/${state.categoryName}/keeper/1.png`" alt=""
-                                class="scavenge-data-addons keeper-img">
+
+                            <img v-if="state.categoryName == 'library'" src="../../../static/library/keeper/1.png"
+                                alt="" class="scavenge-data-addons keeper-img" width="300px" />
+                            <img v-if="state.categoryName == 'salon'" src="../../../static/salon/keeper/1.png" alt=""
+                                class="scavenge-data-addons keeper-img" width="300px" />
+                            <img v-if="state.categoryName == 'garden'" src="../../../static/garden/keeper/1.png" alt=""
+                                class="scavenge-data-addons keeper-img" width="300px" />
                         </div>
 
                     </div>
                     <div class="w-50 inner-scroll">
                         <p><i>{{ state.keeperData.config ? `"${state.keeperData.config.description}""` : "" }}</i> </p>
-                        <p class="scavenge-data-text">Homeland: {{ state.keeperData.config ? state.keeperData.config.homeLand : "" }}</p>
-                        <p class="scavenge-data-text">Cunning: {{ state.keeperData.skills ? state.keeperData.skills.cunning : 0 }}</p>
-                        <p class="scavenge-data-text">Charisma: {{ state.keeperData.skills ? state.keeperData.skills.charisma : 0 }}</p>
-                        <p class="scavenge-data-text">Strength: {{ state.keeperData.skills ? state.keeperData.skills.strength : 0 }}</p>
+                        <p class="scavenge-data-text">Homeland: {{ state.keeperData.config ?
+                            state.keeperData.config.homeLand : "" }}</p>
+                        <p class="scavenge-data-text">Cunning: {{ state.keeperData.skills ?
+                            state.keeperData.skills.cunning : 0 }}</p>
+                        <p class="scavenge-data-text">Charisma: {{ state.keeperData.skills ?
+                            state.keeperData.skills.charisma : 0 }}</p>
+                        <p class="scavenge-data-text">Strength: {{ state.keeperData.skills ?
+                            state.keeperData.skills.strength : 0 }}</p>
                     </div>
                 </div>
 
@@ -258,7 +299,7 @@ const postScavenge = async (id) => {
     } else if (state.value.scavengeAction == "FINISHED") {
         state.value.openClaimPanel = true
     }
-    setTimeout(() => {emit('updateScavenge'), 1000})
+    setTimeout(() => { emit('updateScavenge'), 1000 })
 }
 
 const claimScavenge = async () => {
@@ -301,7 +342,7 @@ watch(() => state.value.hover, (newValue) => {
 
     if (newValue != '') {
         filcker();
-   
+
     }
 
 })
@@ -350,28 +391,7 @@ window.keeperUtils.onUpdateCounter((event, category) => {
 
 }
 
-.scavenge-main {
-    background-image: url("./static/scavenge/main_map.png");
-    z-index: 9;
-}
 
-.scavenge-dungeons {
-    background-image: url("./static/scavenge/map_dungeons.png");
-    z-index: 10;
-    transition: opacity 0.3s ease;
-}
-
-.scavenge-forest {
-    background-image: url("./static/scavenge/map_forest.png");
-    z-index: 10;
-    transition: opacity 0.3s ease;
-}
-
-.scavenge-village {
-    background-image: url("./static/scavenge/map_village.png");
-    z-index: 10;
-    transition: opacity 0.3s ease;
-}
 
 .scavenge-bg-enter-active,
 .scavenge-bg-leave-active {
@@ -396,14 +416,7 @@ window.keeperUtils.onUpdateCounter((event, category) => {
     overflow-y: auto;
 }
 
-.scavenge-data {
-    height: 60px;
-    width: calc(100% - 40px);
-    background-image: url("./static/icons/scrolls/scroll_frame_fade.png");
-    background-repeat: no-repeat;
-    background-size: 600px 100px;
-    padding: 20px;
-}
+
 
 .scavenge-data-main {
 

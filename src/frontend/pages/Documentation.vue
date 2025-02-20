@@ -1,5 +1,5 @@
 <template>
-    <div class="castle-bg">
+    <div class="castle-bg castle-main">
         <tMenu menuName="Castle">
 
             <RouterLink to="/" class="fit-content">
@@ -33,7 +33,7 @@
                     <img src="../../../static/documentation/core.png" alt="" width="300">
                 </div>
 
-                <DocuIconHeader label="The Stock" icon="eye_button_long_loot" />
+                <DocuIconHeader label="The Stock" icon="loot" />
 
                 <p>The shelves should hold the hoard finest wares from all of the world. Not spiders and dust.
                 </p>
@@ -81,22 +81,22 @@
                     <p>Anima</p>
                 </div>
                 <p>And in the core there should be Anima. Souls of those sacrificed for your greater good.</p>
-                <DocuIconHeader label="The Ritual Chamber" icon="eye_button_long_castle" />
+                <DocuIconHeader label="The Ritual Chamber" icon="castle" />
 
 
                 <p>What is power for without using it to get... more power. With the proper sacrifices you can empower
                     your castle and make it strong again.</p>
 
-                <DocuIconHeader label="Garden" icon="eye_button_long_garden" />
+                <DocuIconHeader label="Garden" icon="garden" />
 
                 <p>Your Garden, in it's demise still flourishing. Should be a place where you can live to your passions.
                 </p>
 
-                <DocuIconHeader label="Salon" icon="eye_button_long_salon" />
+                <DocuIconHeader label="Salon" icon="salon" />
 
                 <p>Your Salon, this cosy place for the precious time spent with the ones closest to you</p>
 
-                <DocuIconHeader label="Library" icon="eye_button_long_library" />
+                <DocuIconHeader label="Library" icon="library" />
 
                 <p>Your Library, where you can dedicate yourself to your work with your allies.</p>
 
@@ -105,15 +105,15 @@
 
                 <h2 style="margin-top: 50px;">Haunts: Garden, Salon, Library</h2>
                 <p>You spent so many time in in these places, and you can make them your home again. </p>
-                <p>Organise your things in your way with your categories.</p>
                 <p>Spend time with an old friend.</p>
                 <p>Work on your schemes to restore the glory of yourself and your castle.</p>
+                <p>Organise your schemes into your own secret and occult categories your enemies would never understand</p>
 
                 <div class="col-mid-100">
                     <img src="../../../static/documentation/locale.jpg" alt="" width="300">
                 </div>
 
-                <DocuIconHeader label="New Scheme" icon="eye_button_long_newquest" />
+                <DocuIconHeader label="New Scheme" icon="newquest" />
                 <p>There are many things to do, but where to start your great plans. As great plans require... planning.
                 </p>
 
@@ -133,7 +133,7 @@
 
                 <tButton>Notifications</tButton>
 
-                <p>You send spirits to the future, to tell you about things that should be done precise timing</p>
+                <p>You can send spirits to the future, to tell you about things that should be done precise timing</p>
 
 
 
@@ -147,15 +147,15 @@
                     <img src="../../../static/documentation/subQuests.jpg" alt="" width="300">
                 </div>
 
-                <DocuIconHeader label="New Category" icon="eye_button_long_necategory" />
-                <p>Organizing things no matter how chaotic way is the method of the mastermind. If the mastermind would
+                <DocuIconHeader label="New Category" icon="necategory" />
+                <p>Organizing things no matter how chaoticly is the method of the mastermind. If the mastermind would
                     like to do it of course.
                     You can add categories to use in Quests and even give colors to them.</p>
                 <div class="col-mid-100">
                     <img src="../../../static/documentation/newCategories.jpg" alt="" width="300">
                 </div>
 
-                <DocuIconHeader label="Keeper" icon="eye_button_long_keeper" />
+                <DocuIconHeader label="Keeper" icon="keeper" />
                 <p>You sense someone else in the castle. A presence of something old and... sad like yourself. Some of
                     the shadows
                     start to move and take form.
@@ -172,7 +172,7 @@
 
 
 
-                <DocuIconHeader label="Scavenge" icon="eye_button_long_scavenge" />
+                <DocuIconHeader label="Scavenge" icon="scavenge" />
                 <p>While you are occupied with your schemes your allies can do their own part. They know the nearby
                     dungeons forest and village well,
                     from where they can gather the resources so desparately needed to rebuild yourselves and your
@@ -222,8 +222,7 @@ import DocuIconHeader from '../components/DocuIconHeader.vue';
     position: absolute;
     top: 0;
     right: 0;
-    background-image: url("./static/castle/castle.jpg");
-    z-index: -10;
+   
 }
 
 .castle-card {
