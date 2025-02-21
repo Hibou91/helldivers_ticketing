@@ -1,5 +1,5 @@
 <template>
-    <div class="library-bg" :class="{'library-bg': props.config.category == 0, 'salon-bg': props.config.category == 1, 'garden-bg': props.config.category == 1 }" >
+    <div class="library-bg" :class="{'library-bg': props.config.category == 0, 'salon-bg': props.config.category == 1, 'garden-bg': props.config.category == 2 }" >
         <tMenu menuName="Library">
 
             <RouterLink to="/castle">

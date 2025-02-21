@@ -9,8 +9,8 @@ export default class Notifications {
   }
 
   setUpHandlers() {
-    ipcMain.handle("postNotification", (event, questId, data) =>
-      Notifications.postNotification(questId, data)
+    ipcMain.handle("postNotification", (event, questId, category, data) =>
+      Notifications.postNotification(questId, category, data)
     );
     ipcMain.handle("putNotification", (event, id, data) =>
       Notifications.putNotification(id, data)
@@ -18,7 +18,7 @@ export default class Notifications {
     ipcMain.handle("deleteNotification", (event, id) =>
       Notifications.deleteNotification(id)
     );
-    ipcMain.handle("getNotificationsForQuest", (event, id) =>
+    ipcMain.handle("getNotificationsForQuest", (event, category, id) =>
       Notifications.getNotificationsForQuest(id)
     );
   }
@@ -49,11 +49,11 @@ export default class Notifications {
 
   }
 
-  static async deleteQuestNotifications(id) {
+  static async deleteQuestNotifications(id, category ) {
     let notifications = await this.getNotifications();
 
     let i = 0;
-   const newArray = notifications.filter((e) =>  e.questId != id)
+   const newArray = notifications.filter((e) =>  (e.questId != id || e.category != category))
     
 
     return await fileUtil.postFileData('notifications.json', newArray)
@@ -81,12 +81,13 @@ export default class Notifications {
     return await fileUtil.postFileData('notifications.json', notifications)
   }
 
-  static async postNotification(questId, data) {
+  static async postNotification(questId, category, data) {
     let notifications = await this.getNotifications();
 
     let rawData = JSON.parse(data);
     const newNotification = {
       id: genericUtils.createId(notifications),
+      category: category,
       title: rawData.title,
       body: rawData.body,
       time: rawData.time,
@@ -107,12 +108,12 @@ export default class Notifications {
     
   }
 
-  static async getNotificationsForQuest(questId) {
+  static async getNotificationsForQuest(questId, category) {
     const notifications = await this.getNotifications();
     const returnValue = [];
 
     for (let i = 0; i < notifications.length; i++) {
-      if (notifications[i].questId == questId) {
+      if (notifications[i].questId == questId && notifications[i].category == category) {
         returnValue.push(notifications[i]);
       }
     }

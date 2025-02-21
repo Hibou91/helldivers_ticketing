@@ -119,7 +119,7 @@ export default class Quest {
       quests
     );
 
-    Notifications.deleteQuestNotifications(updateQuest.id);
+    Notifications.deleteQuestNotifications(updateQuest.id, category);
 
     return result;
   }

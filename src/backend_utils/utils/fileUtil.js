@@ -43,4 +43,35 @@ export default {
     }
     return result
   },
+
+  async importFileData(url) {
+    try {
+      
+      let data = await fs.readFile(decodeURI(url), { encoding: "utf8" });
+      
+
+      if (!data || data == "") {
+        return false;
+      }
+      data = JSON.parse(data);
+      return data;
+    } catch (err) {
+      return false;
+    }
+  },
+
+  async exportFileData(url, data) {
+    let result = true;
+    try {
+      
+      await fs.writeFile(decodeURI(url), JSON.stringify(data), (err) => {
+        if (err) {
+          result = false;
+        }
+      });
+    } catch (e) {
+      result = false;
+    }
+    return result
+  },
 };

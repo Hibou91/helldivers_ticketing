@@ -14,7 +14,9 @@
             <tCard>
                 <div>
                     <h2>Castle</h2>
-                    <p></p>
+                    <p>Your castle is moved a bit by the rules of physics and the rules of occult mathematics. </p>
+                    <p>To reach the next level of anything think of your current level multiplied by the level multipliers.</p>
+                    <p>Your storage is allways the level requirement multiplied by the storage multiplier.</p>
                     <p>Level Multiplier</p>
                     <input type="text" v-model="state.castleData.levelMultiplier">
                     <p>Anima level multiplier</p>
@@ -25,6 +27,8 @@
                     <tButton @click="saveCastleData" style="margin: 30px 0 50px 0;">Save settings</tButton>
                 </div>
                 <h2>Materials</h2>
+
+                <p></p>
 
                 <div v-for="material in state.materialData">
                     <h3 @click="material.open = !material.open" class="pointer-link">{{ material.name }}</h3>

@@ -200,7 +200,7 @@ const deleteQuests = async () => {
 }
 
 const getNotifications = async () => {
-    const response = await window.questUtils.getNotificationsForQuest(state.value.editable.id)
+    const response = await window.questUtils.getNotificationsForQuest(state.value.editable.id, props.category)
 
     state.value.notifications = response;
     state.value.openNotifications = true;
@@ -209,7 +209,7 @@ const getNotifications = async () => {
 
 const postNotification = async () => {
 
-    const response = await window.questUtils.postNotification(state.value.editable.id, JSON.stringify(state.value.newNotification))
+    const response = await window.questUtils.postNotification(state.value.editable.id, props.category, JSON.stringify(state.value.newNotification))
     if (response != false) {
         state.value.notifications.push(response)
         toast.toast('Words whispered to the wind may come back later...')
