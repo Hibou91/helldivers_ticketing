@@ -8,5 +8,5 @@
                 <p>As you enter your castle you dig in your vague memories seemingly coming from an other world.
                     Certainly from an other life tough. </p>
                 <h3 style="margin-top: 50px;">The Program</h3>
-                <p>This is a gothic horror mood todo program. Enjoy :)</p>
+                <p>This is a gothic mood to-do program. Enjoy :)</p>
                 <p><a href="https://hibou91.github.io/#/helldivers">Documentation</a> </p>
