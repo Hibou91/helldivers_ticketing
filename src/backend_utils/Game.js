@@ -17,7 +17,7 @@ export default class Game {
     this.scavenges = new Scavenges();
 
     this.fileRepo = [
-      "casle",
+      "castle",
       "scavenge",
       "notifications",
       "materialConfig",

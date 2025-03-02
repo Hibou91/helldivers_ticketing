@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-import fs from "node:fs/promises";
 import config from "../config";
 import genericUtils from "../utils/genericUtils";
 import Notifications from "./Notifications";

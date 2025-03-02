@@ -1,7 +1,5 @@
-import fs from "node:fs/promises";
 
 import { Notification, BrowserWindow } from "electron";
-
 
 import Notifications from "./Notifications";
 import Scavenges from "./Scavenges";

@@ -1,6 +1,5 @@
 import config from "../config";
 import Locale from "./Locale";
-import fs from "node:fs/promises";
 import { ipcMain } from "electron";
 import fileUtil from "../utils/fileUtil";
 import Scavenges from "./Scavenges";
